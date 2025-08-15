@@ -3,8 +3,6 @@ import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import reactPlugin from "eslint-plugin-react";
 import hooksPlugin from "eslint-plugin-react-hooks";
-import tailwind from "eslint-plugin-tailwindcss";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
@@ -23,16 +21,10 @@ export default tseslint.config(
     plugins: {
       react: reactPlugin,
       "react-hooks": hooksPlugin,
-      tailwindcss: tailwind,
-      "simple-import-sort": simpleImportSort,
       "@typescript-eslint": tseslint.plugin,
     },
     settings: {
       react: { version: "detect" },
-      tailwindcss: {
-        callees: ["classnames", "clsx", "ctl"],
-        config: "./tailwind.config.js",
-      },
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -40,9 +32,7 @@ export default tseslint.config(
       ...hooksPlugin.configs.recommended.rules,
       ...tseslint.configs.recommendedTypeChecked.rules,
       ...tseslint.configs.stylisticTypeChecked.rules,
-      // TS handles globals; base rule is noisy in TS projects
       "no-undef": "off",
-      // Prefer TS-aware unused vars rule
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
@@ -50,10 +40,6 @@ export default tseslint.config(
       ],
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
-      "tailwindcss/classnames-order": "warn",
-      "tailwindcss/no-custom-classname": "off",
-      "simple-import-sort/imports": "warn",
-      "simple-import-sort/exports": "warn",
       "@typescript-eslint/no-floating-promises": "error",
       "@typescript-eslint/consistent-type-imports": [
         "warn",

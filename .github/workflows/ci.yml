@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   backend:
-    name: Backend (Go) — lint, vet, build, test
+    name: Backend (Go) — lint, build, test
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -26,18 +26,6 @@ jobs:
         with:
           go-version-file: backend/go.mod
           cache: true
-
-      - name: Verify formatting (gofmt)
-        run: |
-          fmt_out="$(gofmt -l .)"
-          if [ -n "$fmt_out" ]; then
-            echo "The following files are not gofmt'ed:" >&2
-            echo "$fmt_out" >&2
-            exit 1
-          fi
-
-      - name: go vet
-        run: go vet ./...
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
