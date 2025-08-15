@@ -5,7 +5,7 @@ import { createShare } from "../../shared/api/admin";
 import { getEnv } from "../../shared/api/client";
 
 export function ShareForm({ carId }: { carId?: number }) {
-  const { adminPollMs } = getEnv();
+  const { shareBaseUrl } = getEnv();
   const [ttlHours, setTtlHours] = useState<number>(8);
   const [arriveRadiusM, setArriveRadiusM] = useState<number | "">("");
   const [expiresAt, setExpiresAt] = useState<string | "">("");
@@ -19,7 +19,9 @@ export function ShareForm({ carId }: { carId?: number }) {
     return new Date(Date.now() + ms).toISOString();
   }, [ttlHours, expiresAt]);
 
-  const exampleUrl = token ? `/#${token}` : undefined;
+  const exampleUrl = token
+    ? `${shareBaseUrl ? shareBaseUrl : ""}/#${token}`
+    : undefined;
 
   async function onCreate() {
     if (!carId) {
