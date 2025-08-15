@@ -24,14 +24,26 @@ export function getEnv() {
   };
 }
 
+function getCookie(name: string): string | undefined {
+  if (typeof document === "undefined") return undefined;
+  const cookies = document.cookie ? document.cookie.split("; ") : [];
+  for (const c of cookies) {
+    const [k, ...rest] = c.split("=");
+    if (k === name) return decodeURIComponent(rest.join("="));
+  }
+  return undefined;
+}
+
 export async function apiFetch(path: string, init?: RequestInit) {
   const { apiBaseUrl } = getEnv();
   const url = `${apiBaseUrl || ""}${path}`;
+  const cfToken = getCookie("CF_Authorization");
   const res = await fetch(url, {
     credentials: "same-origin",
     ...init,
     headers: {
       "content-type": "application/json",
+      ...(cfToken ? { "CF-Access-Jwt-Assertion": cfToken } : {}),
       ...(init?.headers || {}),
     },
   });
