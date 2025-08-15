@@ -24,6 +24,7 @@ export default tseslint.config(
             "react-hooks": hooksPlugin,
             tailwindcss: tailwind,
             "simple-import-sort": simpleImportSort,
+            "@typescript-eslint": tseslint.plugin,
         },
         settings: {
             react: { version: "detect" },
