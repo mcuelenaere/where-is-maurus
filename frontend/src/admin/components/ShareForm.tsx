@@ -49,7 +49,10 @@ export function ShareForm({ carId, etaMin }: Props) {
     setTtlMinutes(minutes);
   }
   function useETA() {
-    if (etaMin && etaMin > 0) setTTLFromMinutes(etaMin);
+    if (etaMin && etaMin > 0) {
+      const adjusted = Math.round(etaMin * 1.05);
+      setTTLFromMinutes(Math.max(1, adjusted));
+    }
   }
 
   async function onCreate() {
