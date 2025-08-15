@@ -5,12 +5,13 @@ import { MetricCard } from "../shared/components/MetricCard";
 import { Sparkline } from "../shared/components/Sparkline";
 import { Speedometer } from "../shared/components/Speedometer";
 import { TPMSWheels } from "../shared/components/TPMSWheels";
+import { BatteryBar } from "../shared/components/BatteryBar";
+import { PowerBar } from "../shared/components/PowerBar";
 import {
   formatCelsius,
   formatHeading,
   formatKilometers,
   formatPercent,
-  formatPower,
   formatSpeedKph,
 } from "../shared/utils/format";
 import { useSSE } from "./hooks/useSSE";
@@ -94,12 +95,13 @@ export default function App() {
               </div>
             </MetricCard>
 
-            <MetricCard label="Power" value={formatPower(state?.battery?.power_w)} unit="W">
-              <Sparkline data={state?.history_30s?.power_w} />
-            </MetricCard>
-
-            <MetricCard label="SOC" value={formatPercent(state?.battery?.soc_pct)} unit="%">
-              <Sparkline data={state?.history_30s?.soc_pct} />
+            <MetricCard label="Battery" hideValue>
+              <div className="flex flex-col gap-3">
+                <BatteryBar socPct={state?.battery?.soc_pct} />
+                <div>
+                  <PowerBar powerW={state?.battery?.power_w} />
+                </div>
+              </div>
             </MetricCard>
 
             <MetricCard label="Temp" hideValue>
