@@ -10,7 +10,6 @@ linters:
     - ineffassign
     - unused
     - gofmt
-    - gofumpt
     - goconst
     - gosec
     - misspell
@@ -18,8 +17,6 @@ linters:
     - revive
 
 linters-settings:
-  gofumpt:
-    extra-rules: true
   misspell:
     locale: US
   revive:
