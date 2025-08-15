@@ -63,17 +63,15 @@ func (h *AdminHandlers) handleCreateShare(w http.ResponseWriter, r *http.Request
 		return
 	}
 	var ttl time.Duration
-	var expAt time.Time
 	if req.ExpiresAt != nil {
 		if req.ExpiresAt.Before(time.Now()) {
 			writeError(w, http.StatusBadRequest, "bad_request", "expires_at in past")
 			return
 		}
-		expAt = *req.ExpiresAt
+		expAt := *req.ExpiresAt
 		ttl = time.Until(expAt)
 	} else {
 		ttl = h.TokenTTL
-		expAt = time.Now().Add(ttl)
 	}
 	// If dest not provided, try from store route
 	var dest *auth.Dest
