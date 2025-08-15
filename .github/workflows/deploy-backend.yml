@@ -1,12 +1,7 @@
-name: deploy backend
+name: Deploy backend
 
 on:
   workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Docker image tag to publish (e.g. latest, v1.2.3)'
-        required: false
-        default: 'latest'
 
 permissions:
   contents: read
@@ -23,6 +18,9 @@ jobs:
       - name: Compute image name (lowercased repo)
         id: vars
         run: echo "image=ghcr.io/${GITHUB_REPOSITORY,,}/backend" >> $GITHUB_OUTPUT
+
+      - name: Compute date-based tag (UTC)
+        run: echo "DATE_TAG=$(date -u +%Y.%m.%d-%H%M)" >> $GITHUB_ENV
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -41,7 +39,8 @@ jobs:
           images: |
             ${{ steps.vars.outputs.image }}
           tags: |
-            type=raw,value=${{ inputs.tag }}
+            type=raw,value=latest
+            type=raw,value=${{ env.DATE_TAG }}
             type=sha,format=short
             type=sha
 
