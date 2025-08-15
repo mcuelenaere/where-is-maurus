@@ -14,8 +14,8 @@ export function getEnv() {
   }
   return {
     apiBaseUrl: apiBase,
-    mapTileUrl: import.meta.env.VITE_MAP_TILE_URL || DEFAULTS.MAP_TILE_URL,
-    mapAttribution: import.meta.env.VITE_MAP_ATTRIBUTION || DEFAULTS.MAP_ATTRIBUTION,
+    mapTileUrl: DEFAULTS.MAP_TILE_URL,
+    mapAttribution: DEFAULTS.MAP_ATTRIBUTION,
     mapTileUrlDark: import.meta.env.VITE_MAP_TILE_URL_DARK || DEFAULTS.MAP_TILE_URL_DARK,
     mapAttributionDark:
       import.meta.env.VITE_MAP_ATTRIBUTION_DARK || DEFAULTS.MAP_ATTRIBUTION_DARK,
