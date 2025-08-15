@@ -119,7 +119,7 @@ func TestSSEHeartbeatWithoutMQTT(t *testing.T) {
 		}
 	}
 	if !gotHeartbeat {
-		t.Fatalf("expected heartbeat in SSE stream; got: %s", sseW.Body.String())
+		t.Fatalf("expected heartbeat in SSE stream; got: %s", sseW.Snapshot())
 	}
 }
 
