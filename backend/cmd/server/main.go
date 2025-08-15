@@ -30,6 +30,15 @@ func main() {
 		log.Fatal().Err(err).Msg("load config")
 	}
 
+	if lvl, err := zerolog.ParseLevel(cfg.LogLevel); err == nil {
+		zerolog.SetGlobalLevel(lvl)
+	} else {
+		log.Warn().Str("value", cfg.LogLevel).Err(err).Msg("invalid LOG_LEVEL, using default")
+	}
+	log.Debug().
+		Interface("cfg", cfg).
+		Msg("config loaded")
+
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
 

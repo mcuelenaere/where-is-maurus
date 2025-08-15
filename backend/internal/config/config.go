@@ -11,6 +11,7 @@ type Config struct {
 	HTTPAddr            string        `env:"HTTP_ADDR" envDefault:":8080"`
 	CORSAllowedOrigins  []string      `env:"CORS_ALLOWED_ORIGINS" envSeparator:","`
 	CookieDomain        string        `env:"COOKIE_DOMAIN"`
+	LogLevel            string        `env:"LOG_LEVEL" envDefault:"info"`
 	TokenDefaultTTL     time.Duration `env:"TOKEN_DEFAULT_TTL" envDefault:"28800s"`
 	KeyRotateSeconds    time.Duration `env:"KEY_ROTATE_SECONDS" envDefault:"28800s"`
 	MQTTBrokerURL       string        `env:"MQTT_BROKER_URL"`

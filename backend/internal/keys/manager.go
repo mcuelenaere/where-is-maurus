@@ -14,6 +14,7 @@ import (
 	"github.com/lestrrat-go/jwx/v3/jwk"
 	"github.com/lestrrat-go/jwx/v3/jws"
 	"github.com/lestrrat-go/jwx/v3/jwt"
+	"github.com/rs/zerolog/log"
 )
 
 // Manager holds current and previous ES512 JWKs and rotates them on a ticker.
@@ -47,6 +48,8 @@ func NewManager(ctx context.Context, rotateEvery time.Duration) (*Manager, error
 }
 
 func (m *Manager) rotate() error {
+	log.Info().Msg("rotating JWKs")
+
 	// Generate ES512 key (P-521)
 	priv, err := ecdsa.GenerateKey(elliptic.P521(), rand.Reader)
 	if err != nil {

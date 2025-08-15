@@ -1,7 +1,9 @@
 package stream
 
 import (
-    "sync"
+	"sync"
+
+	"github.com/rs/zerolog/log"
 )
 
 type Subscriber struct {
@@ -29,6 +31,7 @@ func (h *Hub) Subscribe(carID int64) *Subscriber {
     }
     m[sub] = struct{}{}
     return sub
+	log.Info().Int64("car_id", carID).Msg("added new subscriber")
 }
 
 func (h *Hub) Unsubscribe(carID int64, sub *Subscriber) {
@@ -40,6 +43,7 @@ func (h *Hub) Unsubscribe(carID int64, sub *Subscriber) {
             delete(h.subs, carID)
         }
     }
+	log.Info().Int64("car_id", carID).Msg("removed subscriber")
 }
 
 func (h *Hub) Broadcast(carID int64, payload []byte) {

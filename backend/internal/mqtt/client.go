@@ -34,6 +34,10 @@ func NewClient(brokerURL, username, password string, clientID string, store *sta
 }
 
 func (c *Client) Connect(ctx context.Context) error {
+	or := c.cli.OptionsReader()
+	if srvs := or.Servers(); len(srvs) > 0 {
+		log.Info().Str("broker", srvs[0].String()).Msg("mqtt connecting")
+	}
 	if token := c.cli.Connect(); !token.WaitTimeout(10*time.Second) || token.Error() != nil {
 		if token.Error() != nil {
 			return token.Error()
@@ -41,6 +45,7 @@ func (c *Client) Connect(ctx context.Context) error {
 		return fmt.Errorf("mqtt connect timeout")
 	}
 	go func() { <-ctx.Done(); c.cli.Disconnect(100) }()
+	log.Info().Msg("mqtt connected ok")
 	return nil
 }
 
@@ -74,8 +79,10 @@ func (c *Client) SubscribeAllCars(ctx context.Context) error {
 			}
 		}
 		if carID == 0 {
+			log.Warn().Str("topic", topic).Msg("invalid car_id")
 			return
 		}
+		log.Debug().Int64("car_id", carID).Str("topic", topic).Int("len", len(payload)).Msg("mqtt message")
 		// routing
 		if strings.HasSuffix(topic, "/location") {
 			var loc struct {
@@ -117,6 +124,7 @@ func (c *Client) SubscribeAllCars(ctx context.Context) error {
 		// numeric simple topics
 		val, err := strconv.ParseFloat(payload, 64)
 		if err != nil {
+			log.Warn().Err(err).Msg("failed to parse float")
 			return
 		}
 		switch {
@@ -156,6 +164,7 @@ func (c *Client) SubscribeAllCars(ctx context.Context) error {
 		}
 	}
 	for _, t := range topics {
+		log.Debug().Str("topic", t).Msg("mqtt subscribing")
 		if token := c.cli.Subscribe(t, 0, handler); token.Wait() && token.Error() != nil {
 			return token.Error()
 		}
