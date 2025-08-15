@@ -20,7 +20,7 @@ export function useSSE<TState extends object, THistory extends object, TPath ext
 
     useEffect(() => {
         let cancelled = false;
-        (async () => {
+        void (async () => {
             try {
                 if (options.token) {
                     await fetch(`${apiBaseUrl || ''}${sessionPath}`, {

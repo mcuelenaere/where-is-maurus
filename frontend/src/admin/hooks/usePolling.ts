@@ -29,11 +29,11 @@ export function usePolling(fn: () => void | Promise<void>, intervalMs: number, d
                 setIsPolling(false);
                 if (!cancelled && isMounted.current) {
                     const wait = backoffRef.current || intervalMs;
-                    timerRef.current = window.setTimeout(tick, wait);
+                    timerRef.current = window.setTimeout(() => { void tick(); }, wait);
                 }
             }
         }
-        tick();
+        void tick();
         return () => {
             cancelled = true;
             if (timerRef.current) window.clearTimeout(timerRef.current);
