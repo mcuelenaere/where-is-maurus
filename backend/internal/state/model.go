@@ -71,4 +71,3 @@ type HistoryWindow struct {
 	TPMSRR     []TimestampedFloat `json:"tpms_rr"`
 	Path       []Breadcrumb       `json:"path_30s"`
 }
-
