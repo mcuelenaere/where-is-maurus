@@ -19,4 +19,5 @@ docker-build:
 docker-run:
 	docker run --rm -p 8080:8080 --env-file .env where-is-maurus/backend:latest
 
-
+test:
+	go test ./...

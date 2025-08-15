@@ -38,6 +38,10 @@ make docker-build
 make docker-run
 ```
 
+### API Docs
+
+See `docs/API.md` for the full REST and SSE contract.
+
 ### Quick SSE test
 
 Start server, then:
