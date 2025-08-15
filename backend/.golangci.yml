@@ -1,0 +1,49 @@
+run:
+  timeout: 3m
+  tests: true
+
+linters:
+  enable:
+    - govet
+    - staticcheck
+    - gosimple
+    - ineffassign
+    - unused
+    - gofmt
+    - gofumpt
+    - goconst
+    - gosec
+    - misspell
+    - errcheck
+    - revive
+
+linters-settings:
+  gofumpt:
+    extra-rules: true
+  misspell:
+    locale: US
+  revive:
+    severity: warning
+    rules:
+      - name: indent-error-flow
+      - name: unexported-return
+        disabled: true
+      - name: exported
+        arguments:
+          - checkPrivateReceivers: false
+      - name: var-naming
+        disabled: true
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  exclude-rules:
+    - path: _test.go
+      linters:
+        - errcheck
+        - gosec
+
