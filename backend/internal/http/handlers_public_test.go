@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"sync"
 	"testing"
 	"time"
 
@@ -101,13 +102,14 @@ func TestSSEHeartbeatWithoutMQTT(t *testing.T) {
 	// connect SSE
 	sseReq := httptest.NewRequest(http.MethodGet, "/api/v1/stream", nil)
 	sseReq.Header.Set("Cookie", cookie)
-	sseW := httptest.NewRecorder()
+	// Use a thread-safe recorder to avoid data races when reading while the handler writes
+	sseW := newSyncRecorder()
 
 	go r.ServeHTTP(sseW, sseReq)
 	time.Sleep(120 * time.Millisecond)
 
-	// read buffered response
-	scanner := bufio.NewScanner(bytes.NewReader(sseW.Body.Bytes()))
+	// read a snapshot of the buffered response
+	scanner := bufio.NewScanner(bytes.NewReader(sseW.Snapshot()))
 	var gotHeartbeat bool
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -119,4 +121,28 @@ func TestSSEHeartbeatWithoutMQTT(t *testing.T) {
 	if !gotHeartbeat {
 		t.Fatalf("expected heartbeat in SSE stream; got: %s", sseW.Body.String())
 	}
+}
+
+// syncRecorder is a minimal thread-safe http.ResponseWriter that implements http.Flusher.
+type syncRecorder struct {
+	mu     sync.Mutex
+	buf    bytes.Buffer
+	header http.Header
+	code   int
+}
+
+func newSyncRecorder() *syncRecorder { return &syncRecorder{header: make(http.Header)} }
+
+func (w *syncRecorder) Header() http.Header        { return w.header }
+func (w *syncRecorder) WriteHeader(statusCode int) { w.code = statusCode }
+func (w *syncRecorder) Write(b []byte) (int, error) {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	return w.buf.Write(b)
+}
+func (w *syncRecorder) Flush() {}
+func (w *syncRecorder) Snapshot() []byte {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	return append([]byte(nil), w.buf.Bytes()...)
 }
