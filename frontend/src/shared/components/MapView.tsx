@@ -50,7 +50,7 @@ export function MapView({
   const center: [number, number] = current ? [current.lat, current.lon] : [0, 0];
 
   return (
-    <div className="h-80 min-h-[360px] overflow-hidden rounded-md border sm:h-96 lg:h-full">
+    <div className="h-80 min-h-[360px] overflow-hidden rounded-md border border-gray-200 sm:h-96 lg:h-full dark:border-gray-700 dark:bg-gray-800">
       <MapContainer center={center} zoom={13} style={{ height: "100%", width: "100%" }}>
         <TileLayer url={mapTileUrl} attribution={mapAttribution} />
         {current && (

@@ -74,16 +74,16 @@ export function ShareForm({ carId, etaMin }: Props) {
   }
 
   return (
-    <div className="rounded-md border bg-white p-4">
-      <h2 className="text-base font-semibold text-gray-900">Create Share</h2>
+    <div className="rounded-md border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+      <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">Create Share</h2>
       <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <div className="flex items-center gap-2 sm:col-span-3">
-          <span className="text-sm text-gray-700">TTL</span>
+          <span className="text-sm text-gray-700 dark:text-gray-300">TTL</span>
           <input
             type="number"
             aria-label="Hours"
             placeholder="hh"
-            className="rounded-md border-gray-300 px-2 py-1 text-sm w-16"
+            className="w-16 rounded-md border-gray-300 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
             value={ttlHours}
             min={0}
             step={1}
@@ -92,12 +92,12 @@ export function ShareForm({ carId, etaMin }: Props) {
               setTtlHours(Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0);
             }}
           />
-          <span className="text-sm text-gray-500">h</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">h</span>
           <input
             type="number"
             aria-label="Minutes"
             placeholder="mm"
-            className="rounded-md border-gray-300 px-2 py-1 text-sm w-16"
+            className="w-16 rounded-md border-gray-300 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
             value={ttlMinutes}
             min={0}
             max={59}
@@ -109,11 +109,11 @@ export function ShareForm({ carId, etaMin }: Props) {
               setTtlMinutes(Math.floor(v));
             }}
           />
-          <span className="text-sm text-gray-500">m</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">m</span>
         </div>
         {/* Only expiration is configurable */}
         <div className="sm:col-span-3">
-          <div className="text-xs text-gray-600">Quick durations</div>
+          <div className="text-xs text-gray-600 dark:text-gray-400">Quick durations</div>
           <div className="mt-1 flex flex-wrap gap-2">
             {presetsMin.map((m) => {
               const isActive = (ttlHours || 0) * 60 + (ttlMinutes || 0) === m;
@@ -123,8 +123,8 @@ export function ShareForm({ carId, etaMin }: Props) {
                   type="button"
                   className={`${
                     isActive
-                      ? "border-blue-300 bg-blue-50 text-blue-700"
-                      : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
+                      ? "border-blue-300 bg-blue-50 text-blue-700 dark:border-blue-500 dark:bg-blue-900/30 dark:text-blue-300"
+                      : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
                   } rounded-md border px-2 py-1 text-xs`}
                   onClick={() => setTTLFromMinutes(m)}
                 >
@@ -134,7 +134,7 @@ export function ShareForm({ carId, etaMin }: Props) {
             })}
             <button
               type="button"
-              className="rounded-md border border-gray-200 bg-white px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+              className="rounded-md border border-gray-200 bg-white px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               onClick={useETA}
               disabled={!etaMin || etaMin <= 0}
               title={!etaMin || etaMin <= 0 ? "No ETA available" : "Use ETA"}
@@ -152,27 +152,27 @@ export function ShareForm({ carId, etaMin }: Props) {
         >
           {loading ? "Creating…" : "Create Share"}
         </button>
-        <div className="text-xs text-gray-600">
+        <div className="text-xs text-gray-600 dark:text-gray-400">
           TTL: {ttlHours}h {ttlMinutes}m
         </div>
       </div>
       {isValidTTL && (
-        <div className="mt-1 text-xs text-gray-600">
+        <div className="mt-1 text-xs text-gray-600 dark:text-gray-400">
           Expires at: {new Date(computedExpiresAt).toLocaleString()}
         </div>
       )}
       {error && (
-        <div className="mt-3 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="mt-3 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-300">
           {error}
         </div>
       )}
       {token && (
-        <div className="mt-4 rounded-md border p-3">
-          <div className="text-sm text-gray-700">Share URL</div>
-          <div className="mt-1 break-all font-mono text-sm">{exampleUrl}</div>
+        <div className="mt-4 rounded-md border border-gray-200 p-3 dark:border-gray-700">
+          <div className="text-sm text-gray-700 dark:text-gray-300">Share URL</div>
+          <div className="mt-1 break-all font-mono text-sm dark:text-gray-100">{exampleUrl}</div>
           <div className="mt-2 flex items-center gap-2">
             <button
-              className="rounded-md bg-gray-100 px-3 py-1 text-sm hover:bg-gray-200"
+              className="rounded-md bg-gray-100 px-3 py-1 text-sm hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600"
               onClick={async () => {
                 if (!exampleUrl) return;
                 try {
@@ -187,7 +187,9 @@ export function ShareForm({ carId, etaMin }: Props) {
               {copied ? "Copied!" : "Copy URL"}
             </button>
             {!shareBaseUrl && (
-              <span className="text-xs text-gray-500">Note: No share base URL configured</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                Note: No share base URL configured
+              </span>
             )}
           </div>
         </div>

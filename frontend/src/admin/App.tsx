@@ -72,14 +72,14 @@ export default function App() {
       <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <CarSelector carIds={carIds} value={selectedCarId} onChange={setSelectedCarId} />
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-gray-600 dark:text-gray-400">
             {connected ? "Live" : "Connecting…"}
             {lastUpdated ? ` • Updated ${formatTime(new Date(lastUpdated))}` : ""}
           </div>
         </div>
 
         {error && (
-          <div className="mt-3 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <div className="mt-3 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-300">
             {error}
           </div>
         )}
@@ -93,7 +93,9 @@ export default function App() {
               dest={state?.route?.dest}
               path={adminState?.path_30s}
             />
-            {!hasRoute && <div className="mt-2 text-xs text-gray-600">No active route</div>}
+            {!hasRoute && (
+              <div className="mt-2 text-xs text-gray-600 dark:text-gray-400">No active route</div>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">

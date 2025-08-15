@@ -7,9 +7,9 @@ type Props = {
 export function CarSelector({ carIds, value, onChange }: Props) {
   return (
     <div className="flex items-center gap-2">
-      <label className="text-sm text-gray-700">Car</label>
+      <label className="text-sm text-gray-700 dark:text-gray-300">Car</label>
       <select
-        className="rounded-md border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="rounded-md border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
         value={value ?? ""}
         onChange={(e) => {
           const v = e.target.value;
