@@ -1,7 +1,5 @@
 package state
 
-import "time"
-
 type TimestampedFloat struct {
 	TS int64   `json:"ts_ms"`
 	V  float64 `json:"v"`
@@ -74,4 +72,3 @@ type HistoryWindow struct {
 	Path       []Breadcrumb       `json:"path_30s"`
 }
 
-func nowMs() int64 { return time.Now().UnixMilli() }
