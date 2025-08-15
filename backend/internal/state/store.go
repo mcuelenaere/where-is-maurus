@@ -49,7 +49,7 @@ func (s *Store) ensure(carID int64) *carEntry {
 	return ce
 }
 
-func (s *Store) prune(history *HistoryWindow, cutoff int64) {
+func prune(history *HistoryWindow, cutoff int64) {
 	pruneTF := func(a []TimestampedFloat) []TimestampedFloat {
 		i := 0
 		for i < len(a) && a[i].TS < cutoff {
@@ -82,7 +82,7 @@ func (s *Store) prune(history *HistoryWindow, cutoff int64) {
 }
 
 // Delta is a partial JSON object bytes representing changes.
-func (s *Store) marshalDelta(delta map[string]any) []byte {
+func marshalDelta(delta map[string]any) []byte {
 	if delta == nil {
 		return nil
 	}
@@ -116,8 +116,8 @@ func (s *Store) UpdateLocation(carID int64, ts int64, lat, lon, speedKPH, headin
 	}
 	ce.history.Path = append(ce.history.Path, Breadcrumb{TS: ts, Lat: lat, Lon: lon})
 	cutoff := ts - ceWindowMs(s.window)
-	s.prune(&ce.history, cutoff)
-	return s.marshalDelta(map[string]any{
+	prune(&ce.history, cutoff)
+	return marshalDelta(map[string]any{
 		"ts_ms":    ts,
 		"location": ce.state.Location,
 		"history_30s": map[string]any{
@@ -140,8 +140,8 @@ func (s *Store) UpdateSpeed(carID int64, ts int64, speedKPH float64) []byte {
 	ce.state.Location.SpeedKPH = speedKPH
 	ce.history.SpeedKPH = append(ce.history.SpeedKPH, TimestampedFloat{TS: ts, V: speedKPH})
 	cutoff := ts - ceWindowMs(s.window)
-	s.prune(&ce.history, cutoff)
-	return s.marshalDelta(map[string]any{"ts_ms": ts, "location": map[string]any{"speed_kph": speedKPH}, "history_30s": map[string]any{"speed_kph": ce.history.SpeedKPH}})
+	prune(&ce.history, cutoff)
+	return marshalDelta(map[string]any{"ts_ms": ts, "location": ce.state.Location, "history_30s": map[string]any{"speed_kph": ce.history.SpeedKPH}})
 }
 
 func (s *Store) UpdateHeading(carID int64, ts int64, heading float64) []byte {
@@ -155,8 +155,8 @@ func (s *Store) UpdateHeading(carID int64, ts int64, heading float64) []byte {
 	ce.state.Location.Heading = heading
 	ce.history.Heading = append(ce.history.Heading, TimestampedFloat{TS: ts, V: heading})
 	cutoff := ts - ceWindowMs(s.window)
-	s.prune(&ce.history, cutoff)
-	return s.marshalDelta(map[string]any{"ts_ms": ts, "location": map[string]any{"heading": heading}, "history_30s": map[string]any{"heading": ce.history.Heading}})
+	prune(&ce.history, cutoff)
+	return marshalDelta(map[string]any{"ts_ms": ts, "location": ce.state.Location, "history_30s": map[string]any{"heading": ce.history.Heading}})
 }
 
 func (s *Store) UpdateElevation(carID int64, ts int64, elevM float64) []byte {
@@ -170,8 +170,8 @@ func (s *Store) UpdateElevation(carID int64, ts int64, elevM float64) []byte {
 	ce.state.Location.ElevationM = elevM
 	ce.history.ElevationM = append(ce.history.ElevationM, TimestampedFloat{TS: ts, V: elevM})
 	cutoff := ts - ceWindowMs(s.window)
-	s.prune(&ce.history, cutoff)
-	return s.marshalDelta(map[string]any{"ts_ms": ts, "location": map[string]any{"elevation_m": elevM}, "history_30s": map[string]any{"elevation_m": ce.history.ElevationM}})
+	prune(&ce.history, cutoff)
+	return marshalDelta(map[string]any{"ts_ms": ts, "location": ce.state.Location, "history_30s": map[string]any{"elevation_m": ce.history.ElevationM}})
 }
 
 func (s *Store) UpdateBatteryLevel(carID int64, ts int64, soc float64) []byte {
@@ -185,8 +185,8 @@ func (s *Store) UpdateBatteryLevel(carID int64, ts int64, soc float64) []byte {
 	ce.state.Battery.SOCPct = soc
 	ce.history.SOCPct = append(ce.history.SOCPct, TimestampedFloat{TS: ts, V: soc})
 	cutoff := ts - ceWindowMs(s.window)
-	s.prune(&ce.history, cutoff)
-	return s.marshalDelta(map[string]any{"ts_ms": ts, "battery": map[string]any{"soc_pct": soc}, "history_30s": map[string]any{"soc_pct": ce.history.SOCPct}})
+	prune(&ce.history, cutoff)
+	return marshalDelta(map[string]any{"ts_ms": ts, "battery": ce.state.Battery, "history_30s": map[string]any{"soc_pct": ce.history.SOCPct}})
 }
 
 func (s *Store) UpdatePower(carID int64, ts int64, powerW float64) []byte {
@@ -200,8 +200,8 @@ func (s *Store) UpdatePower(carID int64, ts int64, powerW float64) []byte {
 	ce.state.Battery.PowerW = powerW
 	ce.history.PowerW = append(ce.history.PowerW, TimestampedFloat{TS: ts, V: powerW})
 	cutoff := ts - ceWindowMs(s.window)
-	s.prune(&ce.history, cutoff)
-	return s.marshalDelta(map[string]any{"ts_ms": ts, "battery": map[string]any{"power_w": powerW}, "history_30s": map[string]any{"power_w": ce.history.PowerW}})
+	prune(&ce.history, cutoff)
+	return marshalDelta(map[string]any{"ts_ms": ts, "battery": ce.state.Battery, "history_30s": map[string]any{"power_w": ce.history.PowerW}})
 }
 
 func (s *Store) UpdateInsideTemp(carID int64, ts int64, c float64) []byte {
@@ -215,8 +215,8 @@ func (s *Store) UpdateInsideTemp(carID int64, ts int64, c float64) []byte {
 	ce.state.Climate.InsideC = c
 	ce.history.InsideC = append(ce.history.InsideC, TimestampedFloat{TS: ts, V: c})
 	cutoff := ts - ceWindowMs(s.window)
-	s.prune(&ce.history, cutoff)
-	return s.marshalDelta(map[string]any{"ts_ms": ts, "climate": map[string]any{"inside_c": c}, "history_30s": map[string]any{"inside_c": ce.history.InsideC}})
+	prune(&ce.history, cutoff)
+	return marshalDelta(map[string]any{"ts_ms": ts, "climate": ce.state.Climate, "history_30s": map[string]any{"inside_c": ce.history.InsideC}})
 }
 
 func (s *Store) UpdateOutsideTemp(carID int64, ts int64, c float64) []byte {
@@ -230,8 +230,8 @@ func (s *Store) UpdateOutsideTemp(carID int64, ts int64, c float64) []byte {
 	ce.state.Climate.OutsideC = c
 	ce.history.OutsideC = append(ce.history.OutsideC, TimestampedFloat{TS: ts, V: c})
 	cutoff := ts - ceWindowMs(s.window)
-	s.prune(&ce.history, cutoff)
-	return s.marshalDelta(map[string]any{"ts_ms": ts, "climate": map[string]any{"outside_c": c}, "history_30s": map[string]any{"outside_c": ce.history.OutsideC}})
+	prune(&ce.history, cutoff)
+	return marshalDelta(map[string]any{"ts_ms": ts, "climate": ce.state.Climate, "history_30s": map[string]any{"outside_c": ce.history.OutsideC}})
 }
 
 func (s *Store) UpdateTPMS(carID int64, ts int64, pos string, v float64) []byte {
@@ -242,28 +242,23 @@ func (s *Store) UpdateTPMS(carID int64, ts int64, pos string, v float64) []byte 
 	if ce.state.TPMS == nil {
 		ce.state.TPMS = &TPMSBar{}
 	}
-	var key string
 	switch pos {
 	case "fl":
 		ce.state.TPMS.FL = v
 		ce.history.TPMSFL = append(ce.history.TPMSFL, TimestampedFloat{TS: ts, V: v})
-		key = "fl"
 	case "fr":
 		ce.state.TPMS.FR = v
 		ce.history.TPMSFR = append(ce.history.TPMSFR, TimestampedFloat{TS: ts, V: v})
-		key = "fr"
 	case "rl":
 		ce.state.TPMS.RL = v
 		ce.history.TPMSRL = append(ce.history.TPMSRL, TimestampedFloat{TS: ts, V: v})
-		key = "rl"
 	case "rr":
 		ce.state.TPMS.RR = v
 		ce.history.TPMSRR = append(ce.history.TPMSRR, TimestampedFloat{TS: ts, V: v})
-		key = "rr"
 	}
 	cutoff := ts - ceWindowMs(s.window)
-	s.prune(&ce.history, cutoff)
-	return s.marshalDelta(map[string]any{"ts_ms": ts, "tpms_bar": map[string]any{key: v}})
+	prune(&ce.history, cutoff)
+	return marshalDelta(map[string]any{"ts_ms": ts, "tpms_bar": ce.state.TPMS})
 }
 
 func (s *Store) UpdateRoute(carID int64, ts int64, dest *Dest, etaMin, distKM float64) []byte {
@@ -281,7 +276,7 @@ func (s *Store) UpdateRoute(carID int64, ts int64, dest *Dest, etaMin, distKM fl
 	if distKM > 0 {
 		ce.state.Route.DistKM = distKM
 	}
-	return s.marshalDelta(map[string]any{"ts_ms": ts, "route": ce.state.Route})
+	return marshalDelta(map[string]any{"ts_ms": ts, "route": ce.state.Route})
 }
 
 func ceWindowMs(d time.Duration) int64 { return d.Milliseconds() }
