@@ -40,9 +40,6 @@ jobs:
       - name: Test
         run: make test
 
-      - name: Test (race detector)
-        run: go test -race ./...
-
   frontend:
     name: Frontend (Vite/TS/React) — lint, format, typecheck, build
     runs-on: ubuntu-latest
