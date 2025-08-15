@@ -48,6 +48,7 @@ type createShareResp struct {
 func (h *AdminHandlers) Routes(r chi.Router) {
 	r.With(h.middlewareCF).Post("/api/v1/shares", h.handleCreateShare)
 	r.With(h.middlewareCF).Get("/api/v1/admin/cars/{id}/state", h.handleGetCarState)
+	r.With(h.middlewareCF).Get("/api/v1/admin/cars", h.handleListCars)
 }
 
 func (h *AdminHandlers) handleCreateShare(w http.ResponseWriter, r *http.Request) {
@@ -106,4 +107,9 @@ func (h *AdminHandlers) handleGetCarState(w http.ResponseWriter, r *http.Request
 		"history_30s": hist,
 	}
 	writeJSON(w, http.StatusOK, resp)
+}
+
+func (h *AdminHandlers) handleListCars(w http.ResponseWriter, r *http.Request) {
+	ids := h.Store.ListCarIDs()
+	writeJSON(w, http.StatusOK, map[string]any{"cars": ids})
 }

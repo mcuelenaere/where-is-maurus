@@ -29,6 +29,17 @@ func (s *Store) GetSnapshot(carID int64) (CarState, HistoryWindow) {
 	return ce.state, ce.history
 }
 
+// ListCarIDs returns the IDs of cars seen in the store.
+func (s *Store) ListCarIDs() []int64 {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	ids := make([]int64, 0, len(s.cars))
+	for id := range s.cars {
+		ids = append(ids, id)
+	}
+	return ids
+}
+
 func (s *Store) ensure(carID int64) *carEntry {
 	if ce, ok := s.cars[carID]; ok {
 		return ce
