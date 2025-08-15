@@ -5,7 +5,8 @@ PKG := where-is-maurus/backend
 .PHONY: tidy build run docker-build docker-run
 
 tidy:
-	cd $(PWD) && go mod tidy
+	go mod tidy
+	go fmt ./...
 
 build:
 	CGO_ENABLED=0 go build -trimpath -ldflags "-s -w" -o bin/$(APP) ./cmd/server
