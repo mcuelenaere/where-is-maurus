@@ -12,6 +12,7 @@ export default tseslint.config(
     {
         files: ["src/**/*.{ts,tsx}", "vite.*.config.ts"],
         languageOptions: {
+            parser: tseslint.parser,
             parserOptions: {
                 ecmaVersion: 2022,
                 sourceType: "module",
