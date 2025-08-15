@@ -46,13 +46,19 @@ export function MapView({
   dest?: LatLon;
   path?: PathPoint[];
 }) {
-  const { mapTileUrl, mapAttribution } = getEnv();
+  const { mapTileUrl, mapAttribution, mapTileUrlDark, mapAttributionDark } = getEnv();
+  const prefersDark =
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const url = prefersDark ? mapTileUrlDark : mapTileUrl;
+  const attribution = prefersDark ? mapAttributionDark : mapAttribution;
   const center: [number, number] = current ? [current.lat, current.lon] : [0, 0];
 
   return (
     <div className="h-80 min-h-[360px] overflow-hidden rounded-md border border-gray-200 sm:h-96 lg:h-full dark:border-gray-700 dark:bg-gray-800">
       <MapContainer center={center} zoom={13} style={{ height: "100%", width: "100%" }}>
-        <TileLayer url={mapTileUrl} attribution={mapAttribution} />
+        <TileLayer url={url} attribution={attribution} />
         {current && (
           <Marker position={[current.lat, current.lon]}>
             <Popup>Current position</Popup>
