@@ -93,7 +93,7 @@ func main() {
 		r.Group(func(r chi.Router) { adm.Routes(r) })
 	}
 
-	srv := &http.Server{Addr: cfg.HTTPAddr, Handler: r}
+	srv := &http.Server{Addr: cfg.HTTPAddr, Handler: r, ReadHeaderTimeout: 5 * time.Second}
 	go func() {
 		log.Info().Str("addr", cfg.HTTPAddr).Msg("server starting")
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
