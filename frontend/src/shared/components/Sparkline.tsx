@@ -1,4 +1,5 @@
 import { Sparklines, SparklinesLine } from 'react-sparklines';
+
 import type { HistoryPoint } from '../api/types';
 
 export function Sparkline({ data }: { data?: HistoryPoint[] }) {

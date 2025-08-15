@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+
 import { getEnv } from '../../shared/api/client';
 
 type SnapshotPayload<TState, THistory, TPath> = TState & { history_30s: THistory; path_30s: TPath[] };
