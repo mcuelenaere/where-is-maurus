@@ -85,57 +85,18 @@ func (h *PublicHandlers) handleStream(w http.ResponseWriter, r *http.Request) {
 			dest = &d
 		}
 	}
-	// SSE headers
-	w.Header().Set("Content-Type", "text/event-stream")
-	w.Header().Set("Cache-Control", "no-store")
-	w.Header().Set("X-Accel-Buffering", "no")
-
-	flusher, ok := w.(http.Flusher)
+	flusher, ok := setSSEHeaders(w)
 	if !ok {
 		writeError(w, http.StatusInternalServerError, "internal_error", "no flusher")
 		return
 	}
 
-	// initial snapshot
-	stateSnap, hist := h.Store.GetSnapshot(carID)
-	historyOnly := map[string]any{
-		"speed_kph":   hist.SpeedKPH,
-		"heading":     hist.Heading,
-		"elevation_m": hist.ElevationM,
-		"soc_pct":     hist.SOCPct,
-		"power_w":     hist.PowerW,
-		"inside_c":    hist.InsideC,
-		"outside_c":   hist.OutsideC,
-		"tpms_fl":     hist.TPMSFL,
-		"tpms_fr":     hist.TPMSFR,
-		"tpms_rl":     hist.TPMSRL,
-		"tpms_rr":     hist.TPMSRR,
-	}
-	snapshotData := map[string]any{
-		"ts_ms":       stateSnap.TSMS,
-		"location":    stateSnap.Location,
-		"battery":     stateSnap.Battery,
-		"climate":     stateSnap.Climate,
-		"tpms_bar":    stateSnap.TPMS,
-		"route":       stateSnap.Route,
-		"history_30s": historyOnly,
-		"path_30s":    hist.Path,
-	}
-	b, _ := json.Marshal(snapshotData)
-	if _, err := w.Write([]byte("event: snapshot\n" + "data: " + string(b) + "\n\n")); err != nil {
+	if ok := sendInitialSnapshot(w, flusher, h.Store, carID); !ok {
 		return
 	}
-	flusher.Flush()
-
-	sub := h.Hub.Subscribe(carID)
-	defer h.Hub.Unsubscribe(carID, sub)
 
 	ctx, cancel := context.WithCancel(r.Context())
 	defer cancel()
-
-	// heartbeat ticker
-	hb := time.NewTicker(h.Heartbeat)
-	defer hb.Stop()
 
 	// arrival expiry if configured
 	hasArrive := false
@@ -143,33 +104,12 @@ func (h *PublicHandlers) handleStream(w http.ResponseWriter, r *http.Request) {
 		hasArrive = true
 	}
 
-	for {
-		select {
-		case <-ctx.Done():
-			return
-		case b := <-sub.Ch:
-			if len(b) == 0 {
-				continue
-			}
-			if _, err := w.Write(b); err != nil {
-				return
-			}
-			flusher.Flush()
-			if hasArrive && arrived(h.Store, carID, dest) {
-				return
-			}
-		case t := <-hb.C:
-			serverTime := map[string]any{"server_time": t.UTC().Format(time.RFC3339Nano)}
-			hbPayload, _ := json.Marshal(serverTime)
-			if _, err := w.Write([]byte("event: heartbeat\n" + "data: " + string(hbPayload) + "\n\n")); err != nil {
-				return
-			}
-			flusher.Flush()
-			if hasArrive && arrived(h.Store, carID, dest) {
-				return
-			}
+	sseLoop(ctx, w, flusher, h.Hub, carID, h.Heartbeat, func() bool {
+		if hasArrive && arrived(h.Store, carID, dest) {
+			return true
 		}
-	}
+		return false
+	})
 }
 
 func arrived(store *state.Store, carID int64, dest *auth.Dest) bool {

@@ -1,18 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CarSelector } from './components/CarSelector';
 import { MapView } from '../shared/components/MapView';
 import { MetricCard } from '../shared/components/MetricCard';
 import { Sparkline } from '../shared/components/Sparkline';
 import { ShareForm } from './components/ShareForm';
 import Header from './components/Header';
-import { usePolling } from './hooks/usePolling';
-import { getCarState, getCars } from '../shared/api/admin';
+import { getCars } from '../shared/api/admin';
 import type { AdminCarState, CarState } from '../shared/api/types';
 import { formatCelsius, formatHeading, formatKilometers, formatPercent, formatPower, formatSpeedKph, formatTime } from '../shared/utils/format';
-import { getEnv } from '../shared/api/client';
+import { useAdminSSE } from './hooks/useAdminSSE';
 
 export default function App() {
-    const { adminPollMs } = getEnv();
     const [carIds, setCarIds] = useState<number[]>([]);
     const [selectedCarId, setSelectedCarId] = useState<number | undefined>(undefined);
     const [adminState, setAdminState] = useState<AdminCarState | undefined>();
@@ -37,17 +35,17 @@ export default function App() {
         };
     }, []);
 
-    const { isPolling, lastUpdated } = usePolling(async () => {
-        if (!selectedCarId) return;
-        try {
-            const res = await getCarState(selectedCarId);
-            setAdminState(res);
-            setState(res.state);
-            setError(undefined);
-        } catch (e) {
-            setError(e instanceof Error ? e.message : 'Failed to fetch state');
-        }
-    }, adminPollMs, [selectedCarId]);
+    const { state: sseState, connected, error: sseError } = useAdminSSE(selectedCarId);
+    const lastUpdated = useMemo(() => (sseState?.ts_ms ? new Date(sseState.ts_ms).getTime() : undefined), [sseState?.ts_ms]);
+    useEffect(() => {
+        if (sseError) setError(sseError);
+        else setError(undefined);
+    }, [sseError]);
+    useEffect(() => {
+        if (!sseState) return;
+        setState(sseState);
+        setAdminState({ state: sseState, history_30s: sseState.history_30s, path_30s: sseState.path_30s });
+    }, [sseState]);
 
     const hasRoute = Boolean(state?.route?.dest);
 
@@ -59,7 +57,7 @@ export default function App() {
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <CarSelector carIds={carIds} value={selectedCarId} onChange={setSelectedCarId} />
                     <div className="text-sm text-gray-600">
-                        {isPolling ? 'Polling…' : 'Idle'}{lastUpdated ? ` • Updated ${formatTime(new Date(lastUpdated))}` : ''}
+                        {connected ? 'Live' : 'Connecting…'}{lastUpdated ? ` • Updated ${formatTime(new Date(lastUpdated))}` : ''}
                     </div>
                 </div>
 

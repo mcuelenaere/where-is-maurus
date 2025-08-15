@@ -1,6 +1,7 @@
 package httpx
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -12,14 +13,17 @@ import (
 	"where-is-maurus/backend/internal/auth"
 	"where-is-maurus/backend/internal/keys"
 	"where-is-maurus/backend/internal/state"
+	"where-is-maurus/backend/internal/stream"
 )
 
 type AdminHandlers struct {
 	CF                   *auth.CFValidator
 	Keys                 *keys.Manager
 	Store                *state.Store
+	Hub                  *stream.Hub
 	TokenTTL             time.Duration
 	DefaultArriveRadiusM float64
+	Heartbeat            time.Duration
 }
 
 func (h *AdminHandlers) middlewareCF(next http.Handler) http.Handler {
@@ -47,7 +51,8 @@ type createShareResp struct {
 
 func (h *AdminHandlers) Routes(r chi.Router) {
 	r.With(h.middlewareCF).Post("/api/v1/shares", h.handleCreateShare)
-	r.With(h.middlewareCF).Get("/api/v1/admin/cars/{id}/state", h.handleGetCarState)
+	// SSE stream for admin to observe live updates for a car
+	r.With(h.middlewareCF).Get("/api/v1/admin/cars/{id}/stream", h.handleStream)
 	r.With(h.middlewareCF).Get("/api/v1/admin/cars", h.handleListCars)
 }
 
@@ -94,22 +99,32 @@ func (h *AdminHandlers) handleCreateShare(w http.ResponseWriter, r *http.Request
 	writeJSON(w, http.StatusOK, createShareResp{Token: tok})
 }
 
-func (h *AdminHandlers) handleGetCarState(w http.ResponseWriter, r *http.Request) {
+func (h *AdminHandlers) handleListCars(w http.ResponseWriter, r *http.Request) {
+	ids := h.Store.ListCarIDs()
+	writeJSON(w, http.StatusOK, map[string]any{"cars": ids})
+}
+
+// handleStream provides Server-Sent Events for the selected car ID for admin users.
+func (h *AdminHandlers) handleStream(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
 		writeError(w, http.StatusBadRequest, "bad_request", "invalid id")
 		return
 	}
-	st, hist := h.Store.GetSnapshot(id)
-	resp := map[string]any{
-		"state":       st,
-		"history_30s": hist,
-	}
-	writeJSON(w, http.StatusOK, resp)
-}
 
-func (h *AdminHandlers) handleListCars(w http.ResponseWriter, r *http.Request) {
-	ids := h.Store.ListCarIDs()
-	writeJSON(w, http.StatusOK, map[string]any{"cars": ids})
+	flusher, ok := setSSEHeaders(w)
+	if !ok {
+		writeError(w, http.StatusInternalServerError, "internal_error", "no flusher")
+		return
+	}
+
+	if ok := sendInitialSnapshot(w, flusher, h.Store, id); !ok {
+		return
+	}
+
+	ctx, cancel := context.WithCancel(r.Context())
+	defer cancel()
+
+	sseLoop(ctx, w, flusher, h.Hub, id, h.Heartbeat, nil)
 }
