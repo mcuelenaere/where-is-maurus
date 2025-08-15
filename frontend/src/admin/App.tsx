@@ -19,7 +19,7 @@ export default function App() {
 
     useEffect(() => {
         let cancelled = false;
-        (async () => {
+        void (async () => {
             try {
                 const ids = await getCars();
                 if (!cancelled) {
