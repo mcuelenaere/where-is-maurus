@@ -66,6 +66,9 @@ export const AdminCarStateSchema = z.object({
 });
 export type AdminCarState = z.infer<typeof AdminCarStateSchema>;
 
+export const AdminCarsResponseSchema = z.object({ cars: z.array(z.number()) });
+export type AdminCarsResponse = z.infer<typeof AdminCarsResponseSchema>;
+
 export const AdminCreateShareRequestSchema = z.object({
     car_id: z.number(),
     expires_at: z.string().optional(),

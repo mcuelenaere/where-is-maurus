@@ -18,7 +18,6 @@ Create `.env` from `.env.example`:
 
 ```
 VITE_API_BASE_URL=https://api.example.com
-VITE_CAR_IDS=1,2
 VITE_DEFAULT_TTL_HOURS=8
 VITE_DEFAULT_ARRIVE_RADIUS_M=100
 VITE_MAP_TILE_URL=https://tile.openstreetmap.org/{z}/{x}/{y}.png
@@ -29,7 +28,6 @@ VITE_MAP_ATTRIBUTION=&copy; OpenStreetMap contributors
 
 Notes:
 - If `VITE_API_BASE_URL` is omitted, the app uses relative paths and `same-origin` credentials.
-- `VITE_CAR_IDS` is a comma-separated list of numeric IDs.
 
 ## Develop
 

@@ -6,42 +6,44 @@ import { Sparkline } from './components/Sparkline';
 import { ShareForm } from './components/ShareForm';
 import Header from './components/Header';
 import { usePolling } from './hooks/usePolling';
-import { getCarState } from './api/admin';
-import type { CarState } from './api/types';
+import { getCarState, getCars } from './api/admin';
+import type { AdminCarState, CarState } from './api/types';
 import { formatCelsius, formatHeading, formatKilometers, formatPercent, formatPower, formatSpeedKph, formatTime } from './utils/format';
 
 const POLL_MS_DEFAULT = 2000;
 
 export default function App() {
-    const carIds = useMemo(() => {
-        const raw = import.meta.env.VITE_CAR_IDS;
-        if (!raw) {
-            console.warn('VITE_CAR_IDS not set. Provide comma-separated numeric IDs in .env.');
-            return [] as number[];
-        }
-        const list = raw.split(',').map((s) => Number(s.trim())).filter((n) => Number.isFinite(n));
-        if (list.length === 0) {
-            console.warn('VITE_CAR_IDS is present but parsed to empty list.');
-        }
-        return list;
-    }, []);
-
-    const [selectedCarId, setSelectedCarId] = useState<number | undefined>(carIds[0]);
+    const [carIds, setCarIds] = useState<number[]>([]);
+    const [selectedCarId, setSelectedCarId] = useState<number | undefined>(undefined);
+    const [adminState, setAdminState] = useState<AdminCarState | undefined>();
     const [state, setState] = useState<CarState | undefined>();
     const [error, setError] = useState<string | undefined>();
 
     const pollMs = POLL_MS_DEFAULT;
 
     useEffect(() => {
-        if (carIds.length > 0 && selectedCarId === undefined) {
-            setSelectedCarId(carIds[0]);
-        }
-    }, [carIds, selectedCarId]);
+        let cancelled = false;
+        (async () => {
+            try {
+                const ids = await getCars();
+                if (!cancelled) {
+                    setCarIds(ids);
+                    if (ids.length > 0) setSelectedCarId((prev) => prev ?? ids[0]);
+                }
+            } catch (e) {
+                if (!cancelled) setError(e instanceof Error ? e.message : 'Failed to load cars');
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
+    }, []);
 
     const { isPolling, lastUpdated } = usePolling(async () => {
         if (!selectedCarId) return;
         try {
             const res = await getCarState(selectedCarId);
+            setAdminState(res);
             setState(res.state);
             setError(undefined);
         } catch (e) {
@@ -83,33 +85,33 @@ export default function App() {
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                         <MetricCard label="Speed" value={formatSpeedKph(state?.location?.speed_kph)} unit="km/h">
-                            <Sparkline data={state?.history_30s?.speed_kph} />
+                            <Sparkline data={adminState?.history_30s?.speed_kph} />
                         </MetricCard>
                         <MetricCard label="Heading" value={formatHeading(state?.location?.heading)} unit="°" />
                         <MetricCard label="Elevation" value={state?.location?.elevation_m?.toFixed(0)} unit="m" />
                         <MetricCard label="SOC" value={formatPercent(state?.battery?.soc_pct)} unit="%">
-                            <Sparkline data={state?.history_30s?.soc_pct} />
+                            <Sparkline data={adminState?.history_30s?.soc_pct} />
                         </MetricCard>
                         <MetricCard label="Power" value={formatPower(state?.battery?.power_w)} unit="W">
-                            <Sparkline data={state?.history_30s?.power_w} />
+                            <Sparkline data={adminState?.history_30s?.power_w} />
                         </MetricCard>
                         <MetricCard label="Inside" value={formatCelsius(state?.climate?.inside_c)} unit="°C">
-                            <Sparkline data={state?.history_30s?.inside_c} />
+                            <Sparkline data={adminState?.history_30s?.inside_c} />
                         </MetricCard>
                         <MetricCard label="Outside" value={formatCelsius(state?.climate?.outside_c)} unit="°C">
-                            <Sparkline data={state?.history_30s?.outside_c} />
+                            <Sparkline data={adminState?.history_30s?.outside_c} />
                         </MetricCard>
                         <MetricCard label="TPMS FL" value={state?.tpms_bar?.fl?.toFixed(2)} unit="bar">
-                            <Sparkline data={state?.history_30s?.tpms_fl} />
+                            <Sparkline data={adminState?.history_30s?.tpms_fl} />
                         </MetricCard>
                         <MetricCard label="TPMS FR" value={state?.tpms_bar?.fr?.toFixed(2)} unit="bar">
-                            <Sparkline data={state?.history_30s?.tpms_fr} />
+                            <Sparkline data={adminState?.history_30s?.tpms_fr} />
                         </MetricCard>
                         <MetricCard label="TPMS RL" value={state?.tpms_bar?.rl?.toFixed(2)} unit="bar">
-                            <Sparkline data={state?.history_30s?.tpms_rl} />
+                            <Sparkline data={adminState?.history_30s?.tpms_rl} />
                         </MetricCard>
                         <MetricCard label="TPMS RR" value={state?.tpms_bar?.rr?.toFixed(2)} unit="bar">
-                            <Sparkline data={state?.history_30s?.tpms_rr} />
+                            <Sparkline data={adminState?.history_30s?.tpms_rr} />
                         </MetricCard>
                         <MetricCard label="Dist to Dest" value={state?.route?.dist_km != null ? formatKilometers(state.route.dist_km) : undefined} unit="km" />
                         <MetricCard label="ETA" value={state?.route?.eta_min != null ? `${state.route.eta_min} min` : undefined} />

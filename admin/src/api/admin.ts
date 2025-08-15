@@ -4,6 +4,7 @@ import {
     AdminCreateShareRequestSchema,
     AdminCreateShareResponseSchema,
     AdminCarStateSchema,
+    AdminCarsResponseSchema,
     type AdminCarState,
     type AdminCreateShareRequest,
     type AdminCreateShareResponse
@@ -34,6 +35,16 @@ export async function createShare(req: AdminCreateShareRequest): Promise<AdminCr
         throw new Error(`Invalid response: ${parsed.error.message}`);
     }
     return parsed.data;
+}
+
+export async function getCars(): Promise<number[]> {
+    const res = await apiFetch(`/api/v1/admin/cars`);
+    const json = await res.json();
+    const parsed = AdminCarsResponseSchema.safeParse(json);
+    if (!parsed.success) {
+        throw new Error(`Invalid cars response: ${parsed.error.message}`);
+    }
+    return parsed.data.cars;
 }
 
 

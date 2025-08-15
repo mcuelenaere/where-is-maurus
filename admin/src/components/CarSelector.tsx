@@ -16,7 +16,7 @@ export function CarSelector({ carIds, value, onChange }: Props) {
                     onChange(v ? Number(v) : undefined);
                 }}
             >
-                {carIds.length === 0 && <option value="">No cars configured</option>}
+                {carIds.length === 0 && <option value="">No cars</option>}
                 {carIds.map((id) => (
                     <option key={id} value={id}>{id}</option>
                 ))}
