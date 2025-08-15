@@ -74,7 +74,6 @@ export type AdminCarsResponse = z.infer<typeof AdminCarsResponseSchema>;
 export const AdminCreateShareRequestSchema = z.object({
   car_id: z.number(),
   expires_at: z.string().optional(),
-  arrive_radius_m: z.number().optional(),
 });
 export type AdminCreateShareRequest = z.infer<typeof AdminCreateShareRequestSchema>;
 

@@ -39,10 +39,8 @@ func (h *AdminHandlers) middlewareCF(next http.Handler) http.Handler {
 }
 
 type createShareReq struct {
-	CarID         int64      `json:"car_id"`
-	ExpiresAt     *time.Time `json:"expires_at,omitempty"`
-	ArriveRadiusM *float64   `json:"arrive_radius_m,omitempty"`
-	Dest          *auth.Dest `json:"dest,omitempty"`
+	CarID     int64      `json:"car_id"`
+	ExpiresAt *time.Time `json:"expires_at,omitempty"`
 }
 
 type createShareResp struct {
@@ -73,22 +71,7 @@ func (h *AdminHandlers) handleCreateShare(w http.ResponseWriter, r *http.Request
 	} else {
 		ttl = h.TokenTTL
 	}
-	// If dest not provided, try from store route
-	var dest *auth.Dest
-	if req.Dest != nil {
-		dest = req.Dest
-	} else {
-		st, _ := h.Store.GetSnapshot(req.CarID)
-		if st.Route != nil && st.Route.Dest != nil {
-			dest = &auth.Dest{Lat: st.Route.Dest.Lat, Lon: st.Route.Dest.Lon}
-		}
-	}
-	if dest != nil && req.ArriveRadiusM != nil {
-		dest.ArriveRadiusM = *req.ArriveRadiusM
-	} else if dest != nil {
-		dest.ArriveRadiusM = h.DefaultArriveRadiusM
-	}
-	tok, _, err := auth.CreateShareToken(time.Now(), ttl, req.CarID, dest, h.Keys.SignJWT)
+	tok, _, err := auth.CreateShareToken(time.Now(), ttl, req.CarID, h.Keys.SignJWT)
 	if err != nil {
 		log.Error().Err(err).Msg("sign share token")
 		writeError(w, http.StatusInternalServerError, "internal_error", "failed to sign token")

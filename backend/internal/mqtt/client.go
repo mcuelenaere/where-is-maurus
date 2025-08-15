@@ -96,25 +96,37 @@ func (c *Client) SubscribeAllCars(ctx context.Context) error {
 			return
 		}
 		if strings.HasSuffix(topic, "/active_route") {
-			// TeslaMate route JSON has nested fields; keep dest lat/lon, eta_min, dist_km when present
+			// Per docs: https://docs.teslamate.org/docs/integrations/mqtt/
 			var ar map[string]any
 			if err := json.Unmarshal(m.Payload(), &ar); err == nil {
-				var dest *state.Dest
-				if d, ok := ar["destination"].(map[string]any); ok {
-					lat, _ := toFloat(d["lat"])
-					lon, _ := toFloat(d["lng"]) // some payloads use lng
-					if lon == 0 {
-						lon, _ = toFloat(d["lon"]) // fallback
-					}
-					dest = &state.Dest{Lat: lat, Lon: lon}
+				if e, ok := ar["error"]; ok && e != nil {
+					delta := c.store.UpdateRoute(carID, ts, nil, 0, 0)
+					c.hub.Broadcast(carID, wrapEvent("delta", delta))
+					return
 				}
-				etaMin, _ := toFloat(ar["eta_minutes"])
+				var dest *state.Dest
+				if loc, ok := ar["location"].(map[string]any); ok {
+					lat, _ := toFloat(loc["latitude"])
+					lon, _ := toFloat(loc["longitude"])
+					if lat != 0 || lon != 0 {
+						dest = &state.Dest{Lat: lat, Lon: lon}
+					}
+				}
+				etaMin, _ := toFloat(ar["minutes_to_arrival"])
 				if etaMin == 0 {
-					etaMin, _ = toFloat(ar["eta_min"])
+					etaMin, _ = toFloat(ar["eta_minutes"])
+					if etaMin == 0 {
+						etaMin, _ = toFloat(ar["eta_min"])
+					}
 				}
 				distKM, _ := toFloat(ar["distance_km"])
 				if distKM == 0 {
-					distKM, _ = toFloat(ar["dist_km"])
+					miles, _ := toFloat(ar["miles_to_arrival"])
+					if miles != 0 {
+						distKM = miles * 1.60934
+					} else {
+						distKM, _ = toFloat(ar["dist_km"])
+					}
 				}
 				delta := c.store.UpdateRoute(carID, ts, dest, etaMin, distKM)
 				c.hub.Broadcast(carID, wrapEvent("delta", delta))

@@ -50,7 +50,7 @@ func TestSessionSetsCookie(t *testing.T) {
 	r.Group(func(r chi.Router) { pub.Routes(r) })
 
 	// issue a share token
-	tokStr, exp, err := auth.CreateShareToken(time.Now(), time.Hour, 1, nil, km.SignJWT)
+	tokStr, exp, err := auth.CreateShareToken(time.Now(), time.Hour, 1, km.SignJWT)
 	if err != nil {
 		t.Fatalf("sign: %v", err)
 	}
@@ -80,7 +80,7 @@ func TestSSEHeartbeatWithoutMQTT(t *testing.T) {
 	r.Group(func(r chi.Router) { pub.Routes(r) })
 
 	// token for car 1
-	tokStr, _, err := auth.CreateShareToken(time.Now(), time.Minute, 1, nil, km.SignJWT)
+	tokStr, _, err := auth.CreateShareToken(time.Now(), time.Minute, 1, km.SignJWT)
 	if err != nil {
 		t.Fatalf("sign: %v", err)
 	}

@@ -1,27 +1,32 @@
 import dayjs from "dayjs";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { createShare } from "../../shared/api/admin";
 import { getEnv } from "../../shared/api/client";
 
-export function ShareForm({ carId }: { carId?: number }) {
+type Props = { carId?: number; etaMin?: number };
+
+export function ShareForm({ carId, etaMin }: Props) {
   const { shareBaseUrl } = getEnv();
-  const [ttlHours, setTtlHours] = useState<number>(8);
-  const [arriveRadiusM, setArriveRadiusM] = useState<number | "">("");
-  const [expiresAt, setExpiresAt] = useState<string | "">("");
+  const [ttlHours, setTtlHours] = useState<number>(4);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [token, setToken] = useState<string | undefined>();
 
+  useEffect(() => {
+    if (etaMin && etaMin > 0) {
+      const hours = Math.max(1, Math.ceil(etaMin / 60));
+      setTtlHours(hours);
+    }
+  }, [etaMin]);
+
   const computedExpiresAt = useMemo(() => {
-    if (expiresAt) return expiresAt;
     const ms = (ttlHours || 0) * 3600 * 1000;
     return new Date(Date.now() + ms).toISOString();
-  }, [ttlHours, expiresAt]);
+  }, [ttlHours]);
 
-  const exampleUrl = token
-    ? `${shareBaseUrl ? shareBaseUrl : ""}/#${token}`
-    : undefined;
+  const exampleUrl = token ? `${shareBaseUrl ? shareBaseUrl : ""}/#${token}` : undefined;
 
   async function onCreate() {
     if (!carId) {
@@ -31,11 +36,7 @@ export function ShareForm({ carId }: { carId?: number }) {
     setLoading(true);
     setError(undefined);
     try {
-      const res = await createShare({
-        car_id: carId,
-        expires_at: computedExpiresAt,
-        arrive_radius_m: typeof arriveRadiusM === "number" ? arriveRadiusM : undefined,
-      });
+      const res = await createShare({ car_id: carId, expires_at: computedExpiresAt });
       setToken(res.token);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to create share");
@@ -58,26 +59,7 @@ export function ShareForm({ carId }: { carId?: number }) {
             onChange={(e) => setTtlHours(Number(e.target.value))}
           />
         </label>
-        <label className="flex flex-col text-sm">
-          <span className="text-gray-700">Arrive radius (m, optional)</span>
-          <input
-            type="number"
-            className="mt-1 rounded-md border-gray-300"
-            value={arriveRadiusM}
-            min={0}
-            onChange={(e) => setArriveRadiusM(e.target.value === "" ? "" : Number(e.target.value))}
-          />
-        </label>
-        <label className="flex flex-col text-sm">
-          <span className="text-gray-700">Expires at (RFC3339, optional)</span>
-          <input
-            type="text"
-            placeholder={dayjs(computedExpiresAt).toISOString()}
-            className="mt-1 rounded-md border-gray-300"
-            value={expiresAt}
-            onChange={(e) => setExpiresAt(e.target.value)}
-          />
-        </label>
+        {/* Only expiration is configurable */}
       </div>
       <div className="mt-3 flex items-center gap-2">
         <button
@@ -87,9 +69,7 @@ export function ShareForm({ carId }: { carId?: number }) {
         >
           {loading ? "Creating…" : "Create Share"}
         </button>
-        <div className="text-xs text-gray-600">
-          Computed expires at: {dayjs(computedExpiresAt).format("YYYY-MM-DD HH:mm:ss")} UTC
-        </div>
+        <div className="text-xs text-gray-600">TTL: {ttlHours}h</div>
       </div>
       {error && (
         <div className="mt-3 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">

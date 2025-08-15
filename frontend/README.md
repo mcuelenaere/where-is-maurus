@@ -32,6 +32,6 @@ VITE_SHARE_BASE_URL=https://share.example.com
 ## Notes
 
 - Share UI keeps the token only in the hash. It exchanges to an HttpOnly cookie via `POST ${VITE_API_BASE_URL}/api/v1/session` with `credentials: include`, then opens `EventSource(${VITE_API_BASE_URL}/api/v1/stream, { withCredentials: true })`.
-- Admin UI fetches list of cars from `/api/v1/admin/cars` and polls `/api/v1/admin/cars/:id/state`.
+- Admin UI fetches list of cars and creates shares by specifying only an expiration (prefilled from ETA when available). Destination is inferred from the current route when present.
 - OSM tiles are used with proper attribution.
 - No analytics; no QR code.

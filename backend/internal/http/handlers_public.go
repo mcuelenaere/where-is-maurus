@@ -3,7 +3,6 @@ package httpx
 import (
 	"context"
 	"encoding/json"
-	"math"
 	"net/http"
 	"time"
 
@@ -76,15 +75,6 @@ func (h *PublicHandlers) handleStream(w http.ResponseWriter, r *http.Request) {
 			carID = int64(f)
 		}
 	}
-	var dest *auth.Dest
-	var rawDest any
-	if err := tok.Get("dest", &rawDest); err == nil && rawDest != nil {
-		b, _ := json.Marshal(rawDest)
-		var d auth.Dest
-		if json.Unmarshal(b, &d) == nil {
-			dest = &d
-		}
-	}
 	flusher, ok := setSSEHeaders(w)
 	if !ok {
 		writeError(w, http.StatusInternalServerError, "internal_error", "no flusher")
@@ -98,36 +88,7 @@ func (h *PublicHandlers) handleStream(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithCancel(r.Context())
 	defer cancel()
 
-	// arrival expiry if configured
-	hasArrive := false
-	if dest != nil && dest.ArriveRadiusM > 0 {
-		hasArrive = true
-	}
-
-	sseLoop(ctx, w, flusher, h.Hub, carID, h.Heartbeat, func() bool {
-		if hasArrive && arrived(h.Store, carID, dest) {
-			return true
-		}
-		return false
-	})
-}
-
-func arrived(store *state.Store, carID int64, dest *auth.Dest) bool {
-	st, _ := store.GetSnapshot(carID)
-	if st.Location == nil || dest == nil {
-		return false
-	}
-	return haversineMeters(st.Location.Lat, st.Location.Lon, dest.Lat, dest.Lon) <= dest.ArriveRadiusM
-}
-
-func haversineMeters(lat1, lon1, lat2, lon2 float64) float64 {
-	const R = 6371000.0
-	toRad := func(d float64) float64 { return d * math.Pi / 180.0 }
-	dLat := toRad(lat2 - lat1)
-	dLon := toRad(lon2 - lon1)
-	a := math.Pow(math.Sin(dLat/2), 2) + math.Cos(toRad(lat1))*math.Cos(toRad(lat2))*math.Pow(math.Sin(dLon/2), 2)
-	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
-	return R * c
+	sseLoop(ctx, w, flusher, h.Hub, carID, h.Heartbeat, nil)
 }
 
 func writeJSON(w http.ResponseWriter, status int, v any) {

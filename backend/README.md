@@ -68,7 +68,7 @@ curl -s http://localhost:8080/api/v1/shares \
 # {"token":"<JWT>"}
 ```
 
-Optional request fields: `expires_at` (RFC3339), `arrive_radius_m`, `dest {lat,lon}`. If destination exists in current route state, it will be embedded automatically.
+Optional request fields: `expires_at` (RFC3339). Destination is inferred from the current route when present and arrival radius defaults from server config.
 
 ### Health
 

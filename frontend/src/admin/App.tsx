@@ -149,7 +149,7 @@ export default function App() {
         </div>
 
         <div className="mt-6">
-          <ShareForm carId={selectedCarId} />
+          <ShareForm carId={selectedCarId} etaMin={state?.route?.eta_min} />
         </div>
       </div>
     </div>

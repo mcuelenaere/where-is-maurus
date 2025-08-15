@@ -17,17 +17,10 @@ const (
 
 type ShareClaims struct {
 	CarID int64 `json:"car_id"`
-	Dest  *Dest `json:"dest,omitempty"`
-}
-
-type Dest struct {
-	Lat           float64 `json:"lat"`
-	Lon           float64 `json:"lon"`
-	ArriveRadiusM float64 `json:"arrive_radius_m,omitempty"`
 }
 
 // CreateShareToken builds a signed JWT using provided signer.
-func CreateShareToken(now time.Time, ttl time.Duration, carID int64, dest *Dest, sign func(t jwt.Token) ([]byte, error)) (string, time.Time, error) {
+func CreateShareToken(now time.Time, ttl time.Duration, carID int64, sign func(t jwt.Token) ([]byte, error)) (string, time.Time, error) {
 	t := jwt.New()
 	_ = t.Set(jwt.IssuerKey, IssuerWhereIsMaurus)
 	_ = t.Set(jwt.AudienceKey, []string{AudienceShare})
@@ -36,9 +29,6 @@ func CreateShareToken(now time.Time, ttl time.Duration, carID int64, dest *Dest,
 	_ = t.Set(jwt.ExpirationKey, exp)
 	_ = t.Set(jwt.JwtIDKey, uuid.New().String())
 	_ = t.Set("car_id", carID)
-	if dest != nil {
-		_ = t.Set("dest", dest)
-	}
 	b, err := sign(t)
 	if err != nil {
 		return "", time.Time{}, err
