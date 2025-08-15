@@ -1,6 +1,8 @@
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+
 import L from 'leaflet';
+import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from 'react-leaflet';
+
 import { getEnv } from '../api/client';
 import type { PathPoint } from '../api/types';
 
@@ -32,7 +34,7 @@ export function MapView({ current, dest, path }: { current?: LatLon; dest?: LatL
     const center: [number, number] = current ? [current.lat, current.lon] : [0, 0];
 
     return (
-        <div className="h-80 sm:h-96 lg:h-full min-h-[360px] rounded-md overflow-hidden border">
+        <div className="h-80 min-h-[360px] overflow-hidden rounded-md border sm:h-96 lg:h-full">
             <MapContainer center={center} zoom={13} style={{ height: '100%', width: '100%' }}>
                 <TileLayer url={mapTileUrl} attribution={mapAttribution} />
                 {current && (

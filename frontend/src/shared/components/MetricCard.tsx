@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 export function MetricCard({ label, value, unit, children }: { label: string; value?: string | number; unit?: string; children?: ReactNode }) {
     return (

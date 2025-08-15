@@ -1,5 +1,5 @@
-import { useSSE as useSharedSSE } from '../../shared/hooks/useSSE';
 import type { CarState, HistoryWindow, PathPoint } from '../../shared/api/types';
+import { useSSE as useSharedSSE } from '../../shared/hooks/useSSE';
 
 export function useAdminSSE(carId: number | undefined) {
     const ssePath = carId ? `/api/v1/admin/cars/${carId}/stream` : undefined;

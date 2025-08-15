@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
+
 import { MapView } from '../shared/components/MapView';
 import { MetricCard } from '../shared/components/MetricCard';
 import { Sparkline } from '../shared/components/Sparkline';
-import { useSSE } from './hooks/useSSE';
 import { formatCelsius, formatHeading, formatKilometers, formatPercent, formatPower, formatSpeedKph } from '../shared/utils/format';
+import { useSSE } from './hooks/useSSE';
 
 export default function App() {
     const token = useMemo(() => (window.location.hash || '').replace(/^#/, '') || undefined, []);
@@ -11,28 +12,28 @@ export default function App() {
     const hasRoute = Boolean(state?.route?.dest);
 
     return (
-        <div className="min-h-screen flex flex-col">
-            <header className="bg-white border-b">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
+        <div className="flex min-h-screen flex-col">
+            <header className="border-b bg-white">
+                <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
                     <h1 className="text-lg font-semibold text-gray-900">Where is Maurus</h1>
                 </div>
             </header>
-            <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
-                <div className="text-sm text-gray-600 mb-2">
+            <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+                <div className="mb-2 text-sm text-gray-600">
                     {connected ? 'Live' : 'Connecting…'} {error && <span className="text-red-600">• {error}</span>}
                 </div>
-                <div className="mt-2 grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    <div className="lg:col-span-2 min-h-[360px]">
+                <div className="mt-2 grid grid-cols-1 gap-4 lg:grid-cols-3">
+                    <div className="min-h-[360px] lg:col-span-2">
                         <MapView
                             current={state?.location ? { lat: state.location.lat, lon: state.location.lon } : undefined}
                             dest={state?.route?.dest}
                             path={state?.path_30s}
                         />
                         {!hasRoute && (
-                            <div className="text-xs text-gray-600 mt-2">No active route</div>
+                            <div className="mt-2 text-xs text-gray-600">No active route</div>
                         )}
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                         <MetricCard label="Speed" value={formatSpeedKph(state?.location?.speed_kph)} unit="km/h">
                             <Sparkline data={state?.history_30s?.speed_kph} />
                         </MetricCard>

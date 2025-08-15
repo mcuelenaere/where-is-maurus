@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
-import { CarSelector } from './components/CarSelector';
+
+import { getCars } from '../shared/api/admin';
+import type { AdminCarState, CarState } from '../shared/api/types';
 import { MapView } from '../shared/components/MapView';
 import { MetricCard } from '../shared/components/MetricCard';
 import { Sparkline } from '../shared/components/Sparkline';
-import { ShareForm } from './components/ShareForm';
-import Header from './components/Header';
-import { getCars } from '../shared/api/admin';
-import type { AdminCarState, CarState } from '../shared/api/types';
 import { formatCelsius, formatHeading, formatKilometers, formatPercent, formatPower, formatSpeedKph, formatTime } from '../shared/utils/format';
+import { CarSelector } from './components/CarSelector';
+import Header from './components/Header';
+import { ShareForm } from './components/ShareForm';
 import { useAdminSSE } from './hooks/useAdminSSE';
 
 export default function App() {
@@ -50,10 +51,10 @@ export default function App() {
     const hasRoute = Boolean(state?.route?.dest);
 
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="flex min-h-screen flex-col">
             <Header />
 
-            <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
+            <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <CarSelector carIds={carIds} value={selectedCarId} onChange={setSelectedCarId} />
                     <div className="text-sm text-gray-600">
@@ -62,24 +63,24 @@ export default function App() {
                 </div>
 
                 {error && (
-                    <div className="mt-3 rounded-md bg-red-50 border border-red-200 text-red-700 p-3 text-sm">
+                    <div className="mt-3 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
                         {error}
                     </div>
                 )}
 
-                <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    <div className="lg:col-span-2 min-h-[360px]">
+                <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+                    <div className="min-h-[360px] lg:col-span-2">
                         <MapView
                             current={state?.location ? { lat: state.location.lat, lon: state.location.lon } : undefined}
                             dest={state?.route?.dest}
                             path={adminState?.path_30s}
                         />
                         {!hasRoute && (
-                            <div className="text-xs text-gray-600 mt-2">No active route</div>
+                            <div className="mt-2 text-xs text-gray-600">No active route</div>
                         )}
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                         <MetricCard label="Speed" value={formatSpeedKph(state?.location?.speed_kph)} unit="km/h">
                             <Sparkline data={adminState?.history_30s?.speed_kph} />
                         </MetricCard>
