@@ -112,6 +112,18 @@ func (c *Client) SubscribeAllCars(ctx context.Context) error {
 						dest = &state.Dest{Lat: lat, Lon: lon}
 					}
 				}
+				var destLabel string
+				if s, ok := ar["destination"].(string); ok {
+					destLabel = s
+				}
+				trafficDelayMin, _ := toFloat(ar["traffic_minutes_delay"])
+				if trafficDelayMin == 0 {
+					// sometimes delivered as traffic_delay_minutes or traffic_delay_min
+					trafficDelayMin, _ = toFloat(ar["traffic_delay_minutes"])
+					if trafficDelayMin == 0 {
+						trafficDelayMin, _ = toFloat(ar["traffic_delay_min"])
+					}
+				}
 				etaMin, _ := toFloat(ar["minutes_to_arrival"])
 				if etaMin == 0 {
 					etaMin, _ = toFloat(ar["eta_minutes"])
@@ -128,7 +140,7 @@ func (c *Client) SubscribeAllCars(ctx context.Context) error {
 						distKM, _ = toFloat(ar["dist_km"])
 					}
 				}
-				delta := c.store.UpdateRoute(carID, ts, dest, etaMin, distKM)
+				delta := c.store.UpdateRouteWithMeta(carID, ts, dest, etaMin, distKM, destLabel, trafficDelayMin)
 				c.hub.Broadcast(carID, wrapEvent("delta", delta))
 			}
 			return

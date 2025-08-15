@@ -41,6 +41,8 @@ export const CarStateSchema = z.object({
       dest: z.object({ lat: z.number(), lon: z.number() }).optional(),
       eta_min: z.number().optional(),
       dist_km: z.number().optional(),
+      dest_label: z.string().optional(),
+      traffic_delay_min: z.number().optional(),
     })
     .optional(),
 });
@@ -49,6 +51,7 @@ export type CarState = z.infer<typeof CarStateSchema>;
 export const HistoryWindowSchema = z
   .object({
     speed_kph: z.array(HistoryPointSchema).optional(),
+    elevation_m: z.array(HistoryPointSchema).optional(),
     power_w: z.array(HistoryPointSchema).optional(),
     soc_pct: z.array(HistoryPointSchema).optional(),
     inside_c: z.array(HistoryPointSchema).optional(),

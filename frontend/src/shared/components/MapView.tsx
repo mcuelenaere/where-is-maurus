@@ -67,6 +67,19 @@ export function MapView({
     iconSize: [28, 28],
     iconAnchor: [14, 14],
   });
+  const destIcon = L.divIcon({
+    className: "",
+    html: `
+      <svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <g>
+          <path d="M12 2 C8 2 6 4 6 7 C6 10 12 16 12 16 C12 16 18 10 18 7 C18 4 16 2 12 2 Z" fill="#ef4444" stroke="#991b1b" stroke-width="1" />
+          <circle cx="12" cy="7" r="2" fill="#fff" />
+        </g>
+      </svg>
+    `,
+    iconSize: [28, 28],
+    iconAnchor: [14, 16],
+  });
 
   return (
     <div className="h-80 min-h-[360px] overflow-hidden rounded-md border border-gray-200 sm:h-96 lg:h-full dark:border-gray-700 dark:bg-gray-800">
@@ -78,12 +91,17 @@ export function MapView({
           </Marker>
         )}
         {dest && (
-          <Marker position={[dest.lat, dest.lon]}>
+          <Marker position={[dest.lat, dest.lon]} icon={destIcon}>
             <Popup>Destination</Popup>
           </Marker>
         )}
         {path && path.length > 1 && (
-          <Polyline positions={path.map((p) => [p.lat, p.lon])} color="#2563eb" />
+          <Polyline
+            positions={path.map((p) => [p.lat, p.lon])}
+            color="#2563eb"
+            weight={3}
+            opacity={0.8}
+          />
         )}
         <FitBounds current={current} dest={dest} path={path} />
       </MapContainer>

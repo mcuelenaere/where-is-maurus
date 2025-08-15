@@ -116,11 +116,9 @@ export default function App() {
               </div>
             </MetricCard>
             <MetricCard label="Heading" value={formatHeading(state?.location?.heading)} unit="°" />
-            <MetricCard
-              label="Elevation"
-              value={state?.location?.elevation_m?.toFixed(0)}
-              unit="m"
-            />
+            <MetricCard label="Elevation" value={state?.location?.elevation_m?.toFixed(0)} unit="m">
+              <Sparkline data={adminState?.history_30s?.elevation_m} />
+            </MetricCard>
             <MetricCard label="SOC" value={formatPercent(state?.battery?.soc_pct)} unit="%">
               <Sparkline data={adminState?.history_30s?.soc_pct} />
             </MetricCard>
@@ -149,9 +147,15 @@ export default function App() {
               unit="km"
             />
             <MetricCard
-              label="ETA"
+              label={state?.route?.dest_label ? `ETA • ${state.route.dest_label}` : "ETA"}
               value={state?.route?.eta_min != null ? `${state.route.eta_min} min` : undefined}
-            />
+            >
+              {state?.route?.traffic_delay_min != null && state.route.traffic_delay_min > 0 && (
+                <div className="text-xs text-gray-600 dark:text-gray-400">
+                  Traffic delay: {state.route.traffic_delay_min} min
+                </div>
+              )}
+            </MetricCard>
           </div>
         </div>
 

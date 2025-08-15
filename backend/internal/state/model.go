@@ -42,9 +42,11 @@ type Dest struct {
 }
 
 type Route struct {
-	Dest   *Dest   `json:"dest,omitempty"`
-	ETAMin float64 `json:"eta_min,omitempty"`
-	DistKM float64 `json:"dist_km,omitempty"`
+	Dest            *Dest   `json:"dest,omitempty"`
+	ETAMin          float64 `json:"eta_min,omitempty"`
+	DistKM          float64 `json:"dist_km,omitempty"`
+	DestLabel       string  `json:"dest_label,omitempty"`
+	TrafficDelayMin float64 `json:"traffic_delay_min,omitempty"`
 }
 
 type CarState struct {

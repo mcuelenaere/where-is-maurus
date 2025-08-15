@@ -279,4 +279,29 @@ func (s *Store) UpdateRoute(carID int64, ts int64, dest *Dest, etaMin, distKM fl
 	return marshalDelta(map[string]any{"ts_ms": ts, "route": ce.state.Route})
 }
 
+// UpdateRouteWithMeta updates route and includes optional destination label and traffic delay minutes.
+func (s *Store) UpdateRouteWithMeta(carID int64, ts int64, dest *Dest, etaMin, distKM float64, destLabel string, trafficDelayMin float64) []byte {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	ce := s.ensure(carID)
+	ce.state.TSMS = ts
+	if ce.state.Route == nil {
+		ce.state.Route = &Route{}
+	}
+	ce.state.Route.Dest = dest
+	if etaMin > 0 {
+		ce.state.Route.ETAMin = etaMin
+	}
+	if distKM > 0 {
+		ce.state.Route.DistKM = distKM
+	}
+	if destLabel != "" {
+		ce.state.Route.DestLabel = destLabel
+	}
+	if trafficDelayMin > 0 {
+		ce.state.Route.TrafficDelayMin = trafficDelayMin
+	}
+	return marshalDelta(map[string]any{"ts_ms": ts, "route": ce.state.Route})
+}
+
 func ceWindowMs(d time.Duration) int64 { return d.Milliseconds() }
