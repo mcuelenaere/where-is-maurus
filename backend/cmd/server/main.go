@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -66,7 +67,9 @@ func main() {
 
 	// MQTT
 	if cfg.MQTTBrokerURL != "" {
-		client := mqttc.NewClient(cfg.MQTTBrokerURL, cfg.MQTTUsername, cfg.MQTTPassword, "where-is-maurus-backend", st, hub)
+		hostname, _ := os.Hostname()
+		clientID := fmt.Sprintf("where-is-maurus-backend-%s-%d-%d", hostname, os.Getpid(), time.Now().UnixNano())
+		client := mqttc.NewClient(cfg.MQTTBrokerURL, cfg.MQTTUsername, cfg.MQTTPassword, clientID, st, hub)
 		if err := client.Connect(ctx); err != nil {
 			log.Fatal().Err(err).Msg("mqtt connect")
 		}
