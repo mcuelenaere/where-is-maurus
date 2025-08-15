@@ -25,9 +25,6 @@ linters-settings:
       - name: indent-error-flow
       - name: unexported-return
         disabled: true
-      - name: exported
-        arguments:
-          - checkPrivateReceivers: false
       - name: var-naming
         disabled: true
   goconst:
