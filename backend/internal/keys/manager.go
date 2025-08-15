@@ -17,7 +17,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// Manager holds current and previous ES512 JWKs and rotates them on a ticker.
+// Manager holds current and previous EC JWKs and rotates them on a ticker.
 type Manager struct {
 	mu       sync.RWMutex
 	current  jwk.Key
@@ -50,8 +50,8 @@ func NewManager(ctx context.Context, rotateEvery time.Duration) (*Manager, error
 func (m *Manager) rotate() error {
 	log.Info().Msg("rotating JWKs")
 
-	// Generate ES512 key (P-521)
-	priv, err := ecdsa.GenerateKey(elliptic.P521(), rand.Reader)
+	// Generate ES256 key (P-256)
+	priv, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	if err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func (m *Manager) rotate() error {
 		return err
 	}
 	_ = jwkKey.Set(jwk.KeyUsageKey, "sig")
-	_ = jwkKey.Set(jwk.AlgorithmKey, jwa.ES512())
+	_ = jwkKey.Set(jwk.AlgorithmKey, jwa.ES256())
 	kid := uuid.New().String()
 	_ = jwkKey.Set(jwk.KeyIDKey, kid)
 
@@ -97,7 +97,12 @@ func (m *Manager) SignJWT(t jwt.Token) ([]byte, error) {
 	if kid != "" {
 		_ = hdrs.Set(jws.KeyIDKey, kid)
 	}
-	return jwt.Sign(t, jwt.WithKey(jwa.ES512(), cur, jws.WithProtectedHeaders(hdrs)))
+	// Use the algorithm declared on the JWK to support seamless upgrades
+	var alg jwa.SignatureAlgorithm
+	if err := cur.Get(jwk.AlgorithmKey, &alg); err != nil {
+		alg = jwa.ES256()
+	}
+	return jwt.Sign(t, jwt.WithKey(alg, cur, jws.WithProtectedHeaders(hdrs)))
 }
 
 // VerifyJWT verifies against current or previous key.
@@ -109,12 +114,20 @@ func (m *Manager) VerifyJWT(raw []byte) (jwt.Token, error) {
 
 	// Try current then previous
 	if cur != nil {
-		if tkn, err := jwt.Parse(raw, jwt.WithKey(jwa.ES512(), cur)); err == nil {
+		var curAlg jwa.SignatureAlgorithm
+		if err := cur.Get(jwk.AlgorithmKey, &curAlg); err != nil {
+			curAlg = jwa.ES256()
+		}
+		if tkn, err := jwt.Parse(raw, jwt.WithKey(curAlg, cur)); err == nil {
 			return tkn, nil
 		}
 	}
 	if prev != nil {
-		if tkn, err := jwt.Parse(raw, jwt.WithKey(jwa.ES512(), prev)); err == nil {
+		var prevAlg jwa.SignatureAlgorithm
+		if err := prev.Get(jwk.AlgorithmKey, &prevAlg); err != nil {
+			prevAlg = jwa.ES256()
+		}
+		if tkn, err := jwt.Parse(raw, jwt.WithKey(prevAlg, prev)); err == nil {
 			return tkn, nil
 		}
 	}

@@ -78,7 +78,7 @@ curl -i http://localhost:8080/healthz
 
 ### Notes
 - SSE only; heartbeat every `SSE_HEARTBEAT_SECONDS` (default 15s)
-- Keys: in-memory ES512; rotate every `KEY_ROTATE_SECONDS`; previous key kept for overlap
+- Keys: in-memory ES256; rotate every `KEY_ROTATE_SECONDS`; previous key kept for overlap
 - Only whitelisted TeslaMate topics are consumed (see code in `internal/mqtt`)
 - No Prometheus, no metrics endpoint
 

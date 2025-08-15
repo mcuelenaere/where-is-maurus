@@ -26,7 +26,7 @@ type Dest struct {
 	ArriveRadiusM float64 `json:"arrive_radius_m,omitempty"`
 }
 
-// CreateShareToken builds a signed JWT with ES512 using provided signer.
+// CreateShareToken builds a signed JWT using provided signer.
 func CreateShareToken(now time.Time, ttl time.Duration, carID int64, dest *Dest, sign func(t jwt.Token) ([]byte, error)) (string, time.Time, error) {
 	t := jwt.New()
 	_ = t.Set(jwt.IssuerKey, IssuerWhereIsMaurus)
