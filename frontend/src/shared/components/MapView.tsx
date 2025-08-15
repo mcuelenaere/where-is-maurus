@@ -15,7 +15,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: new URL("leaflet/dist/images/marker-shadow.png", import.meta.url).toString(),
 });
 
-type LatLon = { lat: number; lon: number };
+type LatLon = { lat: number; lon: number; heading?: number };
 
 function FitBounds({
   current,
@@ -54,13 +54,26 @@ export function MapView({
   const url = prefersDark ? mapTileUrlDark : mapTileUrl;
   const attribution = prefersDark ? mapAttributionDark : mapAttribution;
   const center: [number, number] = current ? [current.lat, current.lon] : [0, 0];
+  const carIcon = L.divIcon({
+    className: "",
+    html: `
+      <svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+        style="transform: rotate(${current?.heading ?? 0}deg); transform-origin: 50% 50%;">
+        <g>
+          <path d="M12 2 L18 14 L12 12 L6 14 Z" fill="#2563eb" stroke="#1e40af" stroke-width="1" />
+        </g>
+      </svg>
+    `,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+  });
 
   return (
     <div className="h-80 min-h-[360px] overflow-hidden rounded-md border border-gray-200 sm:h-96 lg:h-full dark:border-gray-700 dark:bg-gray-800">
       <MapContainer center={center} zoom={13} style={{ height: "100%", width: "100%" }}>
         <TileLayer url={url} attribution={attribution} />
         {current && (
-          <Marker position={[current.lat, current.lon]}>
+          <Marker position={[current.lat, current.lon]} icon={carIcon}>
             <Popup>Current position</Popup>
           </Marker>
         )}

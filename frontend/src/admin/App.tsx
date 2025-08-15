@@ -90,7 +90,13 @@ export default function App() {
           <div className="min-h-[360px] lg:col-span-2">
             <MapView
               current={
-                state?.location ? { lat: state.location.lat, lon: state.location.lon } : undefined
+                state?.location
+                  ? {
+                      lat: state.location.lat,
+                      lon: state.location.lon,
+                      heading: state.location.heading,
+                    }
+                  : undefined
               }
               dest={state?.route?.dest}
               path={adminState?.path_30s}
