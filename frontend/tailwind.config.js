@@ -2,11 +2,11 @@
 export default {
     content: [
         './index.html',
-        './src/**/*.{ts,tsx}'
+        './admin.html',
+        './src/**/*.tsx',
+        './src/**/*.ts'
     ],
-    theme: {
-        extend: {}
-    },
+    theme: { extend: {} },
     plugins: []
 };
 

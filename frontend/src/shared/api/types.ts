@@ -42,25 +42,25 @@ export const CarStateSchema = z.object({
             eta_min: z.number().optional(),
             dist_km: z.number().optional()
         })
-        .optional(),
+        .optional()
 });
-
 export type CarState = z.infer<typeof CarStateSchema>;
 
+export const HistoryWindowSchema = z.object({
+    speed_kph: z.array(HistoryPointSchema).optional(),
+    power_w: z.array(HistoryPointSchema).optional(),
+    soc_pct: z.array(HistoryPointSchema).optional(),
+    inside_c: z.array(HistoryPointSchema).optional(),
+    outside_c: z.array(HistoryPointSchema).optional(),
+    tpms_fl: z.array(HistoryPointSchema).optional(),
+    tpms_fr: z.array(HistoryPointSchema).optional(),
+    tpms_rl: z.array(HistoryPointSchema).optional(),
+    tpms_rr: z.array(HistoryPointSchema).optional(),
+}).partial();
+export type HistoryWindow = z.infer<typeof HistoryWindowSchema>;
+
 export const AdminCarStateSchema = z.object({
-    history_30s: z
-        .object({
-            speed_kph: z.array(HistoryPointSchema).optional(),
-            power_w: z.array(HistoryPointSchema).optional(),
-            soc_pct: z.array(HistoryPointSchema).optional(),
-            inside_c: z.array(HistoryPointSchema).optional(),
-            outside_c: z.array(HistoryPointSchema).optional(),
-            tpms_fl: z.array(HistoryPointSchema).optional(),
-            tpms_fr: z.array(HistoryPointSchema).optional(),
-            tpms_rl: z.array(HistoryPointSchema).optional(),
-            tpms_rr: z.array(HistoryPointSchema).optional()
-        })
-        .partial(),
+    history_30s: HistoryWindowSchema,
     path_30s: z.array(PathPointSchema).optional(),
     state: CarStateSchema
 });

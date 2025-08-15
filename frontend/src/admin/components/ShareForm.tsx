@@ -1,13 +1,12 @@
 import { useMemo, useState } from 'react';
-import { createShare } from '../api/admin';
-import { getEnv } from '../api/client';
+import { createShare } from '../../shared/api/admin';
+import { getEnv } from '../../shared/api/client';
 import dayjs from 'dayjs';
-import { ShareResult } from './ShareResult';
 
 export function ShareForm({ carId }: { carId?: number }) {
-    const { defaultTtlHours, defaultArriveRadiusM, shareBaseUrl } = getEnv();
-    const [ttlHours, setTtlHours] = useState<number>(defaultTtlHours || 8);
-    const [arriveRadiusM, setArriveRadiusM] = useState<number | ''>(defaultArriveRadiusM || '');
+    const { adminPollMs } = getEnv();
+    const [ttlHours, setTtlHours] = useState<number>(8);
+    const [arriveRadiusM, setArriveRadiusM] = useState<number | ''>('');
     const [expiresAt, setExpiresAt] = useState<string | ''>('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | undefined>();
@@ -19,9 +18,7 @@ export function ShareForm({ carId }: { carId?: number }) {
         return new Date(Date.now() + ms).toISOString();
     }, [ttlHours, expiresAt]);
 
-    const exampleUrl = token
-        ? (shareBaseUrl ? `${shareBaseUrl}/#${token}` : `/#${token}`)
-        : undefined;
+    const exampleUrl = token ? `/#${token}` : undefined;
 
     async function onCreate() {
         if (!carId) {
@@ -90,7 +87,20 @@ export function ShareForm({ carId }: { carId?: number }) {
                 <div className="text-xs text-gray-600">Computed expires at: {dayjs(computedExpiresAt).format('YYYY-MM-DD HH:mm:ss')} UTC</div>
             </div>
             {error && <div className="mt-3 rounded-md bg-red-50 border border-red-200 text-red-700 p-3 text-sm">{error}</div>}
-            {token && <div className="mt-4"><ShareResult token={token} exampleUrl={exampleUrl} /></div>}
+            {token && (
+                <div className="mt-4 rounded-md border p-3">
+                    <div className="text-sm text-gray-700">Share URL</div>
+                    <div className="mt-1 font-mono text-sm break-all">{exampleUrl}</div>
+                    <div className="mt-2 flex items-center gap-2">
+                        <button
+                            className="rounded-md bg-gray-100 hover:bg-gray-200 px-3 py-1 text-sm"
+                            onClick={() => navigator.clipboard.writeText(exampleUrl!)}
+                        >
+                            Copy URL
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

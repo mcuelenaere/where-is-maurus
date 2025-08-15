@@ -24,7 +24,6 @@ export function usePolling(fn: () => void | Promise<void>, intervalMs: number, d
                 backoffRef.current = 0;
                 setLastUpdated(Date.now());
             } catch (e) {
-                // Exponential backoff up to 30s
                 backoffRef.current = Math.min(backoffRef.current ? backoffRef.current * 2 : 2000, 30000);
             } finally {
                 setIsPolling(false);

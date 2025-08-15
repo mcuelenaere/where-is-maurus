@@ -1,25 +1,23 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CarSelector } from './components/CarSelector';
-import { MapView } from './components/MapView';
-import { MetricCard } from './components/MetricCard';
-import { Sparkline } from './components/Sparkline';
+import { MapView } from '../shared/components/MapView';
+import { MetricCard } from '../shared/components/MetricCard';
+import { Sparkline } from '../shared/components/Sparkline';
 import { ShareForm } from './components/ShareForm';
 import Header from './components/Header';
 import { usePolling } from './hooks/usePolling';
-import { getCarState, getCars } from './api/admin';
-import type { AdminCarState, CarState } from './api/types';
-import { formatCelsius, formatHeading, formatKilometers, formatPercent, formatPower, formatSpeedKph, formatTime } from './utils/format';
-
-const POLL_MS_DEFAULT = 2000;
+import { getCarState, getCars } from '../shared/api/admin';
+import type { AdminCarState, CarState } from '../shared/api/types';
+import { formatCelsius, formatHeading, formatKilometers, formatPercent, formatPower, formatSpeedKph, formatTime } from '../shared/utils/format';
+import { getEnv } from '../shared/api/client';
 
 export default function App() {
+    const { adminPollMs } = getEnv();
     const [carIds, setCarIds] = useState<number[]>([]);
     const [selectedCarId, setSelectedCarId] = useState<number | undefined>(undefined);
     const [adminState, setAdminState] = useState<AdminCarState | undefined>();
     const [state, setState] = useState<CarState | undefined>();
     const [error, setError] = useState<string | undefined>();
-
-    const pollMs = POLL_MS_DEFAULT;
 
     useEffect(() => {
         let cancelled = false;
@@ -49,7 +47,7 @@ export default function App() {
         } catch (e) {
             setError(e instanceof Error ? e.message : 'Failed to fetch state');
         }
-    }, pollMs, [selectedCarId]);
+    }, adminPollMs, [selectedCarId]);
 
     const hasRoute = Boolean(state?.route?.dest);
 
@@ -76,7 +74,7 @@ export default function App() {
                         <MapView
                             current={state?.location ? { lat: state.location.lat, lon: state.location.lon } : undefined}
                             dest={state?.route?.dest}
-                            path={state?.path_30s}
+                            path={adminState?.path_30s}
                         />
                         {!hasRoute && (
                             <div className="text-xs text-gray-600 mt-2">No active route</div>
