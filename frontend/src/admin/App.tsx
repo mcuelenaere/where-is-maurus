@@ -5,6 +5,8 @@ import type { AdminCarState, CarState } from "../shared/api/types";
 import { MapView } from "../shared/components/MapView";
 import { MetricCard } from "../shared/components/MetricCard";
 import { Sparkline } from "../shared/components/Sparkline";
+import { Speedometer } from "../shared/components/Speedometer";
+import { TPMSWheels } from "../shared/components/TPMSWheels";
 import {
   formatCelsius,
   formatHeading,
@@ -99,12 +101,13 @@ export default function App() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            <MetricCard
-              label="Speed"
-              value={formatSpeedKph(state?.location?.speed_kph)}
-              unit="km/h"
-            >
-              <Sparkline data={adminState?.history_30s?.speed_kph} />
+            <MetricCard label="Speed" hideValue>
+              <div className="flex flex-col items-center">
+                <Speedometer value={state?.location?.speed_kph} unit="km/h" />
+                <div className="mt-2 w-full max-w-[140px]">
+                  <Sparkline data={adminState?.history_30s?.speed_kph} />
+                </div>
+              </div>
             </MetricCard>
             <MetricCard label="Heading" value={formatHeading(state?.location?.heading)} unit="°" />
             <MetricCard
@@ -124,17 +127,13 @@ export default function App() {
             <MetricCard label="Outside" value={formatCelsius(state?.climate?.outside_c)} unit="°C">
               <Sparkline data={adminState?.history_30s?.outside_c} />
             </MetricCard>
-            <MetricCard label="TPMS FL" value={state?.tpms_bar?.fl?.toFixed(2)} unit="bar">
-              <Sparkline data={adminState?.history_30s?.tpms_fl} />
-            </MetricCard>
-            <MetricCard label="TPMS FR" value={state?.tpms_bar?.fr?.toFixed(2)} unit="bar">
-              <Sparkline data={adminState?.history_30s?.tpms_fr} />
-            </MetricCard>
-            <MetricCard label="TPMS RL" value={state?.tpms_bar?.rl?.toFixed(2)} unit="bar">
-              <Sparkline data={adminState?.history_30s?.tpms_rl} />
-            </MetricCard>
-            <MetricCard label="TPMS RR" value={state?.tpms_bar?.rr?.toFixed(2)} unit="bar">
-              <Sparkline data={adminState?.history_30s?.tpms_rr} />
+            <MetricCard label="TPMS" hideValue>
+              <TPMSWheels
+                fl={state?.tpms_bar?.fl}
+                fr={state?.tpms_bar?.fr}
+                rl={state?.tpms_bar?.rl}
+                rr={state?.tpms_bar?.rr}
+              />
             </MetricCard>
             <MetricCard
               label="Dist to Dest"
