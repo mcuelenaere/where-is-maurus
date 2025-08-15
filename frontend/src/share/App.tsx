@@ -62,7 +62,6 @@ export default function App() {
                 </div>
               </div>
             </MetricCard>
-            <MetricCard label="Heading" value={formatHeading(state?.location?.heading)} unit="°" />
             <MetricCard label="Elevation" value={state?.location?.elevation_m?.toFixed(0)} unit="m">
               <Sparkline data={state?.history_30s?.elevation_m} />
             </MetricCard>
@@ -72,11 +71,23 @@ export default function App() {
             <MetricCard label="Power" value={formatPower(state?.battery?.power_w)} unit="W">
               <Sparkline data={state?.history_30s?.power_w} />
             </MetricCard>
-            <MetricCard label="Inside" value={formatCelsius(state?.climate?.inside_c)} unit="°C">
-              <Sparkline data={state?.history_30s?.inside_c} />
-            </MetricCard>
-            <MetricCard label="Outside" value={formatCelsius(state?.climate?.outside_c)} unit="°C">
-              <Sparkline data={state?.history_30s?.outside_c} />
+            <MetricCard label="Temp" hideValue>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between gap-2 text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">Inside</span>
+                  <span className="whitespace-nowrap tabular-nums font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base">
+                    {formatCelsius(state?.climate?.inside_c)} °C
+                  </span>
+                </div>
+                <Sparkline data={state?.history_30s?.inside_c} />
+                <div className="flex items-center justify-between gap-2 text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">Outside</span>
+                  <span className="whitespace-nowrap tabular-nums font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base">
+                    {formatCelsius(state?.climate?.outside_c)} °C
+                  </span>
+                </div>
+                <Sparkline data={state?.history_30s?.outside_c} />
+              </div>
             </MetricCard>
             <MetricCard label="TPMS" hideValue>
               <TPMSWheels
@@ -87,21 +98,33 @@ export default function App() {
               />
             </MetricCard>
             <MetricCard
-              label="Dist to Dest"
-              value={
-                state?.route?.dist_km != null ? formatKilometers(state.route.dist_km) : undefined
-              }
-              unit="km"
-            />
-            <MetricCard
-              label={state?.route?.dest_label ? `ETA • ${state.route.dest_label}` : "ETA"}
-              value={state?.route?.eta_min != null ? `${state.route.eta_min} min` : undefined}
+              label={state?.route?.dest_label ? `Route • ${state.route.dest_label}` : "Route"}
+              hideValue
             >
-              {state?.route?.traffic_delay_min != null && state.route.traffic_delay_min > 0 && (
-                <div className="text-xs text-gray-600 dark:text-gray-400">
-                  Traffic delay: {state.route.traffic_delay_min} min
+              <div className="flex flex-col gap-1 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Distance</span>
+                  <span className="font-semibold text-gray-900 dark:text-gray-100">
+                    {state?.route?.dist_km != null
+                      ? `${formatKilometers(state.route.dist_km)} km`
+                      : "—"}
+                  </span>
                 </div>
-              )}
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">ETA</span>
+                  <span className="font-semibold text-gray-900 dark:text-gray-100">
+                    {state?.route?.eta_min != null ? `${state.route.eta_min} min` : "—"}
+                  </span>
+                </div>
+                {state?.route?.traffic_delay_min != null && state.route.traffic_delay_min > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Traffic delay</span>
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">
+                      {state.route.traffic_delay_min} min
+                    </span>
+                  </div>
+                )}
+              </div>
             </MetricCard>
           </div>
         </div>
