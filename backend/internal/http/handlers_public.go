@@ -46,7 +46,11 @@ func (h *PublicHandlers) handleSession(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusUnauthorized, "unauthorized", "invalid token")
 		return
 	}
-	exp, _ := tok.Expiration()
+	exp, ok := tok.Expiration()
+	if !ok {
+		writeError(w, http.StatusUnauthorized, "unauthorized", "invalid token")
+		return
+	}
 	auth.SetSessionCookie(w, h.CookieDomain, req.Token, exp)
 	writeJSON(w, http.StatusOK, sessionResp{Ok: true})
 }
@@ -59,6 +63,11 @@ func (h *PublicHandlers) handleStream(w http.ResponseWriter, r *http.Request) {
 	}
 	tok, err := auth.VerifyShareToken(raw, h.Keys.VerifyJWT)
 	if err != nil {
+		writeError(w, http.StatusUnauthorized, "unauthorized", "invalid session")
+		return
+	}
+	exp, ok := tok.Expiration()
+	if !ok {
 		writeError(w, http.StatusUnauthorized, "unauthorized", "invalid session")
 		return
 	}
@@ -87,13 +96,7 @@ func (h *PublicHandlers) handleStream(w http.ResponseWriter, r *http.Request) {
 
 	// Stop streaming when the JWT expires by setting a deadline on the context,
 	// otherwise use a cancellable context.
-	ctx := r.Context()
-	var cancel context.CancelFunc
-	if exp, ok := tok.Expiration(); ok {
-		ctx, cancel = context.WithDeadline(ctx, exp)
-	} else {
-		ctx, cancel = context.WithCancel(ctx)
-	}
+	ctx, cancel := context.WithDeadline(r.Context(), exp)
 	defer cancel()
 	sseLoop(ctx, w, flusher, h.Hub, carID, h.Heartbeat)
 }
