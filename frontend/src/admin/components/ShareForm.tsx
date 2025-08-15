@@ -77,43 +77,8 @@ export function ShareForm({ carId, etaMin }: Props) {
     <div className="rounded-md border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
       <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">Create Share</h2>
       <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div className="flex items-center gap-2 sm:col-span-3">
-          <span className="text-sm text-gray-700 dark:text-gray-300">TTL</span>
-          <input
-            type="number"
-            aria-label="Hours"
-            placeholder="hh"
-            className="w-16 rounded-md border-gray-300 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
-            value={ttlHours}
-            min={0}
-            step={1}
-            onChange={(e) => {
-              const v = Number(e.target.value);
-              setTtlHours(Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0);
-            }}
-          />
-          <span className="text-sm text-gray-500 dark:text-gray-400">h</span>
-          <input
-            type="number"
-            aria-label="Minutes"
-            placeholder="mm"
-            className="w-16 rounded-md border-gray-300 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
-            value={ttlMinutes}
-            min={0}
-            max={59}
-            step={1}
-            onChange={(e) => {
-              let v = Number(e.target.value);
-              if (!Number.isFinite(v) || v < 0) v = 0;
-              if (v > 59) v = 59;
-              setTtlMinutes(Math.floor(v));
-            }}
-          />
-          <span className="text-sm text-gray-500 dark:text-gray-400">m</span>
-        </div>
-        {/* Only expiration is configurable */}
         <div className="sm:col-span-3">
-          <div className="text-xs text-gray-600 dark:text-gray-400">Quick durations</div>
+          <div className="text-xs text-gray-600 dark:text-gray-400">Duration:</div>
           <div className="mt-1 flex flex-wrap gap-2">
             {presetsMin.map((m) => {
               const isActive = (ttlHours || 0) * 60 + (ttlMinutes || 0) === m;
@@ -144,7 +109,15 @@ export function ShareForm({ carId, etaMin }: Props) {
           </div>
         </div>
       </div>
-      <div className="mt-3 flex items-center gap-2">
+      <div className="mt-3 flex flex-col items-start gap-2">
+        <div className="text-xs text-gray-600 dark:text-gray-400">
+          TTL: {ttlHours}h {ttlMinutes}m
+        </div>
+        {isValidTTL && (
+          <div className="text-xs text-gray-600 dark:text-gray-400">
+            Expires at: {new Date(computedExpiresAt).toLocaleString()}
+          </div>
+        )}
         <button
           onClick={onCreate}
           disabled={loading || !isValidTTL}
@@ -152,15 +125,7 @@ export function ShareForm({ carId, etaMin }: Props) {
         >
           {loading ? "Creating…" : "Create Share"}
         </button>
-        <div className="text-xs text-gray-600 dark:text-gray-400">
-          TTL: {ttlHours}h {ttlMinutes}m
-        </div>
       </div>
-      {isValidTTL && (
-        <div className="mt-1 text-xs text-gray-600 dark:text-gray-400">
-          Expires at: {new Date(computedExpiresAt).toLocaleString()}
-        </div>
-      )}
       {error && (
         <div className="mt-3 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-300">
           {error}
