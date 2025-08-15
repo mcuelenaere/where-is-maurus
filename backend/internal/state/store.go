@@ -270,12 +270,8 @@ func (s *Store) UpdateRoute(carID int64, ts int64, dest *Dest, etaMin, distKM fl
 		ce.state.Route = &Route{}
 	}
 	ce.state.Route.Dest = dest
-	if etaMin > 0 {
-		ce.state.Route.ETAMin = etaMin
-	}
-	if distKM > 0 {
-		ce.state.Route.DistKM = distKM
-	}
+	ce.state.Route.ETAMin = etaMin
+	ce.state.Route.DistKM = distKM
 	return marshalDelta(map[string]any{"ts_ms": ts, "route": ce.state.Route})
 }
 
@@ -289,18 +285,10 @@ func (s *Store) UpdateRouteWithMeta(carID int64, ts int64, dest *Dest, etaMin, d
 		ce.state.Route = &Route{}
 	}
 	ce.state.Route.Dest = dest
-	if etaMin > 0 {
-		ce.state.Route.ETAMin = etaMin
-	}
-	if distKM > 0 {
-		ce.state.Route.DistKM = distKM
-	}
-	if destLabel != "" {
-		ce.state.Route.DestLabel = destLabel
-	}
-	if trafficDelayMin > 0 {
-		ce.state.Route.TrafficDelayMin = trafficDelayMin
-	}
+	ce.state.Route.ETAMin = etaMin
+	ce.state.Route.DistKM = distKM
+	ce.state.Route.DestLabel = destLabel
+	ce.state.Route.TrafficDelayMin = trafficDelayMin
 	return marshalDelta(map[string]any{"ts_ms": ts, "route": ce.state.Route})
 }
 
