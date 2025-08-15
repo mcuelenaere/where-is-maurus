@@ -40,6 +40,14 @@ export default tseslint.config(
             ...hooksPlugin.configs.recommended.rules,
             ...tseslint.configs.recommendedTypeChecked.rules,
             ...tseslint.configs.stylisticTypeChecked.rules,
+            // TS handles globals; base rule is noisy in TS projects
+            "no-undef": "off",
+            // Prefer TS-aware unused vars rule
+            "no-unused-vars": "off",
+            "@typescript-eslint/no-unused-vars": [
+                "warn",
+                { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" }
+            ],
             "react/react-in-jsx-scope": "off",
             "react/prop-types": "off",
             "tailwindcss/classnames-order": "warn",
