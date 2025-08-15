@@ -61,6 +61,9 @@ func main() {
 	st := state.NewStore()
 	hub := stream.NewHub()
 
+	// Resampler to keep flatlines visible
+	state.StartResampler(st, hub)
+
 	// MQTT
 	if cfg.MQTTBrokerURL != "" {
 		client := mqttc.NewClient(cfg.MQTTBrokerURL, cfg.MQTTUsername, cfg.MQTTPassword, "where-is-maurus-backend", st, hub)
