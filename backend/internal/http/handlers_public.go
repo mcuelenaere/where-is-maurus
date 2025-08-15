@@ -85,10 +85,17 @@ func (h *PublicHandlers) handleStream(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx, cancel := context.WithCancel(r.Context())
+	// Stop streaming when the JWT expires by setting a deadline on the context,
+	// otherwise use a cancellable context.
+	ctx := r.Context()
+	var cancel context.CancelFunc
+	if exp, ok := tok.Expiration(); ok {
+		ctx, cancel = context.WithDeadline(ctx, exp)
+	} else {
+		ctx, cancel = context.WithCancel(ctx)
+	}
 	defer cancel()
-
-	sseLoop(ctx, w, flusher, h.Hub, carID, h.Heartbeat, nil)
+	sseLoop(ctx, w, flusher, h.Hub, carID, h.Heartbeat)
 }
 
 func writeJSON(w http.ResponseWriter, status int, v any) {

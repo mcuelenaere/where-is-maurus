@@ -53,8 +53,8 @@ func sendInitialSnapshot(w http.ResponseWriter, flusher http.Flusher, st *state.
 	return true
 }
 
-// sseLoop forwards hub messages and emits heartbeats until context cancellation or stopWhen() true.
-func sseLoop(ctx context.Context, w http.ResponseWriter, flusher http.Flusher, hub *stream.Hub, carID int64, heartbeat time.Duration, stopWhen func() bool) {
+// sseLoop forwards hub messages and emits heartbeats until the context is cancelled.
+func sseLoop(ctx context.Context, w http.ResponseWriter, flusher http.Flusher, hub *stream.Hub, carID int64, heartbeat time.Duration) {
 	sub := hub.Subscribe(carID)
 	defer hub.Unsubscribe(carID, sub)
 
@@ -73,9 +73,6 @@ func sseLoop(ctx context.Context, w http.ResponseWriter, flusher http.Flusher, h
 				return
 			}
 			flusher.Flush()
-			if stopWhen != nil && stopWhen() {
-				return
-			}
 		case t := <-hb.C:
 			serverTime := map[string]any{"server_time": t.UTC().Format(time.RFC3339Nano)}
 			hbPayload, _ := json.Marshal(serverTime)
@@ -83,9 +80,6 @@ func sseLoop(ctx context.Context, w http.ResponseWriter, flusher http.Flusher, h
 				return
 			}
 			flusher.Flush()
-			if stopWhen != nil && stopWhen() {
-				return
-			}
 		}
 	}
 }

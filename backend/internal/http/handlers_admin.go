@@ -107,5 +107,5 @@ func (h *AdminHandlers) handleStream(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithCancel(r.Context())
 	defer cancel()
 
-	sseLoop(ctx, w, flusher, h.Hub, id, h.Heartbeat, nil)
+	sseLoop(ctx, w, flusher, h.Hub, id, h.Heartbeat)
 }
