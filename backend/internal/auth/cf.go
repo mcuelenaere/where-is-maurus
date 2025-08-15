@@ -34,6 +34,11 @@ func NewCFValidator(ctx context.Context, jwksURL, issuer, audience string) (*CFV
 func (v *CFValidator) ValidateRequest(r *http.Request) error {
 	assertion := r.Header.Get("CF-Access-Jwt-Assertion")
 	if assertion == "" {
+		if q := r.URL.Query().Get("cf_jwt"); q != "" {
+			assertion = q
+		}
+	}
+	if assertion == "" {
 		return errors.New("missing CF Access assertion")
 	}
 	ctx := r.Context()
