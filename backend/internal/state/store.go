@@ -19,7 +19,7 @@ type carEntry struct {
 }
 
 func NewStore() *Store {
-	return &Store{cars: make(map[int64]*carEntry), window: 30 * time.Second}
+	return &Store{cars: make(map[int64]*carEntry), window: 15 * time.Minute}
 }
 
 func (s *Store) GetSnapshot(carID int64) (CarState, HistoryWindow) {
