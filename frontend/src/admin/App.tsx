@@ -101,12 +101,43 @@ export default function App() {
               dest={state?.route?.dest}
               path={adminState?.path_30s}
             />
-            {!hasRoute && (
-              <div className="mt-2 text-xs text-gray-600 dark:text-gray-400">No active route</div>
-            )}
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <MetricCard
+              label={state?.route?.dest_label ? `Route • ${state.route.dest_label}` : "Route"}
+              hideValue
+            >
+              {hasRoute ? (
+                <div className="flex flex-col gap-1 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Distance</span>
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">
+                      {state?.route?.dist_km != null
+                        ? `${formatKilometers(state.route.dist_km)} km`
+                        : "—"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">ETA</span>
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">
+                      {state?.route?.eta_min != null ? `${state.route.eta_min} min` : "—"}
+                    </span>
+                  </div>
+                  {state?.route?.traffic_delay_min != null && state.route.traffic_delay_min > 0 && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Traffic delay</span>
+                      <span className="font-semibold text-gray-900 dark:text-gray-100">
+                        {state.route.traffic_delay_min} min
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-xs text-gray-600 dark:text-gray-400">No active route</div>
+              )}
+            </MetricCard>
+
             <MetricCard label="Speed" hideValue>
               <div className="flex flex-col items-center">
                 <Speedometer value={state?.location?.speed_kph} unit="km/h" />
@@ -115,15 +146,15 @@ export default function App() {
                 </div>
               </div>
             </MetricCard>
-            <MetricCard label="Elevation" value={state?.location?.elevation_m?.toFixed(0)} unit="m">
-              <Sparkline data={adminState?.history_30s?.elevation_m} />
-            </MetricCard>
-            <MetricCard label="SOC" value={formatPercent(state?.battery?.soc_pct)} unit="%">
-              <Sparkline data={adminState?.history_30s?.soc_pct} />
-            </MetricCard>
+
             <MetricCard label="Power" value={formatPower(state?.battery?.power_w)} unit="W">
               <Sparkline data={adminState?.history_30s?.power_w} />
             </MetricCard>
+
+            <MetricCard label="SOC" value={formatPercent(state?.battery?.soc_pct)} unit="%">
+              <Sparkline data={adminState?.history_30s?.soc_pct} />
+            </MetricCard>
+
             <MetricCard label="Temp" hideValue>
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-2 text-sm">
@@ -142,42 +173,13 @@ export default function App() {
                 <Sparkline data={adminState?.history_30s?.outside_c} />
               </div>
             </MetricCard>
-            <MetricCard label="TPMS" hideValue>
+            <MetricCard label="Tire Pressure" hideValue>
               <TPMSWheels
                 fl={state?.tpms_bar?.fl}
                 fr={state?.tpms_bar?.fr}
                 rl={state?.tpms_bar?.rl}
                 rr={state?.tpms_bar?.rr}
               />
-            </MetricCard>
-            <MetricCard
-              label={state?.route?.dest_label ? `Route • ${state.route.dest_label}` : "Route"}
-              hideValue
-            >
-              <div className="flex flex-col gap-1 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Distance</span>
-                  <span className="font-semibold text-gray-900 dark:text-gray-100">
-                    {state?.route?.dist_km != null
-                      ? `${formatKilometers(state.route.dist_km)} km`
-                      : "—"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">ETA</span>
-                  <span className="font-semibold text-gray-900 dark:text-gray-100">
-                    {state?.route?.eta_min != null ? `${state.route.eta_min} min` : "—"}
-                  </span>
-                </div>
-                {state?.route?.traffic_delay_min != null && state.route.traffic_delay_min > 0 && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Traffic delay</span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">
-                      {state.route.traffic_delay_min} min
-                    </span>
-                  </div>
-                )}
-              </div>
             </MetricCard>
           </div>
         </div>
