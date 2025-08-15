@@ -44,6 +44,7 @@ jobs:
         with:
           version: latest
           working-directory: backend
+          install-mode: goinstall
 
       - name: Build
         run: make build
@@ -119,7 +120,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: actionlint
-        uses: rhysd/actionlint@v1
+        uses: docker://ghcr.io/rhysd/actionlint:latest
 
   secrets-scan:
     name: Secrets scan (gitleaks)
@@ -131,6 +132,6 @@ jobs:
           fetch-depth: 0
       - name: gitleaks
         uses: gitleaks/gitleaks-action@v2
-        with:
-          args: detect --redact --no-banner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
