@@ -53,7 +53,7 @@ func sendInitialSnapshot(w http.ResponseWriter, flusher http.Flusher, st *state.
 	return true
 }
 
-// sseLoop forwards hub messages and emits heartbeats until the context is cancelled.
+// sseLoop forwards hub messages and emits heartbeats until the context is canceled.
 func sseLoop(ctx context.Context, w http.ResponseWriter, flusher http.Flusher, hub *stream.Hub, carID int64, heartbeat time.Duration) {
 	sub := hub.Subscribe(carID)
 	defer hub.Unsubscribe(carID, sub)
