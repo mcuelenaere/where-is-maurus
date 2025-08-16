@@ -48,6 +48,11 @@ export async function apiFetch(path: string, init?: RequestInit) {
     },
   });
   if (!res.ok) {
+    if ((res.status === 401 || res.status === 403) && path.startsWith("/api/v1/admin")) {
+      // Trigger CF Access login flow in the PWA window
+      window.location.assign("/cdn-cgi/access/logout");
+      return res;
+    }
     const text = await res.text().catch(() => "");
     throw new Error(`Request failed ${res.status}: ${text || res.statusText}`);
   }

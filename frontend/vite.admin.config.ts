@@ -14,7 +14,7 @@ export default defineConfig({
       useCredentials: true,
       devOptions: { enabled: true },
       workbox: {
-        navigateFallbackDenylist: [/^\/api\//],
+        navigateFallbackDenylist: [/^\/api\//, /^\/cdn-cgi\//],
       },
       manifest: {
         name: "Where is Maurus - Admin",
