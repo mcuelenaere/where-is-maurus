@@ -13,10 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/shared/components/modules/BatteryModule.tsx
-msgid "Battery"
-msgstr "Battery"
-
 #: src/shared/components/BatteryBar.tsx
 msgid "Battery state of charge"
 msgstr "Battery state of charge"
@@ -139,6 +135,7 @@ msgstr "Note: No share base URL configured"
 msgid "Outside"
 msgstr "Outside"
 
+#: src/shared/components/modules/BatteryModule.tsx
 #: src/shared/components/PowerBar.tsx
 msgid "Power"
 msgstr "Power"
