@@ -2,11 +2,7 @@ SHELL := /bin/sh
 APP := server
 PKG := where-is-maurus/backend
 
-.PHONY: tidy build run docker-build docker-run lint
-
-tidy:
-	go mod tidy
-	go fmt ./...
+.PHONY: fmt build run docker-build docker-run lint
 
 build:
 	CGO_ENABLED=0 go build -trimpath -ldflags "-s -w" -o bin/$(APP) ./cmd/server
@@ -23,6 +19,10 @@ docker-run:
 test:
 	go test ./...
 	go test -race ./...
+
+fmt:
+	golangci-lint fmt
+	go mod tidy
 
 lint:
 	golangci-lint run
