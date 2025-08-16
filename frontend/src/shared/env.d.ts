@@ -8,3 +8,7 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+declare module "@lingui/format-po" {
+  export function parse(poContent: string): { messages: Record<string, string> };
+}

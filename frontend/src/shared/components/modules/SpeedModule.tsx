@@ -1,4 +1,5 @@
 import React from "react";
+import { Trans } from "@lingui/react/macro";
 
 import type { HistoryWindow } from "../../api/types";
 import { MetricCard } from "../MetricCard";
@@ -12,7 +13,7 @@ type Props = {
 
 export function SpeedModule({ speedKph, history }: Props) {
   return (
-    <MetricCard label="Speed" hideValue>
+    <MetricCard label={<Trans>Speed</Trans>} hideValue>
       <div className="flex flex-col items-center">
         <Speedometer value={speedKph} unit="km/h" />
         <div className="mt-2 w-full max-w-[140px]">

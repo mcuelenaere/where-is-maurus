@@ -2,6 +2,7 @@ import "leaflet/dist/leaflet.css";
 
 import L from "leaflet";
 import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-leaflet";
+import { Trans } from "@lingui/react/macro";
 
 import { getEnv } from "../api/client";
 import type { PathPoint } from "../api/types";
@@ -87,12 +88,16 @@ export function MapView({
         <TileLayer url={url} attribution={attribution} />
         {current && (
           <Marker position={[current.lat, current.lon]} icon={carIcon}>
-            <Popup>Current position</Popup>
+            <Popup>
+              <Trans>Current position</Trans>
+            </Popup>
           </Marker>
         )}
         {dest && (
           <Marker position={[dest.lat, dest.lon]} icon={destIcon}>
-            <Popup>Destination</Popup>
+            <Popup>
+              <Trans>Destination</Trans>
+            </Popup>
           </Marker>
         )}
         {path && path.length > 1 && (

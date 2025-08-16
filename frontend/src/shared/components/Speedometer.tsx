@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useLingui } from "@lingui/react/macro";
 
 export function Speedometer({
   value,
@@ -11,6 +12,7 @@ export function Speedometer({
   width?: number;
   unit?: string;
 }) {
+  const { t } = useLingui();
   const radius = 70;
   const strokeWidth = 12;
   const height = Math.ceil(radius + strokeWidth * 1.5);
@@ -45,7 +47,7 @@ export function Speedometer({
         height={(width / (viewBoxWidth || 1)) * viewBoxHeight}
         viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
         role="img"
-        aria-label="Speedometer"
+        aria-label={t`Speedometer`}
       >
         <path
           d={d}

@@ -1,4 +1,5 @@
 import React from "react";
+import { Trans } from "@lingui/react/macro";
 
 import { MetricCard } from "../MetricCard";
 import { TPMSWheels } from "../TPMSWheels";
@@ -12,7 +13,7 @@ type Props = {
 
 export function TirePressureModule({ fl, fr, rl, rr }: Props) {
   return (
-    <MetricCard label="Tire Pressure" hideValue>
+    <MetricCard label={<Trans>Tire Pressure</Trans>} hideValue>
       <TPMSWheels fl={fl} fr={fr} rl={rl} rr={rr} />
     </MetricCard>
   );

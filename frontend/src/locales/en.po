@@ -1,0 +1,215 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2025-08-16 10:11+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/shared/components/modules/BatteryModule.tsx
+msgid "Battery"
+msgstr "Battery"
+
+#: src/shared/components/BatteryBar.tsx
+msgid "Battery state of charge"
+msgstr "Battery state of charge"
+
+#: src/admin/components/CarSelector.tsx
+msgid "Car"
+msgstr "Car"
+
+#: src/admin/App.tsx
+#: src/share/App.tsx
+msgid "Connecting…"
+msgstr "Connecting…"
+
+#: src/admin/components/ShareForm.tsx
+msgid "Copied!"
+msgstr "Copied!"
+
+#: src/admin/components/ShareForm.tsx
+msgid "Copy URL"
+msgstr "Copy URL"
+
+#: src/admin/components/ShareForm.tsx
+#: src/admin/components/ShareForm.tsx
+msgid "Create Share"
+msgstr "Create Share"
+
+#: src/admin/components/ShareForm.tsx
+msgid "Creating…"
+msgstr "Creating…"
+
+#: src/shared/components/MapView.tsx
+msgid "Current position"
+msgstr "Current position"
+
+#: src/shared/components/MapView.tsx
+msgid "Destination"
+msgstr "Destination"
+
+#: src/shared/components/modules/RouteModule.tsx
+msgid "Distance"
+msgstr "Distance"
+
+#: src/admin/components/ShareForm.tsx
+msgid "Duration:"
+msgstr "Duration:"
+
+#: src/shared/components/modules/RouteModule.tsx
+msgid "ETA"
+msgstr "ETA"
+
+#: src/share/App.tsx
+msgid "Expired"
+msgstr "Expired"
+
+#. placeholder {0}: timeFormatter.format(hours, "hour")
+#. placeholder {0}: timeFormatter.format(mins, "minute")
+#: src/share/App.tsx
+#: src/share/App.tsx
+msgid "Expires {0}"
+msgstr "Expires {0}"
+
+#: src/admin/components/ShareForm.tsx
+msgid "Expires at:"
+msgstr "Expires at:"
+
+#: src/share/App.tsx
+msgid "Expires in < 1 min"
+msgstr "Expires in < 1 min"
+
+#: src/admin/components/ShareForm.tsx
+msgid "Failed to create share"
+msgstr "Failed to create share"
+
+#: src/admin/App.tsx
+msgid "Failed to load cars"
+msgstr "Failed to load cars"
+
+#: src/shared/components/modules/TempModule.tsx
+msgid "Inside"
+msgstr "Inside"
+
+#. placeholder {0}: parsed.error.message
+#: src/shared/api/admin.ts
+msgid "Invalid cars response: {0}"
+msgstr "Invalid cars response: {0}"
+
+#. placeholder {0}: bodyParse.error.message
+#: src/shared/api/admin.ts
+msgid "Invalid request: {0}"
+msgstr "Invalid request: {0}"
+
+#. placeholder {0}: parsed.error.message
+#: src/shared/api/admin.ts
+msgid "Invalid response: {0}"
+msgstr "Invalid response: {0}"
+
+#: src/admin/App.tsx
+#: src/share/App.tsx
+msgid "Live"
+msgstr "Live"
+
+#: src/shared/components/modules/RouteModule.tsx
+msgid "No active route"
+msgstr "No active route"
+
+#: src/admin/components/CarSelector.tsx
+msgid "No cars"
+msgstr "No cars"
+
+#: src/admin/components/ShareForm.tsx
+msgid "No ETA available"
+msgstr "No ETA available"
+
+#: src/admin/components/ShareForm.tsx
+msgid "Note: No share base URL configured"
+msgstr "Note: No share base URL configured"
+
+#: src/shared/components/modules/TempModule.tsx
+msgid "Outside"
+msgstr "Outside"
+
+#: src/shared/components/modules/BatteryModule.tsx
+#: src/shared/components/PowerBar.tsx
+msgid "Power"
+msgstr "Power"
+
+#: src/shared/components/modules/RouteModule.tsx
+msgid "Route"
+msgstr "Route"
+
+#. placeholder {0}: route.dest_label
+#: src/shared/components/modules/RouteModule.tsx
+msgid "Route • {0}"
+msgstr "Route • {0}"
+
+#: src/admin/components/ShareForm.tsx
+msgid "Select a car first"
+msgstr "Select a car first"
+
+#: src/shared/hooks/useSSE.ts
+msgid "Session exchange failed"
+msgstr "Session exchange failed"
+
+#: src/admin/components/ShareForm.tsx
+msgid "Share URL"
+msgstr "Share URL"
+
+#: src/shared/components/modules/BatteryModule.tsx
+msgid "SOC"
+msgstr "SOC"
+
+#: src/shared/components/modules/SpeedModule.tsx
+msgid "Speed"
+msgstr "Speed"
+
+#: src/shared/components/Speedometer.tsx
+msgid "Speedometer"
+msgstr "Speedometer"
+
+#: src/shared/components/modules/TempModule.tsx
+msgid "Temp"
+msgstr "Temp"
+
+#: src/shared/components/modules/TirePressureModule.tsx
+msgid "Tire Pressure"
+msgstr "Tire Pressure"
+
+#: src/shared/components/modules/RouteModule.tsx
+msgid "Traffic delay"
+msgstr "Traffic delay"
+
+#: src/admin/components/ShareForm.tsx
+msgid "TTL must be at least 1 minute"
+msgstr "TTL must be at least 1 minute"
+
+#: src/admin/components/ShareForm.tsx
+msgid "TTL:"
+msgstr "TTL:"
+
+#: src/admin/App.tsx
+#: src/share/App.tsx
+msgid "Updated"
+msgstr "Updated"
+
+#: src/admin/components/ShareForm.tsx
+#: src/admin/components/ShareForm.tsx
+msgid "Use ETA"
+msgstr "Use ETA"
+
+#: src/share/App.tsx
+msgid "Where is Maurus"
+msgstr "Where is Maurus"
+
+#: src/admin/components/Header.tsx
+msgid "Where is Maurus – Admin"
+msgstr "Where is Maurus – Admin"

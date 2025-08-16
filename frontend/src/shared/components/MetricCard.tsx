@@ -7,7 +7,7 @@ export function MetricCard({
   children,
   hideValue = false,
 }: {
-  label: string;
+  label: ReactNode;
   value?: string | number;
   unit?: string;
   children?: ReactNode;

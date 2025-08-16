@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { t } from "@lingui/macro";
 
 import { getEnv } from "../../shared/api/client";
 import type { DeltaPayload, SnapshotPayload } from "../api/types";
@@ -29,7 +30,7 @@ export function useSSE(options: Options) {
           });
         }
       } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : "Session exchange failed");
+        if (!cancelled) setError(e instanceof Error ? e.message : t`Session exchange failed`);
         return;
       }
 

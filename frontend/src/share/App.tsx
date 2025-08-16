@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import { MapView } from "../shared/components/MapView";
 import { ModulesAndMap } from "../shared/components/ModulesAndMap";
@@ -18,6 +19,8 @@ import {
 import { useSSE } from "./hooks/useSSE";
 
 export default function App() {
+  const { t, i18n } = useLingui();
+
   const token = useMemo(() => (window.location.hash || "").replace(/^#/, "") || undefined, []);
   const { state, connected, error } = useSSE(token);
 
@@ -50,23 +53,23 @@ export default function App() {
     if (!expMs) return undefined;
 
     const diffMs = expMs - nowMs;
-    if (diffMs <= 0) return "Expired";
+    if (diffMs <= 0) return t`Expired`;
 
     const totalMin = Math.ceil(diffMs / 60000);
     const hours = Math.floor(totalMin / 60);
     const mins = totalMin % 60;
 
-    const timeFormatter = new Intl.RelativeTimeFormat(undefined, {
+    const timeFormatter = new Intl.RelativeTimeFormat(i18n.locale, {
       style: "short",
       numeric: "auto",
     });
 
     if (hours > 1) {
-      return `Expires ${timeFormatter.format(hours, "hour")}`;
+      return t`Expires ${timeFormatter.format(hours, "hour")}`;
     } else if (mins > 1) {
-      return `Expires ${timeFormatter.format(mins, "minute")}`;
+      return t`Expires ${timeFormatter.format(mins, "minute")}`;
     } else {
-      return `Expires in < 1 min`;
+      return t`Expires in < 1 min`;
     }
   }, [expMs, nowMs]);
 
@@ -75,15 +78,22 @@ export default function App() {
       <header className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
         <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
           <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            Where is Maurus
+            <Trans>Where is Maurus</Trans>
           </h1>
         </div>
       </header>
       <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
         <div className="mb-2 flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
           <div>
-            {connected ? "Live" : "Connecting…"}
-            {lastUpdated ? ` • Updated ${formatTime(new Date(lastUpdated))}` : ""}
+            {connected ? <Trans>Live</Trans> : <Trans>Connecting…</Trans>}
+            {lastUpdated ? (
+              <span>
+                {" "}
+                • <Trans>Updated</Trans> {formatTime(new Date(lastUpdated))}
+              </span>
+            ) : (
+              ""
+            )}
             {error && <span className="text-red-600"> • {error}</span>}
           </div>
           {remainingLabel && (

@@ -1,8 +1,9 @@
 import react from "@vitejs/plugin-react";
+import { lingui } from "@lingui/vite-plugin";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react({ babel: { plugins: ["macros"] } }), lingui()],
   root: "src/admin",
   server: {
     port: 5174,

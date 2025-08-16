@@ -1,4 +1,5 @@
 import React from "react";
+import { Trans } from "@lingui/react/macro";
 
 import type { HistoryWindow } from "../../api/types";
 import { MetricCard } from "../MetricCard";
@@ -15,7 +16,7 @@ type Props = {
 
 export function BatteryModule({ socPct, powerW, historySoc, historyPower }: Props) {
   return (
-    <MetricCard label="Battery" hideValue>
+    <MetricCard label={<Trans>Battery</Trans>} hideValue>
       <div className="flex flex-col gap-3">
         <BatteryBar socPct={socPct} />
         <div>
@@ -24,11 +25,15 @@ export function BatteryModule({ socPct, powerW, historySoc, historyPower }: Prop
         {(historySoc || historyPower) && (
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <div className="text-xs text-gray-600 dark:text-gray-400">SOC</div>
+              <div className="text-xs text-gray-600 dark:text-gray-400">
+                <Trans>SOC</Trans>
+              </div>
               <Sparkline data={historySoc} />
             </div>
             <div>
-              <div className="text-xs text-gray-600 dark:text-gray-400">Power</div>
+              <div className="text-xs text-gray-600 dark:text-gray-400">
+                <Trans>Power</Trans>
+              </div>
               <Sparkline data={historyPower} />
             </div>
           </div>

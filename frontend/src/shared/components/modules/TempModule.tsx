@@ -1,4 +1,5 @@
 import React from "react";
+import { Trans } from "@lingui/react/macro";
 
 import type { HistoryWindow } from "../../api/types";
 import { MetricCard } from "../MetricCard";
@@ -14,17 +15,21 @@ type Props = {
 
 export function TempModule({ insideC, outsideC, historyInside, historyOutside }: Props) {
   return (
-    <MetricCard label="Temp" hideValue>
+    <MetricCard label={<Trans>Temp</Trans>} hideValue>
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-2 text-sm">
-          <span className="text-gray-600 dark:text-gray-400">Inside</span>
+          <span className="text-gray-600 dark:text-gray-400">
+            <Trans>Inside</Trans>
+          </span>
           <span className="whitespace-nowrap tabular-nums font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base">
             {formatCelsius(insideC)} °C
           </span>
         </div>
         <Sparkline data={historyInside} />
         <div className="flex items-center justify-between gap-2 text-sm">
-          <span className="text-gray-600 dark:text-gray-400">Outside</span>
+          <span className="text-gray-600 dark:text-gray-400">
+            <Trans>Outside</Trans>
+          </span>
           <span className="whitespace-nowrap tabular-nums font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base">
             {formatCelsius(outsideC)} °C
           </span>

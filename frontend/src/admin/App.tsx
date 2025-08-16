@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import { getCars } from "../shared/api/admin";
 import { ModulesAndMap } from "../shared/components/ModulesAndMap";
@@ -9,6 +10,8 @@ import { ShareForm } from "./components/ShareForm";
 import { useAdminSSE } from "./hooks/useAdminSSE";
 
 export default function App() {
+  const { t } = useLingui();
+
   const [carIds, setCarIds] = useState<number[]>([]);
   const [selectedCarId, setSelectedCarId] = useState<number | undefined>(undefined);
   const [error, setError] = useState<string | undefined>();
@@ -23,7 +26,7 @@ export default function App() {
           if (ids.length > 0) setSelectedCarId((prev) => prev ?? ids[0]);
         }
       } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : "Failed to load cars");
+        if (!cancelled) setError(e instanceof Error ? e.message : t`Failed to load cars`);
       }
     })();
     return () => {
@@ -49,8 +52,15 @@ export default function App() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <CarSelector carIds={carIds} value={selectedCarId} onChange={setSelectedCarId} />
           <div className="text-sm text-gray-600 dark:text-gray-400">
-            {connected ? "Live" : "Connecting…"}
-            {lastUpdated ? ` • Updated ${formatTime(new Date(lastUpdated))}` : ""}
+            {connected ? <Trans>Live</Trans> : <Trans>Connecting…</Trans>}
+            {lastUpdated ? (
+              <span>
+                {" "}
+                • <Trans>Updated</Trans> {formatTime(new Date(lastUpdated))}
+              </span>
+            ) : (
+              ""
+            )}
           </div>
         </div>
 
