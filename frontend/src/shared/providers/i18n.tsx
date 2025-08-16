@@ -1,7 +1,7 @@
 import { setupI18n, I18n as I18nType } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { English, Dutch } from "../../locales";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 const messages = {
   en: English,

@@ -27,7 +27,7 @@ export function usePolling(
         await fn();
         backoffRef.current = 0;
         setLastUpdated(Date.now());
-      } catch (e) {
+      } catch {
         backoffRef.current = Math.min(backoffRef.current ? backoffRef.current * 2 : 2000, 30000);
       } finally {
         setIsPolling(false);

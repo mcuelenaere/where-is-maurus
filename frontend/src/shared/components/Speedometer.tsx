@@ -15,18 +15,14 @@ export function Speedometer({
   const { t } = useLingui();
   const radius = 70;
   const strokeWidth = 12;
-  const height = Math.ceil(radius + strokeWidth * 1.5);
   const viewBoxWidth = radius * 2 + strokeWidth * 2;
   const viewBoxHeight = radius + strokeWidth * 2;
 
-  const { arcLength, dashArray } = useMemo(() => {
+  const dashArray = useMemo(() => {
     const clamped = Math.max(0, Math.min(max, value ?? 0));
     const fraction = max > 0 ? clamped / max : 0;
     const length = Math.PI * radius;
-    return {
-      arcLength: length,
-      dashArray: `${(fraction * length).toFixed(1)} ${length.toFixed(1)}`,
-    };
+    return `${(fraction * length).toFixed(1)} ${length.toFixed(1)}`;
   }, [value, max]);
 
   // Semi-circle path from left to right (top arc)

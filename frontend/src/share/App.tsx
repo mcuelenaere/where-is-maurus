@@ -1,21 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Trans, useLingui } from "@lingui/react/macro";
 
-import { MapView } from "../shared/components/MapView";
 import { ModulesAndMap } from "../shared/components/ModulesAndMap";
-import { RouteModule } from "../shared/components/modules/RouteModule";
-import { SpeedModule } from "../shared/components/modules/SpeedModule";
-import { BatteryModule } from "../shared/components/modules/BatteryModule";
-import { TempModule } from "../shared/components/modules/TempModule";
-import { TirePressureModule } from "../shared/components/modules/TirePressureModule";
-import {
-  formatCelsius,
-  formatHeading,
-  formatKilometers,
-  formatPercent,
-  formatSpeedKph,
-  formatTime,
-} from "../shared/utils/format";
+import { formatTime } from "../shared/utils/format";
 import { useSSE } from "./hooks/useSSE";
 
 export default function App() {
