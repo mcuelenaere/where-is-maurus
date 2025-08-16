@@ -1,4 +1,5 @@
-import { setupI18n, I18n as I18nType } from "@lingui/core";
+import type { I18n as I18nType } from "@lingui/core";
+import { setupI18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { English, Dutch } from "../../locales";
 import { useMemo } from "react";
@@ -35,7 +36,7 @@ export function I18n({ children }: I18nProps) {
     });
     activateLanguage(i18n, language);
     return i18n;
-  }, []);
+  }, [language]);
 
   return <I18nProvider i18n={i18n}>{children}</I18nProvider>;
 }

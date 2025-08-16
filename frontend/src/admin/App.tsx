@@ -32,7 +32,7 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [t]);
 
   const { state, connected, error: sseError } = useAdminSSE(selectedCarId);
   const lastUpdated = useMemo(

@@ -58,7 +58,7 @@ export default function App() {
     } else {
       return t`Expires in < 1 min`;
     }
-  }, [expMs, nowMs]);
+  }, [expMs, nowMs, t, i18n]);
 
   return (
     <div className="flex min-h-screen flex-col">
