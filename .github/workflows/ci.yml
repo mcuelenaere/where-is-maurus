@@ -26,6 +26,7 @@ jobs:
         with:
           go-version-file: backend/go.mod
           cache: true
+          cache-dependency-path: backend/go.mod
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v8
