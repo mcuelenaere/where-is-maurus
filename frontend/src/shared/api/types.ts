@@ -64,13 +64,6 @@ export const HistoryWindowSchema = z
   .partial();
 export type HistoryWindow = z.infer<typeof HistoryWindowSchema>;
 
-export const AdminCarStateSchema = z.object({
-  history_30s: HistoryWindowSchema,
-  path_30s: z.array(PathPointSchema).optional(),
-  state: CarStateSchema,
-});
-export type AdminCarState = z.infer<typeof AdminCarStateSchema>;
-
 export const AdminCarsResponseSchema = z.object({ cars: z.array(z.number()) });
 export type AdminCarsResponse = z.infer<typeof AdminCarsResponseSchema>;
 

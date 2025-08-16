@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { getCars } from "../shared/api/admin";
-import type { AdminCarState, CarState } from "../shared/api/types";
 import { ModulesAndMap } from "../shared/components/ModulesAndMap";
-import { formatHeading, formatTime } from "../shared/utils/format";
+import { formatTime } from "../shared/utils/format";
 import { CarSelector } from "./components/CarSelector";
 import Header from "./components/Header";
 import { ShareForm } from "./components/ShareForm";
@@ -12,8 +11,6 @@ import { useAdminSSE } from "./hooks/useAdminSSE";
 export default function App() {
   const [carIds, setCarIds] = useState<number[]>([]);
   const [selectedCarId, setSelectedCarId] = useState<number | undefined>(undefined);
-  const [adminState, setAdminState] = useState<AdminCarState | undefined>();
-  const [state, setState] = useState<CarState | undefined>();
   const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
@@ -34,26 +31,15 @@ export default function App() {
     };
   }, []);
 
-  const { state: sseState, connected, error: sseError } = useAdminSSE(selectedCarId);
+  const { state, connected, error: sseError } = useAdminSSE(selectedCarId);
   const lastUpdated = useMemo(
-    () => (sseState?.ts_ms ? new Date(sseState.ts_ms).getTime() : undefined),
-    [sseState?.ts_ms]
+    () => (state?.ts_ms ? new Date(state.ts_ms).getTime() : undefined),
+    [state?.ts_ms]
   );
   useEffect(() => {
     if (sseError) setError(sseError);
     else setError(undefined);
   }, [sseError]);
-  useEffect(() => {
-    if (!sseState) return;
-    setState(sseState);
-    setAdminState({
-      state: sseState,
-      history_30s: sseState.history_30s,
-      path_30s: sseState.path_30s,
-    });
-  }, [sseState]);
-
-  const hasRoute = Boolean(state?.route?.dest);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -86,18 +72,18 @@ export default function App() {
                 : undefined
             }
             dest={state?.route?.dest}
-            path={adminState?.path_30s}
+            path={state?.path_30s}
             route={state?.route}
             speedKph={state?.location?.speed_kph}
-            historySpeed={adminState?.history_30s?.speed_kph}
+            historySpeed={state?.history_30s?.speed_kph}
             batterySoc={state?.battery?.soc_pct}
             batteryPower={state?.battery?.power_w}
-            historySoc={adminState?.history_30s?.soc_pct}
-            historyPower={adminState?.history_30s?.power_w}
+            historySoc={state?.history_30s?.soc_pct}
+            historyPower={state?.history_30s?.power_w}
             insideC={state?.climate?.inside_c}
             outsideC={state?.climate?.outside_c}
-            historyInside={adminState?.history_30s?.inside_c}
-            historyOutside={adminState?.history_30s?.outside_c}
+            historyInside={state?.history_30s?.inside_c}
+            historyOutside={state?.history_30s?.outside_c}
             tpms={state?.tpms_bar}
           />
         </div>

@@ -1,23 +1,11 @@
 import { apiFetch } from "./client";
 import {
   AdminCarsResponseSchema,
-  type AdminCarState,
-  AdminCarStateSchema,
   type AdminCreateShareRequest,
   AdminCreateShareRequestSchema,
   type AdminCreateShareResponse,
   AdminCreateShareResponseSchema,
 } from "./types";
-
-export async function getCarState(carId: number): Promise<AdminCarState> {
-  const res = await apiFetch(`/api/v1/admin/cars/${carId}/state`);
-  const json = await res.json();
-  const parsed = AdminCarStateSchema.safeParse(json);
-  if (!parsed.success) {
-    throw new Error(`Invalid car state schema: ${parsed.error.message}`);
-  }
-  return parsed.data;
-}
 
 export async function createShare(req: AdminCreateShareRequest): Promise<AdminCreateShareResponse> {
   const bodyParse = AdminCreateShareRequestSchema.safeParse(req);

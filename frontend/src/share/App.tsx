@@ -20,7 +20,6 @@ import { useSSE } from "./hooks/useSSE";
 export default function App() {
   const token = useMemo(() => (window.location.hash || "").replace(/^#/, "") || undefined, []);
   const { state, connected, error } = useSSE(token);
-  const hasRoute = Boolean(state?.route?.dest);
 
   const lastUpdated = useMemo(
     () => (state?.ts_ms ? new Date(state.ts_ms).getTime() : undefined),
