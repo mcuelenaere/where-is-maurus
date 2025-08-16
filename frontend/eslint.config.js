@@ -6,7 +6,7 @@ import hooksPlugin from "eslint-plugin-react-hooks";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist-*/**", "dist/**", "node_modules/**"] },
+  { ignores: ["dist-*/**", "dist/**", "node_modules/**", "**/dev-dist/**"] },
   {
     files: ["src/**/*.{ts,tsx}", "vite.*.config.ts"],
     languageOptions: {
