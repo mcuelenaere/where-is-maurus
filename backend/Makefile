@@ -2,7 +2,7 @@ SHELL := /bin/sh
 APP := server
 PKG := where-is-maurus/backend
 
-.PHONY: tidy build run docker-build docker-run
+.PHONY: tidy build run docker-build docker-run lint
 
 tidy:
 	go mod tidy
@@ -23,3 +23,6 @@ docker-run:
 test:
 	go test ./...
 	go test -race ./...
+
+lint:
+	golangci-lint run
