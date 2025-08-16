@@ -139,7 +139,6 @@ msgstr ""
 msgid "Outside"
 msgstr ""
 
-#: src/shared/components/modules/BatteryModule.tsx
 #: src/shared/components/PowerBar.tsx
 msgid "Power"
 msgstr ""
@@ -163,10 +162,6 @@ msgstr ""
 
 #: src/admin/components/ShareForm.tsx
 msgid "Share URL"
-msgstr ""
-
-#: src/shared/components/modules/BatteryModule.tsx
-msgid "SOC"
 msgstr ""
 
 #: src/shared/components/modules/SpeedModule.tsx

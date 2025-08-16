@@ -7,7 +7,7 @@ export function Sparkline({ data }: { data?: HistoryPoint[] }) {
   const values = data.filter((p) => p.v != null).map((p) => Number(p.v));
   if (values.length < 2) return null;
   return (
-    <Sparklines data={values} svgWidth={100} svgHeight={24} margin={4}>
+    <Sparklines data={values} svgWidth={100} svgHeight={24}>
       <SparklinesLine color="#2563eb" style={{ fill: "none" }} />
     </Sparklines>
   );

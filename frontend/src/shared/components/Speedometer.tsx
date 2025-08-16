@@ -74,6 +74,7 @@ export function Speedometer({
             y={strokeWidth + radius * 0.72}
             fontSize="18"
             fontWeight="600"
+            className="whitespace-nowrap tabular-nums"
           >
             {value != null ? Math.round(value) : "—"}
           </text>
@@ -82,11 +83,11 @@ export function Speedometer({
           </text>
         </g>
         {/* Min/Max labels */}
-        <g fontSize="10" className="fill-gray-500 dark:fill-gray-400">
-          <text x={strokeWidth} y={viewBoxHeight - 4} textAnchor="start">
+        <g fontSize="10" className="fill-gray-500 dark:fill-gray-400 tabular-nums">
+          <text x={strokeWidth * 2} y={viewBoxHeight - 8} textAnchor="start">
             0
           </text>
-          <text x={viewBoxWidth - strokeWidth} y={viewBoxHeight - 4} textAnchor="end">
+          <text x={viewBoxWidth - strokeWidth * 2} y={viewBoxHeight - 8} textAnchor="end">
             {max}
           </text>
         </g>

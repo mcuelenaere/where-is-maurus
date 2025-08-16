@@ -16,28 +16,26 @@ type Props = {
 
 export function BatteryModule({ socPct, powerW, historySoc, historyPower }: Props) {
   return (
-    <MetricCard label={<Trans>Battery</Trans>} hideValue>
+    <MetricCard label={<Trans>Power</Trans>} hideValue>
       <div className="flex flex-col gap-3">
-        <BatteryBar socPct={socPct} />
-        <div>
-          <PowerBar powerW={powerW} />
-        </div>
-        {(historySoc || historyPower) && (
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <div className="text-xs text-gray-600 dark:text-gray-400">
-                <Trans>SOC</Trans>
-              </div>
+        <div className="flex flex-row gap-2">
+          <div className="grow">
+            <BatteryBar socPct={socPct} />
+          </div>
+          {historySoc && (
+            <div className="flex-none max-w-[30%] overflow-hidden">
               <Sparkline data={historySoc} />
             </div>
-            <div>
-              <div className="text-xs text-gray-600 dark:text-gray-400">
-                <Trans>Power</Trans>
-              </div>
+          )}
+        </div>
+        <div className="flex flex-row gap-2">
+          <PowerBar powerW={powerW} />
+          {historyPower && (
+            <div className="self-center">
               <Sparkline data={historyPower} />
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </MetricCard>
   );

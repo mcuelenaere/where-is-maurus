@@ -139,7 +139,6 @@ msgstr "Note: No share base URL configured"
 msgid "Outside"
 msgstr "Outside"
 
-#: src/shared/components/modules/BatteryModule.tsx
 #: src/shared/components/PowerBar.tsx
 msgid "Power"
 msgstr "Power"
@@ -164,10 +163,6 @@ msgstr "Session exchange failed"
 #: src/admin/components/ShareForm.tsx
 msgid "Share URL"
 msgstr "Share URL"
-
-#: src/shared/components/modules/BatteryModule.tsx
-msgid "SOC"
-msgstr "SOC"
 
 #: src/shared/components/modules/SpeedModule.tsx
 msgid "Speed"

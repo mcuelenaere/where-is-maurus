@@ -14,9 +14,9 @@ type Props = {
 export function SpeedModule({ speedKph, history }: Props) {
   return (
     <MetricCard label={<Trans>Speed</Trans>} hideValue>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center gap-2">
         <Speedometer value={speedKph} unit="km/h" />
-        <div className="mt-2 w-full max-w-[140px]">
+        <div className="w-full flex flex-col items-center">
           <Sparkline data={history} />
         </div>
       </div>
