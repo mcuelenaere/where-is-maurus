@@ -1,14 +1,2 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  color-scheme: light dark;
-}
-
-html,
-body,
-#root,
-#admin-root {
-  height: 100%;
-}
+@import "tailwindcss";
+@source "../**/*.{html,ts,tsx}";
