@@ -104,7 +104,7 @@ export default function App() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2">
             <MetricCard
               label={state?.route?.dest_label ? `Route • ${state.route.dest_label}` : "Route"}
               hideValue
