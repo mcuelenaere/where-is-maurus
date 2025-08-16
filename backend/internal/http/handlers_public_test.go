@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-
 	"where-is-maurus/backend/internal/auth"
 	"where-is-maurus/backend/internal/keys"
 	"where-is-maurus/backend/internal/state"

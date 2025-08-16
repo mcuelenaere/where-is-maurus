@@ -38,6 +38,8 @@ issues:
 formatters:
   enable:
     - gofmt
+    - goimports
+    - gci
   exclusions:
     generated: lax
     paths:

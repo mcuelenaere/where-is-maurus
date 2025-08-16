@@ -10,7 +10,6 @@ import (
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/rs/zerolog/log"
-
 	"where-is-maurus/backend/internal/state"
 	"where-is-maurus/backend/internal/stream"
 )

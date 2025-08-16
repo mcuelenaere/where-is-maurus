@@ -12,7 +12,6 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-
 	"where-is-maurus/backend/internal/auth"
 	"where-is-maurus/backend/internal/config"
 	httpx "where-is-maurus/backend/internal/http"
