@@ -2,21 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 
 import { getCars } from "../shared/api/admin";
 import type { AdminCarState, CarState } from "../shared/api/types";
-import { MapView } from "../shared/components/MapView";
-import { MetricCard } from "../shared/components/MetricCard";
-import { Sparkline } from "../shared/components/Sparkline";
-import { Speedometer } from "../shared/components/Speedometer";
-import { BatteryBar } from "../shared/components/BatteryBar";
-import { PowerBar } from "../shared/components/PowerBar";
-import { TPMSWheels } from "../shared/components/TPMSWheels";
-import {
-  formatCelsius,
-  formatHeading,
-  formatKilometers,
-  formatPercent,
-  formatSpeedKph,
-  formatTime,
-} from "../shared/utils/format";
+import { ModulesAndMap } from "../shared/components/ModulesAndMap";
+import { formatHeading, formatTime } from "../shared/utils/format";
 import { CarSelector } from "./components/CarSelector";
 import Header from "./components/Header";
 import { ShareForm } from "./components/ShareForm";
@@ -87,103 +74,32 @@ export default function App() {
           </div>
         )}
 
-        <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <div className="min-h-[360px] lg:col-span-2">
-            <MapView
-              current={
-                state?.location
-                  ? {
-                      lat: state.location.lat,
-                      lon: state.location.lon,
-                      heading: state.location.heading,
-                    }
-                  : undefined
-              }
-              dest={state?.route?.dest}
-              path={adminState?.path_30s}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2">
-            <MetricCard
-              label={state?.route?.dest_label ? `Route • ${state.route.dest_label}` : "Route"}
-              hideValue
-            >
-              {hasRoute ? (
-                <div className="flex flex-col gap-1 text-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Distance</span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">
-                      {state?.route?.dist_km != null
-                        ? `${formatKilometers(state.route.dist_km)} km`
-                        : "—"}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">ETA</span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">
-                      {state?.route?.eta_min != null ? `${state.route.eta_min} min` : "—"}
-                    </span>
-                  </div>
-                  {state?.route?.traffic_delay_min != null && state.route.traffic_delay_min > 0 && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Traffic delay</span>
-                      <span className="font-semibold text-gray-900 dark:text-gray-100">
-                        {state.route.traffic_delay_min} min
-                      </span>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="text-xs text-gray-600 dark:text-gray-400">No active route</div>
-              )}
-            </MetricCard>
-
-            <MetricCard label="Speed" hideValue>
-              <div className="flex flex-col items-center">
-                <Speedometer value={state?.location?.speed_kph} unit="km/h" />
-                <div className="mt-2 w-full max-w-[140px]">
-                  <Sparkline data={adminState?.history_30s?.speed_kph} />
-                </div>
-              </div>
-            </MetricCard>
-
-            <MetricCard label="Battery" hideValue>
-              <div className="flex flex-col gap-3">
-                <BatteryBar socPct={state?.battery?.soc_pct} />
-                <div>
-                  <PowerBar powerW={state?.battery?.power_w} />
-                </div>
-              </div>
-            </MetricCard>
-
-            <MetricCard label="Temp" hideValue>
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between gap-2 text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Inside</span>
-                  <span className="whitespace-nowrap tabular-nums font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base">
-                    {formatCelsius(state?.climate?.inside_c)} °C
-                  </span>
-                </div>
-                <Sparkline data={adminState?.history_30s?.inside_c} />
-                <div className="flex items-center justify-between gap-2 text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">Outside</span>
-                  <span className="whitespace-nowrap tabular-nums font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base">
-                    {formatCelsius(state?.climate?.outside_c)} °C
-                  </span>
-                </div>
-                <Sparkline data={adminState?.history_30s?.outside_c} />
-              </div>
-            </MetricCard>
-            <MetricCard label="Tire Pressure" hideValue>
-              <TPMSWheels
-                fl={state?.tpms_bar?.fl}
-                fr={state?.tpms_bar?.fr}
-                rl={state?.tpms_bar?.rl}
-                rr={state?.tpms_bar?.rr}
-              />
-            </MetricCard>
-          </div>
+        <div className="mt-4">
+          <ModulesAndMap
+            current={
+              state?.location
+                ? {
+                    lat: state.location.lat,
+                    lon: state.location.lon,
+                    heading: state.location.heading,
+                  }
+                : undefined
+            }
+            dest={state?.route?.dest}
+            path={adminState?.path_30s}
+            route={state?.route}
+            speedKph={state?.location?.speed_kph}
+            historySpeed={adminState?.history_30s?.speed_kph}
+            batterySoc={state?.battery?.soc_pct}
+            batteryPower={state?.battery?.power_w}
+            historySoc={adminState?.history_30s?.soc_pct}
+            historyPower={adminState?.history_30s?.power_w}
+            insideC={state?.climate?.inside_c}
+            outsideC={state?.climate?.outside_c}
+            historyInside={adminState?.history_30s?.inside_c}
+            historyOutside={adminState?.history_30s?.outside_c}
+            tpms={state?.tpms_bar}
+          />
         </div>
 
         <div className="mt-6">
