@@ -44,7 +44,7 @@ func main() {
 	defer cancel()
 
 	// Keys
-	keyMgr, err := keys.NewManager(ctx, cfg.KeyRotateSeconds)
+	keyMgr, err := keys.NewManager(ctx, cfg.KeyRotateInterval)
 	if err != nil {
 		log.Fatal().Err(err).Msg("keys")
 	}
@@ -83,16 +83,16 @@ func main() {
 	r := httpx.NewRouter(cfg.CORSAllowedOrigins)
 
 	// Public routes
-	pub := &httpx.PublicHandlers{Keys: keyMgr, Store: st, Hub: hub, CookieDomain: cfg.CookieDomain, Heartbeat: cfg.SSEHeartbeatSeconds}
+	pub := &httpx.PublicHandlers{Keys: keyMgr, Store: st, Hub: hub, CookieDomain: cfg.CookieDomain, Heartbeat: cfg.SSEHeartbeatInterval}
 	r.Group(func(r chi.Router) { pub.Routes(r) })
 
 	// Admin routes
 	if cfv != nil {
-		adm := &httpx.AdminHandlers{CF: cfv, Keys: keyMgr, Store: st, Hub: hub, TokenTTL: cfg.TokenDefaultTTL, DefaultArriveRadiusM: cfg.ArriveRadiusM, Heartbeat: cfg.SSEHeartbeatSeconds}
+		adm := &httpx.AdminHandlers{CF: cfv, Keys: keyMgr, Store: st, Hub: hub, TokenTTL: cfg.TokenDefaultTTL, DefaultArriveRadiusM: cfg.ArriveRadiusM, Heartbeat: cfg.SSEHeartbeatInterval}
 		r.Group(func(r chi.Router) { adm.Routes(r) })
 	} else {
 		log.Warn().Msg("CF Access disabled: CF_JWKS_URL/CF_ISSUER/C F_AUDIENCE not set")
-		adm := &httpx.AdminHandlers{CF: nil, Keys: keyMgr, Store: st, Hub: hub, TokenTTL: cfg.TokenDefaultTTL, DefaultArriveRadiusM: cfg.ArriveRadiusM, Heartbeat: cfg.SSEHeartbeatSeconds}
+		adm := &httpx.AdminHandlers{CF: nil, Keys: keyMgr, Store: st, Hub: hub, TokenTTL: cfg.TokenDefaultTTL, DefaultArriveRadiusM: cfg.ArriveRadiusM, Heartbeat: cfg.SSEHeartbeatInterval}
 		r.Group(func(r chi.Router) { adm.Routes(r) })
 	}
 
