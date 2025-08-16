@@ -1,6 +1,4 @@
-import React from "react";
-
-import type { CarState, HistoryWindow, PathPoint } from "../api/types";
+import type { SnapshotPayload } from "../api/types";
 import { MapView } from "./MapView";
 import { RouteModule } from "./modules/RouteModule";
 import { SpeedModule } from "./modules/SpeedModule";
@@ -10,63 +8,44 @@ import { TirePressureModule } from "./modules/TirePressureModule";
 
 type Current = { lat: number; lon: number; heading?: number } | undefined;
 
-export function ModulesAndMap({
-  className,
-  current,
-  dest,
-  path,
-  // Modules data
-  route,
-  speedKph,
-  historySpeed,
-  batterySoc,
-  batteryPower,
-  historySoc,
-  historyPower,
-  insideC,
-  outsideC,
-  historyInside,
-  historyOutside,
-  tpms,
-}: {
-  className?: string;
-  current: Current;
-  dest?: { lat: number; lon: number };
-  path?: PathPoint[];
-  route?: CarState["route"];
-  speedKph?: number;
-  historySpeed?: HistoryWindow["speed_kph"];
-  batterySoc?: number;
-  batteryPower?: number;
-  historySoc?: HistoryWindow["soc_pct"];
-  historyPower?: HistoryWindow["power_w"];
-  insideC?: number;
-  outsideC?: number;
-  historyInside?: HistoryWindow["inside_c"];
-  historyOutside?: HistoryWindow["outside_c"];
-  tpms?: CarState["tpms_bar"];
-}) {
+export function ModulesAndMap({ state }: { state?: SnapshotPayload }) {
+  const current: Current = state?.location
+    ? {
+        lat: state.location.lat,
+        lon: state.location.lon,
+        heading: state.location.heading,
+      }
+    : undefined;
+
   return (
-    <div className={`grid grid-cols-1 gap-4 lg:grid-cols-3 ${className ?? ""}`.trim()}>
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
       <div className="min-h-[360px] lg:col-span-2">
-        <MapView current={current} dest={dest} path={path} />
+        <MapView current={current} dest={state?.route?.dest} path={state?.path_30s} />
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2">
-        <RouteModule route={route} />
-        <SpeedModule speedKph={speedKph} history={historySpeed} />
+        <RouteModule route={state?.route} />
+        <SpeedModule
+          speedKph={state?.location?.speed_kph}
+          history={state?.history_30s?.speed_kph}
+        />
         <BatteryModule
-          socPct={batterySoc}
-          powerW={batteryPower}
-          historySoc={historySoc}
-          historyPower={historyPower}
+          socPct={state?.battery?.soc_pct}
+          powerW={state?.battery?.power_w}
+          historySoc={state?.history_30s?.soc_pct}
+          historyPower={state?.history_30s?.power_w}
         />
         <TempModule
-          insideC={insideC}
-          outsideC={outsideC}
-          historyInside={historyInside}
-          historyOutside={historyOutside}
+          insideC={state?.climate?.inside_c}
+          outsideC={state?.climate?.outside_c}
+          historyInside={state?.history_30s?.inside_c}
+          historyOutside={state?.history_30s?.outside_c}
         />
-        <TirePressureModule fl={tpms?.fl} fr={tpms?.fr} rl={tpms?.rl} rr={tpms?.rr} />
+        <TirePressureModule
+          fl={state?.tpms_bar?.fl}
+          fr={state?.tpms_bar?.fr}
+          rl={state?.tpms_bar?.rl}
+          rr={state?.tpms_bar?.rr}
+        />
       </div>
     </div>
   );

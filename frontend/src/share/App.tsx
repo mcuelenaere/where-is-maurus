@@ -93,31 +93,7 @@ export default function App() {
           )}
         </div>
         <div className="mt-2">
-          <ModulesAndMap
-            current={
-              state?.location
-                ? {
-                    lat: state.location.lat,
-                    lon: state.location.lon,
-                    heading: state.location.heading,
-                  }
-                : undefined
-            }
-            dest={state?.route?.dest}
-            path={state?.path_30s}
-            route={state?.route}
-            speedKph={state?.location?.speed_kph}
-            historySpeed={state?.history_30s?.speed_kph}
-            batterySoc={state?.battery?.soc_pct}
-            batteryPower={state?.battery?.power_w}
-            historySoc={state?.history_30s?.soc_pct}
-            historyPower={state?.history_30s?.power_w}
-            insideC={state?.climate?.inside_c}
-            outsideC={state?.climate?.outside_c}
-            historyInside={state?.history_30s?.inside_c}
-            historyOutside={state?.history_30s?.outside_c}
-            tpms={state?.tpms_bar}
-          />
+          <ModulesAndMap state={state} />
         </div>
       </div>
     </div>
