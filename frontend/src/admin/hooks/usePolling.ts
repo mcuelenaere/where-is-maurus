@@ -7,7 +7,7 @@ export function usePolling(
 ) {
   const [isPolling, setIsPolling] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<number | undefined>();
-  const timerRef = useRef<number | undefined>();
+  const timerRef = useRef<number | undefined>(undefined);
   const backoffRef = useRef(0);
   const isMounted = useRef(true);
 
