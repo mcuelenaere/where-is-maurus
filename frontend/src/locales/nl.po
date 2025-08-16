@@ -78,8 +78,9 @@ msgstr ""
 msgid "Expires {0}"
 msgstr ""
 
+#. placeholder {0}: i18n.date(computedExpiresAt, { dateStyle: "short", timeStyle: "medium" })
 #: src/admin/components/ShareForm.tsx
-msgid "Expires at:"
+msgid "Expires at: {0} ({ttlHours}h {ttlMinutes}m from now)"
 msgstr ""
 
 #: src/share/App.tsx
@@ -186,14 +187,6 @@ msgstr ""
 
 #: src/shared/components/modules/RouteModule.tsx
 msgid "Traffic delay"
-msgstr ""
-
-#: src/admin/components/ShareForm.tsx
-msgid "TTL must be at least 1 minute"
-msgstr ""
-
-#: src/admin/components/ShareForm.tsx
-msgid "TTL:"
 msgstr ""
 
 #: src/admin/App.tsx
