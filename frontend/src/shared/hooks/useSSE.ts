@@ -1,27 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 
 import { getEnv } from "../../shared/api/client";
-
-type SnapshotPayload<TState, THistory, TPath> = TState & {
-  history_30s: THistory;
-  path_30s: TPath[];
-};
-type DeltaPayload<TState, THistory, TPath> = Partial<SnapshotPayload<TState, THistory, TPath>>;
+import type { DeltaPayload, SnapshotPayload } from "../api/types";
 
 type Options = {
-  // If provided, will first POST to session endpoint to exchange token for cookie (share flow)
   token?: string;
-  // Direct SSE path (for admin or custom endpoints). If omitted, uses env.ssePath
   ssePath?: string;
 };
 
-export function useSSE<
-  TState extends object,
-  THistory extends object,
-  TPath extends { ts_ms: number },
->(options: Options) {
+export function useSSE(options: Options) {
   const { apiBaseUrl, sessionPath, ssePath: defaultSSEPath } = getEnv();
-  const [state, setState] = useState<SnapshotPayload<TState, THistory, TPath> | undefined>();
+  const [state, setState] = useState<SnapshotPayload | undefined>();
   const [connected, setConnected] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const esRef = useRef<EventSource | null>(null);
@@ -52,16 +41,12 @@ export function useSSE<
       es.addEventListener("error", () => setConnected(false));
 
       es.addEventListener("snapshot", (ev) => {
-        const data = JSON.parse((ev as MessageEvent).data) as SnapshotPayload<
-          TState,
-          THistory,
-          TPath
-        >;
+        const data = JSON.parse((ev as MessageEvent).data) as SnapshotPayload;
         setState(data);
       });
 
       es.addEventListener("delta", (ev) => {
-        const data = JSON.parse((ev as MessageEvent).data) as DeltaPayload<TState, THistory, TPath>;
+        const data = JSON.parse((ev as MessageEvent).data) as DeltaPayload;
         setState(
           (prev) =>
             ({
@@ -71,7 +56,7 @@ export function useSSE<
                 ...(prev?.history_30s ?? ({} as any)),
                 ...(data?.history_30s ?? ({} as any)),
               },
-            }) as SnapshotPayload<TState, THistory, TPath>
+            }) as SnapshotPayload
         );
       });
 

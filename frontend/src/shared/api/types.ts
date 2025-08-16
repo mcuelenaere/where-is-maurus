@@ -75,3 +75,10 @@ export type AdminCreateShareRequest = z.infer<typeof AdminCreateShareRequestSche
 
 export const AdminCreateShareResponseSchema = z.object({ token: z.string() });
 export type AdminCreateShareResponse = z.infer<typeof AdminCreateShareResponseSchema>;
+
+// SSE payload types (concrete)
+export type SnapshotPayload = CarState & {
+  history_30s: HistoryWindow;
+  path_30s: PathPoint[];
+};
+export type DeltaPayload = Partial<SnapshotPayload>;

@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { PathPoint } from "../api/types";
+import type { CarState, HistoryWindow, PathPoint } from "../api/types";
 import { MapView } from "./MapView";
 import { RouteModule } from "./modules/RouteModule";
 import { SpeedModule } from "./modules/SpeedModule";
@@ -33,18 +33,18 @@ export function ModulesAndMap({
   current: Current;
   dest?: { lat: number; lon: number };
   path?: PathPoint[];
-  route?: any;
+  route?: CarState["route"];
   speedKph?: number;
-  historySpeed?: any;
+  historySpeed?: HistoryWindow["speed_kph"];
   batterySoc?: number;
   batteryPower?: number;
-  historySoc?: any;
-  historyPower?: any;
+  historySoc?: HistoryWindow["soc_pct"];
+  historyPower?: HistoryWindow["power_w"];
   insideC?: number;
   outsideC?: number;
-  historyInside?: any;
-  historyOutside?: any;
-  tpms?: { fl?: number; fr?: number; rl?: number; rr?: number };
+  historyInside?: HistoryWindow["inside_c"];
+  historyOutside?: HistoryWindow["outside_c"];
+  tpms?: CarState["tpms_bar"];
 }) {
   return (
     <div className={`grid grid-cols-1 gap-4 lg:grid-cols-3 ${className ?? ""}`.trim()}>

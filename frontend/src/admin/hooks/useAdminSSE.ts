@@ -1,4 +1,3 @@
-import type { CarState, HistoryWindow, PathPoint } from "../../shared/api/types";
 import { useSSE as useSharedSSE } from "../../shared/hooks/useSSE";
 
 function getCookie(name: string): string | undefined {
@@ -16,5 +15,5 @@ export function useAdminSSE(carId: number | undefined) {
   const ssePath = carId
     ? `/api/v1/admin/cars/${carId}/stream${token ? `?cf_jwt=${encodeURIComponent(token)}` : ""}`
     : undefined;
-  return useSharedSSE<CarState, HistoryWindow, PathPoint>({ ssePath });
+  return useSharedSSE({ ssePath });
 }
