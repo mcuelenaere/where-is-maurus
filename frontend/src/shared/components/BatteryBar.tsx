@@ -13,21 +13,21 @@ export function BatteryBar({ socPct }: { socPct?: number }) {
 
   return (
     <div className="flex items-center gap-3" aria-label={t`Battery state of charge`}>
-      <div className="relative h-6 w-full rounded-sm border border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-900">
-        {/* Cap */}
-        <div className="absolute right-[-6px] top-1/2 h-3 w-1.5 -translate-y-1/2 rounded-sm border border-gray-300 bg-gray-200 dark:border-gray-600 dark:bg-gray-700" />
-        {/* Fill */}
+      <div className="relative w-4 h-8 rounded-sm border border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-900">
+        {/* Cap (top) */}
+        <div className="absolute left-1/2 top-[-6px] h-1.5 w-3 -translate-x-1/2 rounded-sm border border-gray-300 bg-gray-200 dark:border-gray-600 dark:bg-gray-700" />
+        {/* Fill (bottom-up) */}
         {pct != null && (
           <div
-            className={`h-full ${colorFor(pct)}`}
-            style={{ width: `${pct}%` }}
+            className={`absolute bottom-0 left-0 w-full ${colorFor(pct)}`}
+            style={{ height: `${pct}%` }}
             role="progressbar"
             aria-valuenow={Math.round(pct)}
             aria-valuemin={0}
             aria-valuemax={100}
           />
         )}
-        {pct == null && <div className="h-full w-0" />}
+        {pct == null && <div className="absolute bottom-0 left-0 h-0 w-full" />}
       </div>
       <div className="text-sm font-semibold whitespace-nowrap tabular-nums text-gray-900 dark:text-gray-100">
         {pct != null ? `${Math.round(pct)}%` : "—"}

@@ -27,7 +27,7 @@ export function PowerBar({ powerW }: { powerW?: number }) {
 
   return (
     <div className="flex items-center gap-3" aria-label={t`Power`}>
-      <div className="relative h-32 w-4 rounded-sm bg-gray-200 dark:bg-gray-700">
+      <div className="relative h-16 w-4 rounded-sm bg-gray-200 dark:bg-gray-700">
         {/* Center zero line */}
         <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-gray-400/70" />
         {/* Positive (up) */}
