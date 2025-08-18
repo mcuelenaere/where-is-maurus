@@ -15,6 +15,13 @@ export default defineConfig({
       devOptions: { enabled: true },
       workbox: {
         navigateFallbackDenylist: [/^\/api\//, /^\/cdn-cgi\//],
+        runtimeCaching: [
+          {
+            // This checks the network for the main page, to allow for Cloudflare authentication redirects
+            urlPattern: /^\/$|index\.html$/i,
+            handler: 'NetworkFirst',
+          },
+        ],
       },
       manifest: {
         name: "Where is Maurus - Admin",
