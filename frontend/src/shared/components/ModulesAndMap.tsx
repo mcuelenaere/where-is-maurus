@@ -5,6 +5,7 @@ import { SpeedModule } from "./modules/SpeedModule";
 import { BatteryModule } from "./modules/BatteryModule";
 import { TempModule } from "./modules/TempModule";
 import { TirePressureModule } from "./modules/TirePressureModule";
+import { ElevationModule } from "./modules/ElevationModule";
 
 type Current = { lat: number; lon: number; heading?: number } | undefined;
 
@@ -45,6 +46,10 @@ export function ModulesAndMap({ state }: { state?: SnapshotPayload }) {
           fr={state?.tpms_bar?.fr}
           rl={state?.tpms_bar?.rl}
           rr={state?.tpms_bar?.rr}
+        />
+        <ElevationModule
+          elevationM={state?.location?.elevation_m}
+          history={state?.history_30s?.elevation_m}
         />
       </div>
     </div>
