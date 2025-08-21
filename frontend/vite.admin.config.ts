@@ -14,7 +14,11 @@ export default defineConfig({
       useCredentials: true,
       devOptions: { enabled: true },
       workbox: {
-        navigateFallbackDenylist: [/^\/cdn-cgi\//, /^\/$/, /^index\.html$/]
+        // Disable all caching and interception
+        globPatterns: [],
+        globIgnores: ['**/*'],
+        // Ensure no requests are cached
+        maximumFileSizeToCacheInBytes: 0,
       },
       manifest: {
         name: "Where is Maurus - Admin",
