@@ -13,6 +13,7 @@ export default defineConfig({
       registerType: "autoUpdate",
       useCredentials: true,
       devOptions: { enabled: true },
+      injectRegister: false,
       workbox: {
         // Disable all caching and interception
         globPatterns: [],
