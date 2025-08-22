@@ -17,7 +17,7 @@ export default defineConfig({
       workbox: {
         // Disable all caching and interception
         globPatterns: [],
-        globIgnores: ['**/*'],
+        globIgnores: ["**/*"],
         // Ensure no requests are cached
         maximumFileSizeToCacheInBytes: 0,
       },
