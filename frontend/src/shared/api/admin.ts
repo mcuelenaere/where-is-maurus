@@ -1,5 +1,4 @@
 import { apiFetch } from "./client";
-import { t } from "@lingui/macro";
 import {
   AdminCarsResponseSchema,
   type AdminCreateShareRequest,
@@ -11,7 +10,7 @@ import {
 export async function createShare(req: AdminCreateShareRequest): Promise<AdminCreateShareResponse> {
   const bodyParse = AdminCreateShareRequestSchema.safeParse(req);
   if (!bodyParse.success) {
-    throw new Error(t`Invalid request: ${bodyParse.error.message}`);
+    throw new Error(`Invalid request: ${bodyParse.error.message}`);
   }
   const res = await apiFetch(`/api/v1/shares`, {
     method: "POST",
@@ -20,7 +19,7 @@ export async function createShare(req: AdminCreateShareRequest): Promise<AdminCr
   const data = await res.json();
   const parsed = AdminCreateShareResponseSchema.safeParse(data);
   if (!parsed.success) {
-    throw new Error(t`Invalid response: ${parsed.error.message}`);
+    throw new Error(`Invalid response: ${parsed.error.message}`);
   }
   return parsed.data;
 }
@@ -30,7 +29,7 @@ export async function getCars(): Promise<number[]> {
   const json = await res.json();
   const parsed = AdminCarsResponseSchema.safeParse(json);
   if (!parsed.success) {
-    throw new Error(t`Invalid cars response: ${parsed.error.message}`);
+    throw new Error(`Invalid cars response: ${parsed.error.message}`);
   }
   return parsed.data.cars;
 }

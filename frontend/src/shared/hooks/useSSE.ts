@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { t } from "@lingui/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import { getEnv } from "../../shared/api/client";
 import type { DeltaPayload, SnapshotPayload } from "../api/types";
@@ -10,6 +10,7 @@ type Options = {
 };
 
 export function useSSE(options: Options) {
+  const { t } = useLingui();
   const { apiBaseUrl, sessionPath, ssePath: defaultSSEPath } = getEnv();
   const [state, setState] = useState<SnapshotPayload | undefined>();
   const [connected, setConnected] = useState(false);
