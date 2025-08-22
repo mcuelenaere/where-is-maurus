@@ -12,8 +12,9 @@ function getCookie(name: string): string | undefined {
 
 export function useAdminSSE(carId: number | undefined) {
   const token = getCookie("CF_Authorization");
-  const ssePath = carId
-    ? `/api/v1/admin/cars/${carId}/stream${token ? `?cf_jwt=${encodeURIComponent(token)}` : ""}`
-    : undefined;
+  const ssePath =
+    carId && token
+      ? `/api/v1/admin/cars/${carId}/stream?cf_jwt=${encodeURIComponent(token)}`
+      : undefined;
   return useSharedSSE({ ssePath });
 }
