@@ -37,7 +37,7 @@ export function PowerBar({ powerW }: { powerW: number }) {
         />
       </div>
       <div className="text-sm font-semibold whitespace-nowrap tabular-nums text-gray-900 dark:text-gray-100">
-        {label} <span className="font-normal text-gray-500 dark:text-gray-400">W</span>
+        {label} <span className="font-normal text-gray-500 dark:text-gray-400">kW</span>
       </div>
     </div>
   );
