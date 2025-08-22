@@ -59,6 +59,10 @@ msgstr "Afstand"
 msgid "Duration:"
 msgstr "Duur:"
 
+#: src/shared/components/modules/ElevationModule.tsx
+msgid "Elevation"
+msgstr "Hoogte"
+
 #: src/shared/components/modules/RouteModule.tsx
 msgid "ETA"
 msgstr "ETA"
