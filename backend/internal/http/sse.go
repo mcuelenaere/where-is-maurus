@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"where-is-maurus/backend/internal/state"
-	"where-is-maurus/backend/internal/stream"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/state"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/stream"
 )
 
 // setSSEHeaders sets required headers and returns a flusher or error.

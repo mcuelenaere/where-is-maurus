@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"where-is-maurus/backend/internal/stream"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/stream"
 )
 
 // Resampling interval knob (code-configurable only)

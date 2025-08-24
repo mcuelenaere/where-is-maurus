@@ -10,15 +10,15 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/auth"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/config"
+	httpx "github.com/mcuelenaere/where-is-maurus/backend/internal/http"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/keys"
+	mqttc "github.com/mcuelenaere/where-is-maurus/backend/internal/mqtt"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/state"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/stream"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"where-is-maurus/backend/internal/auth"
-	"where-is-maurus/backend/internal/config"
-	httpx "where-is-maurus/backend/internal/http"
-	"where-is-maurus/backend/internal/keys"
-	mqttc "where-is-maurus/backend/internal/mqtt"
-	"where-is-maurus/backend/internal/state"
-	"where-is-maurus/backend/internal/stream"
 )
 
 func main() {

@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-	"where-is-maurus/backend/internal/keys"
-	"where-is-maurus/backend/internal/state"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/keys"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/state"
 )
 
 func TestAdminCreateShare_NoCFMiddleware(t *testing.T) {

@@ -1,6 +1,6 @@
 SHELL := /bin/sh
 APP := server
-PKG := where-is-maurus/backend
+PKG := github.com/mcuelenaere/where-is-maurus/backend
 
 .PHONY: fmt build run docker-build docker-run lint
 
@@ -11,10 +11,10 @@ run:
 	HTTP_ADDR=:8080 go run ./cmd/server
 
 docker-build:
-	docker build -t where-is-maurus/backend:latest .
+	docker build -t github.com/mcuelenaere/where-is-maurus/backend:latest .
 
 docker-run:
-	docker run --rm -p 8080:8080 --env-file .env where-is-maurus/backend:latest
+	docker run --rm -p 8080:8080 --env-file .env github.com/mcuelenaere/where-is-maurus/backend:latest
 
 test:
 	go test ./...

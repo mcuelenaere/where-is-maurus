@@ -12,10 +12,10 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-	"where-is-maurus/backend/internal/auth"
-	"where-is-maurus/backend/internal/keys"
-	"where-is-maurus/backend/internal/state"
-	"where-is-maurus/backend/internal/stream"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/auth"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/keys"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/state"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/stream"
 )
 
 // fake key manager for tests: generate once, no rotation

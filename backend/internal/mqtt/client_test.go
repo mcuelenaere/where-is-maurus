@@ -7,8 +7,8 @@ import (
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"where-is-maurus/backend/internal/state"
-	"where-is-maurus/backend/internal/stream"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/state"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/stream"
 )
 
 // We don't hit a real broker; instead, we exercise handler logic indirectly by invoking the subscribed callback.

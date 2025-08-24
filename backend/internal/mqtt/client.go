@@ -9,9 +9,9 @@ import (
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/state"
+	"github.com/mcuelenaere/where-is-maurus/backend/internal/stream"
 	"github.com/rs/zerolog/log"
-	"where-is-maurus/backend/internal/state"
-	"where-is-maurus/backend/internal/stream"
 )
 
 type Client struct {

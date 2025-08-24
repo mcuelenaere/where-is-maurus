@@ -96,5 +96,5 @@ jobs:
         with:
           context: ./backend
           push: false
-          tags: where-is-maurus/backend:ci
+          tags: where-is-maurus-backend:ci
 
