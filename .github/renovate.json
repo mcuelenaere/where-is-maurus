@@ -2,5 +2,34 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "matchPackagePatterns": [
+        "^@types/",
+        "^eslint",
+        "^@eslint",
+        "^prettier",
+        "^typescript-eslint",
+        "^typescript",
+        "^vite",
+        "^@vitejs",
+        "@lingui/vite-plugin"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "matchPackageNames": [
+        "typescript",
+        "eslint",
+        "prettier",
+        "vite"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    }
   ]
 }
