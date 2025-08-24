@@ -3,13 +3,15 @@ import { Trans, useLingui } from "@lingui/react/macro";
 
 import { createShare } from "../../shared/api/admin";
 import { getEnv } from "../../shared/api/client";
+import { DurationSelector } from "./DurationSelector";
 
 type Props = { carId?: number; etaMin?: number };
 
 export function ShareForm({ carId, etaMin }: Props) {
-  const { t, i18n } = useLingui();
+  const { t } = useLingui();
 
   const { shareBaseUrl } = getEnv();
+  const [ttlDays, setTtlDays] = useState<number>(0);
   const [ttlHours, setTtlHours] = useState<number>(4);
   const [ttlMinutes, setTtlMinutes] = useState<number>(0);
 
@@ -18,44 +20,19 @@ export function ShareForm({ carId, etaMin }: Props) {
   const [token, setToken] = useState<string | undefined>();
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    if (etaMin && etaMin > 0) {
-      const hours = Math.floor(etaMin / 60);
-      let minutes = etaMin % 60;
-      if (hours === 0 && minutes === 0) {
-        minutes = 1;
-      }
-      setTtlHours(hours);
-      setTtlMinutes(minutes);
-    }
-  }, [etaMin]);
-
   const computedExpiresAt = useMemo(() => {
-    const totalMinutes = (ttlHours || 0) * 60 + (ttlMinutes || 0);
+    const totalMinutes = (ttlDays || 0) * 24 * 60 + (ttlHours || 0) * 60 + (ttlMinutes || 0);
     const date = new Date(Date.now() + totalMinutes * 60 * 1000);
     date.setSeconds(0);
     return date.toISOString();
-  }, [ttlHours, ttlMinutes]);
+  }, [ttlDays, ttlHours, ttlMinutes]);
 
   const exampleUrl = token ? `${shareBaseUrl ? shareBaseUrl : ""}/#${token}` : undefined;
 
-  const presetsMin = [15, 30, 45, 60, 120, 240, 480];
-  function setTTLFromMinutes(total: number) {
-    if (!Number.isFinite(total) || total <= 0) {
-      setTtlHours(0);
-      setTtlMinutes(0);
-      return;
-    }
-    const hours = Math.floor(total / 60);
-    const minutes = total % 60;
+  function handleDurationChange(days: number, hours: number, minutes: number) {
+    setTtlDays(days);
     setTtlHours(hours);
     setTtlMinutes(minutes);
-  }
-  function useETA() {
-    if (etaMin && etaMin > 0) {
-      const adjusted = Math.round(etaMin * 1.05);
-      setTTLFromMinutes(Math.max(1, adjusted));
-    }
   }
 
   async function onCreate() {
@@ -83,47 +60,8 @@ export function ShareForm({ carId, etaMin }: Props) {
       </h2>
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex-none">
-          <div className="mt-3 flex flex-row gap-2">
-            <span className="text-xs text-gray-600 dark:text-gray-400 self-center">
-              <Trans>Duration:</Trans>
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {presetsMin.map((m) => {
-                const isActive = (ttlHours || 0) * 60 + (ttlMinutes || 0) === m;
-                return (
-                  <button
-                    key={m}
-                    type="button"
-                    className={`${
-                      isActive
-                        ? "border-blue-300 bg-blue-50 text-blue-700 dark:border-blue-500 dark:bg-blue-900/30 dark:text-blue-300"
-                        : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-                    } rounded-md border px-2 py-1 text-xs`}
-                    onClick={() => setTTLFromMinutes(m)}
-                  >
-                    {m < 60 ? `${m}m` : `${Math.floor(m / 60)}h${m % 60 ? ` ${m % 60}m` : ""}`}
-                  </button>
-                );
-              })}
-              <button
-                type="button"
-                className="rounded-md border border-gray-200 bg-white px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-                onClick={useETA}
-                disabled={!etaMin || etaMin <= 0}
-                title={!etaMin || etaMin <= 0 ? t`No ETA available` : t`Use ETA`}
-              >
-                <Trans>Use ETA</Trans>
-              </button>
-            </div>
-          </div>
+          <DurationSelector etaMin={etaMin} onDurationChange={handleDurationChange} />
           <div className="mt-3 flex flex-col items-start gap-2">
-            <div className="text-xs text-gray-600 dark:text-gray-400">
-              <Trans>
-                Expires at:{" "}
-                {i18n.date(computedExpiresAt, { dateStyle: "short", timeStyle: "medium" })} (
-                {ttlHours}h {ttlMinutes}m from now)
-              </Trans>
-            </div>
             <button
               onClick={onCreate}
               disabled={loading}
