@@ -1,5 +1,7 @@
 # Where is Maurus
 
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
 A real-time Tesla vehicle tracking application that provides live location, battery status, and other vehicle metrics through a web interface. The system consists of a Go backend that consumes TeslaMate MQTT data and a React frontend that displays the information in real-time.
 
 ## 🚗 What it does
@@ -148,11 +150,32 @@ make docker-run
 
 ## 🤝 Contributing
 
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. This means:
+
+- ✅ You can use, modify, and distribute this software
+- ✅ You can use it commercially
+- ✅ You must share your modifications under the same license
+- ✅ If you run a modified version on a server, you must provide the source code to users
+- ✅ All derivative works must also be licensed under AGPL-3.0
+
+### How to Contribute
+
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
 4. Run tests and linting
 5. Submit a pull request
+
+**Important**: By contributing to this project, you agree that your contributions will be licensed under the AGPL-3.0 license.
+
+## 📄 License
+
+This project is licensed under the **GNU Affero General Public License v3.0** - see the [LICENSE](LICENSE) file for details.
+
+The AGPL-3.0 license ensures that:
+- All modifications remain open source
+- Network use is covered (important for web applications)
+- Users have access to the source code of any modified version
 
 ---
 

@@ -1,3 +1,7 @@
+// Copyright (c) 2025 Maurus Cuelenaere
+// This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0)
+// See LICENSE file for details.
+
 module where-is-maurus/backend
 
 go 1.25.0
