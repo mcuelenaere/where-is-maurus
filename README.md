@@ -49,7 +49,7 @@ cd backend
 cp .env.example .env
 # Edit .env with your MQTT broker details and Cloudflare config
 make build
-./bin/server
+make run
 ```
 
 ### 2. Frontend Setup
@@ -81,13 +81,13 @@ npm run dev:admin   # Admin UI at http://localhost:5174
 Key configuration options in `backend/.env`:
 
 ```bash
-HTTP_ADDR=:8080                    # HTTP server address
+HTTP_ADDR=:8080                       # HTTP server address
 MQTT_BROKER_URL=tcp://localhost:1883  # MQTT broker URL
-MQTT_USERNAME=                      # MQTT username (if required)
-MQTT_PASSWORD=                      # MQTT password (if required)
-CF_JWKS_URL=                       # Cloudflare JWT public keys
-CF_ISSUER=                         # Cloudflare Access issuer
-CF_AUDIENCE=                       # Cloudflare Access audience
+MQTT_USERNAME=                        # MQTT username (if required)
+MQTT_PASSWORD=                        # MQTT password (if required)
+CF_JWKS_URL=                          # Cloudflare JWT public keys
+CF_ISSUER=                            # Cloudflare Access issuer
+CF_AUDIENCE=                          # Cloudflare Access audience
 ```
 
 ### Frontend Environment Variables
@@ -105,7 +105,7 @@ VITE_SHARE_BASE_URL=https://share.example.com # Share UI base URL
 
 ```bash
 cd backend
-make run          # Run with hot reload
+make run          # Run app
 make test         # Run tests
 make lint         # Run linter
 make fmt          # Format code
