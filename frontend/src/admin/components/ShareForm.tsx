@@ -55,8 +55,8 @@ export function ShareForm({ carId, etaMin }: Props) {
 
   return (
     <div className="rounded-md border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-      <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-        <Trans>Create Share</Trans>
+      <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">
+        <Trans>Create shareable link</Trans>
       </h2>
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex-none">
@@ -67,7 +67,7 @@ export function ShareForm({ carId, etaMin }: Props) {
               disabled={loading}
               className="inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
             >
-              {loading ? <Trans>Creating…</Trans> : <Trans>Create Share</Trans>}
+              {loading ? <Trans>Creating…</Trans> : <Trans>Create link</Trans>}
             </button>
           </div>
           {error && (
@@ -78,9 +78,9 @@ export function ShareForm({ carId, etaMin }: Props) {
         </div>
         <div className="grow">
           {token && (
-            <div className="mt-4 rounded-md border border-gray-200 p-3 dark:border-gray-700">
+            <div className="rounded-md border border-gray-200 p-3 dark:border-gray-700">
               <div className="text-sm text-gray-700 dark:text-gray-300">
-                <Trans>Share URL</Trans>
+                <Trans>Share link</Trans>
               </div>
               <div className="mt-1 break-all font-mono text-sm dark:text-gray-100">
                 {exampleUrl}
