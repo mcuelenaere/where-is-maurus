@@ -35,9 +35,12 @@ msgid "Copy URL"
 msgstr "Copy URL"
 
 #: src/admin/components/ShareForm.tsx
+msgid "Create link"
+msgstr "Create link"
+
 #: src/admin/components/ShareForm.tsx
-msgid "Create Share"
-msgstr "Create Share"
+msgid "Create shareable link"
+msgstr "Create shareable link"
 
 #: src/admin/components/ShareForm.tsx
 msgid "Creating…"
@@ -47,6 +50,18 @@ msgstr "Creating…"
 msgid "Current position"
 msgstr "Current position"
 
+#: src/admin/components/DurationSelector.tsx
+msgid "Custom"
+msgstr "Custom"
+
+#: src/admin/components/DurationSelector.tsx
+msgid "Custom:"
+msgstr "Custom:"
+
+#: src/admin/components/DurationSelector.tsx
+msgid "Days"
+msgstr "Days"
+
 #: src/shared/components/MapView.tsx
 msgid "Destination"
 msgstr "Destination"
@@ -55,7 +70,7 @@ msgstr "Destination"
 msgid "Distance"
 msgstr "Distance"
 
-#: src/admin/components/ShareForm.tsx
+#: src/admin/components/DurationSelector.tsx
 msgid "Duration:"
 msgstr "Duration:"
 
@@ -79,9 +94,10 @@ msgid "Expires {0}"
 msgstr "Expires {0}"
 
 #. placeholder {0}: i18n.date(computedExpiresAt, { dateStyle: "short", timeStyle: "medium" })
-#: src/admin/components/ShareForm.tsx
-msgid "Expires at: {0} ({ttlHours}h {ttlMinutes}m from now)"
-msgstr "Expires at: {0} ({ttlHours}h {ttlMinutes}m from now)"
+#. placeholder {1}: ttlDays > 0 ? `${ttlDays}d ` : ""
+#: src/admin/components/DurationSelector.tsx
+msgid "Expires at: {0} ({1}{ttlHours}h {ttlMinutes}m from now)"
+msgstr "Expires at: {0} ({1}{ttlHours}h {ttlMinutes}m from now)"
 
 #: src/share/App.tsx
 msgid "Expires in < 1 min"
@@ -95,29 +111,22 @@ msgstr "Failed to create share"
 msgid "Failed to load cars"
 msgstr "Failed to load cars"
 
+#: src/admin/components/DurationSelector.tsx
+msgid "Hours"
+msgstr "Hours"
+
 #: src/shared/components/modules/TempModule.tsx
 msgid "Inside"
 msgstr "Inside"
-
-#. placeholder {0}: parsed.error.message
-#: src/shared/api/admin.ts
-msgid "Invalid cars response: {0}"
-msgstr "Invalid cars response: {0}"
-
-#. placeholder {0}: bodyParse.error.message
-#: src/shared/api/admin.ts
-msgid "Invalid request: {0}"
-msgstr "Invalid request: {0}"
-
-#. placeholder {0}: parsed.error.message
-#: src/shared/api/admin.ts
-msgid "Invalid response: {0}"
-msgstr "Invalid response: {0}"
 
 #: src/admin/App.tsx
 #: src/share/App.tsx
 msgid "Live"
 msgstr "Live"
+
+#: src/admin/components/DurationSelector.tsx
+msgid "Minutes"
+msgstr "Minutes"
 
 #: src/shared/components/modules/RouteModule.tsx
 msgid "No active route"
@@ -127,7 +136,7 @@ msgstr "No active route"
 msgid "No cars"
 msgstr "No cars"
 
-#: src/admin/components/ShareForm.tsx
+#: src/admin/components/DurationSelector.tsx
 msgid "No ETA available"
 msgstr "No ETA available"
 
@@ -162,8 +171,8 @@ msgid "Session exchange failed"
 msgstr "Session exchange failed"
 
 #: src/admin/components/ShareForm.tsx
-msgid "Share URL"
-msgstr "Share URL"
+msgid "Share link"
+msgstr "Share link"
 
 #: src/shared/components/modules/SpeedModule.tsx
 msgid "Speed"
@@ -190,8 +199,8 @@ msgstr "Traffic delay"
 msgid "Updated"
 msgstr "Updated"
 
-#: src/admin/components/ShareForm.tsx
-#: src/admin/components/ShareForm.tsx
+#: src/admin/components/DurationSelector.tsx
+#: src/admin/components/DurationSelector.tsx
 msgid "Use ETA"
 msgstr "Use ETA"
 

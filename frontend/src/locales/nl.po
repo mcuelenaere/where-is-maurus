@@ -35,9 +35,12 @@ msgid "Copy URL"
 msgstr "URL kopiëren"
 
 #: src/admin/components/ShareForm.tsx
+msgid "Create link"
+msgstr "Link aanmaken"
+
 #: src/admin/components/ShareForm.tsx
-msgid "Create Share"
-msgstr "Deel-link aanmaken"
+msgid "Create shareable link"
+msgstr "Deelbare link aanmaken"
 
 #: src/admin/components/ShareForm.tsx
 msgid "Creating…"
@@ -47,6 +50,18 @@ msgstr "Aanmaken…"
 msgid "Current position"
 msgstr "Huidige positie"
 
+#: src/admin/components/DurationSelector.tsx
+msgid "Custom"
+msgstr "Aangepast"
+
+#: src/admin/components/DurationSelector.tsx
+msgid "Custom:"
+msgstr "Aangepast:"
+
+#: src/admin/components/DurationSelector.tsx
+msgid "Days"
+msgstr "Dagen"
+
 #: src/shared/components/MapView.tsx
 msgid "Destination"
 msgstr "Bestemming"
@@ -55,7 +70,7 @@ msgstr "Bestemming"
 msgid "Distance"
 msgstr "Afstand"
 
-#: src/admin/components/ShareForm.tsx
+#: src/admin/components/DurationSelector.tsx
 msgid "Duration:"
 msgstr "Duur:"
 
@@ -79,9 +94,10 @@ msgid "Expires {0}"
 msgstr "Verloopt {0}"
 
 #. placeholder {0}: i18n.date(computedExpiresAt, { dateStyle: "short", timeStyle: "medium" })
-#: src/admin/components/ShareForm.tsx
-msgid "Expires at: {0} ({ttlHours}h {ttlMinutes}m from now)"
-msgstr "Verloopt op: {0} (over {ttlHours}u {ttlMinutes}m)"
+#. placeholder {1}: ttlDays > 0 ? `${ttlDays}d ` : ""
+#: src/admin/components/DurationSelector.tsx
+msgid "Expires at: {0} ({1}{ttlHours}h {ttlMinutes}m from now)"
+msgstr "Verloopt op: {0} ({1}{ttlHours}u {ttlMinutes}m vanaf nu)"
 
 #: src/share/App.tsx
 msgid "Expires in < 1 min"
@@ -95,29 +111,22 @@ msgstr "Kan deel-link niet aanmaken"
 msgid "Failed to load cars"
 msgstr "Kan auto's niet laden"
 
+#: src/admin/components/DurationSelector.tsx
+msgid "Hours"
+msgstr "Uren"
+
 #: src/shared/components/modules/TempModule.tsx
 msgid "Inside"
 msgstr "Binnen"
-
-#. placeholder {0}: parsed.error.message
-#: src/shared/api/admin.ts
-msgid "Invalid cars response: {0}"
-msgstr "Ongeldig antwoord voor auto's: {0}"
-
-#. placeholder {0}: bodyParse.error.message
-#: src/shared/api/admin.ts
-msgid "Invalid request: {0}"
-msgstr "Ongeldig verzoek: {0}"
-
-#. placeholder {0}: parsed.error.message
-#: src/shared/api/admin.ts
-msgid "Invalid response: {0}"
-msgstr "Ongeldig antwoord: {0}"
 
 #: src/admin/App.tsx
 #: src/share/App.tsx
 msgid "Live"
 msgstr "Live"
+
+#: src/admin/components/DurationSelector.tsx
+msgid "Minutes"
+msgstr "Minuten"
 
 #: src/shared/components/modules/RouteModule.tsx
 msgid "No active route"
@@ -127,7 +136,7 @@ msgstr "Geen actieve route"
 msgid "No cars"
 msgstr "Geen auto's"
 
-#: src/admin/components/ShareForm.tsx
+#: src/admin/components/DurationSelector.tsx
 msgid "No ETA available"
 msgstr "Geen ETA beschikbaar"
 
@@ -162,8 +171,8 @@ msgid "Session exchange failed"
 msgstr "Sessie-uitwisseling mislukt"
 
 #: src/admin/components/ShareForm.tsx
-msgid "Share URL"
-msgstr "Deel-URL"
+msgid "Share link"
+msgstr "Deel link"
 
 #: src/shared/components/modules/SpeedModule.tsx
 msgid "Speed"
@@ -190,8 +199,8 @@ msgstr "Verkeersvertraging"
 msgid "Updated"
 msgstr "Bijgewerkt"
 
-#: src/admin/components/ShareForm.tsx
-#: src/admin/components/ShareForm.tsx
+#: src/admin/components/DurationSelector.tsx
+#: src/admin/components/DurationSelector.tsx
 msgid "Use ETA"
 msgstr "ETA gebruiken"
 
