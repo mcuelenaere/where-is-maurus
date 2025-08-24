@@ -13,8 +13,10 @@ Key ones:
 - `HTTP_ADDR` (default :8080)
 - `CORS_ALLOWED_ORIGINS` comma-separated
 - `COOKIE_DOMAIN`
-- `MQTT_BROKER_URL` and `CAR_IDS`
+- `MQTT_BROKER_URL`, `MQTT_USERNAME`, `MQTT_PASSWORD`
 - `CF_JWKS_URL`, `CF_ISSUER`, `CF_AUDIENCE` for admin endpoints
+- `LOG_LEVEL` (default: info)
+- `ARRIVE_RADIUS_M` (default: 100)
 
 ### Run locally
 
@@ -37,10 +39,6 @@ make run
 make docker-build
 make docker-run
 ```
-
-### API Docs
-
-See `docs/API.md` for the full REST and SSE contract.
 
 ### Quick SSE test
 
@@ -80,6 +78,6 @@ curl -i http://localhost:8080/healthz
 - SSE only; heartbeat every `SSE_HEARTBEAT_SECONDS` (default 15s)
 - Keys: in-memory ES256; rotate every `KEY_ROTATE_SECONDS`; previous key kept for overlap
 - Only whitelisted TeslaMate topics are consumed (see code in `internal/mqtt`)
-- No Prometheus, no metrics endpoint
+- Build output goes to `bin/` directory
 
 
