@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Trans, useLingui } from "@lingui/react/macro";
 
 import { createShare } from "../../shared/api/admin";

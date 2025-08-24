@@ -73,7 +73,7 @@ export function useSSE(options: Options) {
         esRef.current = null;
       }
     };
-  }, [options.token, options.ssePath, apiBaseUrl, sessionPath, defaultSSEPath]);
+  }, [options.token, options.ssePath, apiBaseUrl, sessionPath, defaultSSEPath, t]);
 
   return { state, connected, error } as const;
 }
