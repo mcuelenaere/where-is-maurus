@@ -20,7 +20,7 @@ func TestAdminCreateShare_NoCFMiddleware(t *testing.T) {
 	if err != nil {
 		t.Fatalf("keys: %v", err)
 	}
-	adm := &AdminHandlers{CF: nil, Keys: km, Store: state.NewStore(), TokenTTL: time.Minute, DefaultArriveRadiusM: 100}
+	adm := &AdminHandlers{CF: nil, Keys: km, Store: state.NewStore(), TokenTTL: time.Minute}
 
 	r := NewRouter(nil)
 	r.Group(func(r chi.Router) { adm.Routes(r) })

@@ -12,7 +12,6 @@ func TestLoad_DefaultsAndNormalization(t *testing.T) {
 	t.Setenv("TOKEN_DEFAULT_TTL", "")
 	t.Setenv("KEY_ROTATE_SECONDS", "")
 	t.Setenv("SSE_HEARTBEAT_SECONDS", "")
-	t.Setenv("ARRIVE_RADIUS_M", "")
 
 	cfg, err := Load()
 	if err != nil {

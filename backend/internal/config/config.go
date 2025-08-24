@@ -21,7 +21,6 @@ type Config struct {
 	CFIssuer             string        `env:"CF_ISSUER"`
 	CFAudience           string        `env:"CF_AUDIENCE"`
 	SSEHeartbeatInterval time.Duration `env:"SSE_HEARTBEAT_SECONDS" envDefault:"15s"`
-	ArriveRadiusM        float64       `env:"ARRIVE_RADIUS_M" envDefault:"100"`
 }
 
 func Load() (Config, error) {

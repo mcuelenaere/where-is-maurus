@@ -87,11 +87,11 @@ func main() {
 
 	// Admin routes
 	if cfv != nil {
-		adm := &httpx.AdminHandlers{CF: cfv, Keys: keyMgr, Store: st, Hub: hub, TokenTTL: cfg.TokenDefaultTTL, DefaultArriveRadiusM: cfg.ArriveRadiusM, Heartbeat: cfg.SSEHeartbeatInterval}
+		adm := &httpx.AdminHandlers{CF: cfv, Keys: keyMgr, Store: st, Hub: hub, TokenTTL: cfg.TokenDefaultTTL, Heartbeat: cfg.SSEHeartbeatInterval}
 		r.Group(func(r chi.Router) { adm.Routes(r) })
 	} else {
 		log.Warn().Msg("CF Access disabled: CF_JWKS_URL/CF_ISSUER/C F_AUDIENCE not set")
-		adm := &httpx.AdminHandlers{CF: nil, Keys: keyMgr, Store: st, Hub: hub, TokenTTL: cfg.TokenDefaultTTL, DefaultArriveRadiusM: cfg.ArriveRadiusM, Heartbeat: cfg.SSEHeartbeatInterval}
+		adm := &httpx.AdminHandlers{CF: nil, Keys: keyMgr, Store: st, Hub: hub, TokenTTL: cfg.TokenDefaultTTL, Heartbeat: cfg.SSEHeartbeatInterval}
 		r.Group(func(r chi.Router) { adm.Routes(r) })
 	}
 

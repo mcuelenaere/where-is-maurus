@@ -16,7 +16,6 @@ Key ones:
 - `MQTT_BROKER_URL`, `MQTT_USERNAME`, `MQTT_PASSWORD`
 - `CF_JWKS_URL`, `CF_ISSUER`, `CF_AUDIENCE` for admin endpoints
 - `LOG_LEVEL` (default: info)
-- `ARRIVE_RADIUS_M` (default: 100)
 
 ### Run locally
 

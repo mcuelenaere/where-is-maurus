@@ -16,13 +16,12 @@ import (
 )
 
 type AdminHandlers struct {
-	CF                   *auth.CFValidator
-	Keys                 *keys.Manager
-	Store                *state.Store
-	Hub                  *stream.Hub
-	TokenTTL             time.Duration
-	DefaultArriveRadiusM float64
-	Heartbeat            time.Duration
+	CF        *auth.CFValidator
+	Keys      *keys.Manager
+	Store     *state.Store
+	Hub       *stream.Hub
+	TokenTTL  time.Duration
+	Heartbeat time.Duration
 }
 
 func (h *AdminHandlers) middlewareCF(next http.Handler) http.Handler {
