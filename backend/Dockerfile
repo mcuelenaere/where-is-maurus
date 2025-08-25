@@ -15,6 +15,5 @@ COPY --from=build /out/server /server
 EXPOSE 8080
 USER nonroot:nonroot
 ENTRYPOINT ["/server"]
-HEALTHCHECK --interval=30s --timeout=3s CMD ["/server", "-healthcheck"]
 
 
