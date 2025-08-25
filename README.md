@@ -4,7 +4,8 @@
 
 A real-time Tesla vehicle tracking application that provides live location, battery status, and other vehicle metrics through a web interface. The system consists of a Go backend that consumes TeslaMate MQTT data and a React frontend that displays the information in real-time.
 
-![Where is Maurus Admin frontend screenshot](docs/screenshot1.png)
+![admin frontend desktop screenshot](docs/screenshot1.png)
+![share frontend mobile screenshot](docs/screenshot2.png)
 
 ## 🚗 What it does
 
