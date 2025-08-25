@@ -4,8 +4,10 @@
 
 A real-time Tesla vehicle tracking application that provides live location, battery status, and other vehicle metrics through a web interface. The system consists of a Go backend that consumes TeslaMate MQTT data and a React frontend that displays the information in real-time.
 
-![admin frontend desktop screenshot](docs/screenshot1.png)
-![share frontend mobile screenshot](docs/screenshot2.png)
+<p>
+  <img src="docs/screenshot1.png" alt="admin frontend desktop screenshot" height=500 />
+  <img src="docs/screenshot2.png" alt="share frontend mobile screenshot" height=500 />
+</p>
 
 ## 🚗 What it does
 
