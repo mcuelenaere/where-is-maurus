@@ -5,13 +5,11 @@ export function TPMSWheels({
   fr,
   rl,
   rr,
-  unit = "bar",
 }: {
   fl?: number;
   fr?: number;
   rl?: number;
   rr?: number;
-  unit?: string;
 }) {
   function pressureClass(v?: number) {
     if (v == null) return "text-gray-400";
