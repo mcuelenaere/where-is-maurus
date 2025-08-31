@@ -1,3 +1,5 @@
+import { BarFormatter } from "../utils/format";
+
 export function TPMSWheels({
   fl,
   fr,
@@ -26,14 +28,19 @@ export function TPMSWheels({
           {label}
         </div>
         <div
-          className={`flex h-12 w-12 flex-col items-center justify-center rounded-full border-2 border-gray-300 dark:border-gray-600 ${pressureClass(
-            value
-          )}`}
+          className={`flex h-12 w-12 flex-col items-center justify-center rounded-full border-2 border-gray-300 dark:border-gray-600`}
         >
-          <span className="leading-none">
-            <span className="text-xs font-semibold">{value != null ? value.toFixed(2) : "—"}</span>
-          </span>
-          <span className="mt-0.5 text-[8px] text-gray-500 dark:text-gray-400">{unit}</span>
+          <div className="leading-none flex flex-col gap-0.5 items-center">
+            <BarFormatter
+              value={value}
+              renderValue={(parts) => (
+                <div className={`text-xs font-semibold ${pressureClass(value)}`}>{parts}</div>
+              )}
+              renderUnit={(parts) => (
+                <div className="text-[8px] text-gray-500 dark:text-gray-400">{parts}</div>
+              )}
+            />
+          </div>
         </div>
       </div>
     );

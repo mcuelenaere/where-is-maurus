@@ -3,7 +3,7 @@ import { Trans, useLingui } from "@lingui/react/macro";
 
 import type { CarState } from "../../api/types";
 import { MetricCard } from "../MetricCard";
-import { formatKilometers, formatMinutes } from "../../utils/format";
+import { KilometersFormatter, MinutesFormatter } from "../../utils/format";
 
 type Props = { route?: CarState["route"] };
 
@@ -21,26 +21,56 @@ export function RouteModule({ route }: Props) {
             <span className="text-gray-600 dark:text-gray-400">
               <Trans>Distance</Trans>
             </span>
-            <span className="font-semibold text-gray-900 dark:text-gray-100">
-              {formatKilometers(route?.dist_km)}
-            </span>
+            <div className="whitespace-nowrap">
+              <KilometersFormatter
+                value={route?.dist_km}
+                renderValue={(parts) => (
+                  <span className="font-semibold tabular-nums text-gray-900 dark:text-gray-100">
+                    {parts}
+                  </span>
+                )}
+                renderUnit={(parts) => (
+                  <span className="font-normal text-gray-500 dark:text-gray-400">{parts}</span>
+                )}
+              />
+            </div>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-gray-600 dark:text-gray-400">
               <Trans>ETA</Trans>
             </span>
-            <span className="font-semibold text-gray-900 dark:text-gray-100">
-              {formatMinutes(route?.eta_min)}
-            </span>
+            <div className="whitespace-nowrap">
+              <MinutesFormatter
+                value={route?.eta_min}
+                renderValue={(parts) => (
+                  <span className="font-semibold tabular-nums text-gray-900 dark:text-gray-100">
+                    {parts}
+                  </span>
+                )}
+                renderUnit={(parts) => (
+                  <span className="font-normal text-gray-500 dark:text-gray-400">{parts}</span>
+                )}
+              />
+            </div>
           </div>
           {route?.traffic_delay_min != null && route.traffic_delay_min > 0 && (
             <div className="flex items-center justify-between">
               <span className="text-gray-600 dark:text-gray-400">
                 <Trans>Traffic delay</Trans>
               </span>
-              <span className="font-semibold text-gray-900 dark:text-gray-100">
-                {formatMinutes(route.traffic_delay_min)}
-              </span>
+              <div className="whitespace-nowrap">
+                <MinutesFormatter
+                  value={route.traffic_delay_min}
+                  renderValue={(parts) => (
+                    <span className="font-semibold tabular-nums text-gray-900 dark:text-gray-100">
+                      {parts}
+                    </span>
+                  )}
+                  renderUnit={(parts) => (
+                    <span className="font-normal text-gray-500 dark:text-gray-400">{parts}</span>
+                  )}
+                />
+              </div>
             </div>
           )}
         </div>

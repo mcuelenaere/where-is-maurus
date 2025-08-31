@@ -1,5 +1,6 @@
 import React from "react";
 import { useLingui } from "@lingui/react/macro";
+import { PercentFormatter } from "../utils/format";
 
 export function BatteryBar({ socPct }: { socPct?: number }) {
   const { t } = useLingui();
@@ -29,8 +30,18 @@ export function BatteryBar({ socPct }: { socPct?: number }) {
         )}
         {pct == null && <div className="absolute bottom-0 left-0 h-0 w-full" />}
       </div>
-      <div className="text-sm font-semibold whitespace-nowrap tabular-nums text-gray-900 dark:text-gray-100">
-        {pct != null ? `${Math.round(pct)}%` : "—"}
+      <div className="text-sm whitespace-nowrap">
+        <PercentFormatter
+          value={pct}
+          renderValue={(parts) => (
+            <span className="font-semibold tabular-nums text-gray-900 dark:text-gray-100">
+              {parts}
+            </span>
+          )}
+          renderUnit={(parts) => (
+            <span className="font-normal text-gray-500 dark:text-gray-400">{parts}</span>
+          )}
+        />
       </div>
     </div>
   );
