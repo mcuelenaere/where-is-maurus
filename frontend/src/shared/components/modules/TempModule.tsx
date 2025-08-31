@@ -22,7 +22,7 @@ export function TempModule({ insideC, outsideC, historyInside, historyOutside }:
             <Trans>Inside</Trans>
           </span>
           <span className="whitespace-nowrap tabular-nums font-semibold text-gray-900 dark:text-gray-100">
-            {formatCelsius(insideC)} °C
+            {formatCelsius(insideC)}
           </span>
           <Sparkline data={historyInside} />
         </div>
@@ -31,7 +31,7 @@ export function TempModule({ insideC, outsideC, historyInside, historyOutside }:
             <Trans>Outside</Trans>
           </span>
           <span className="whitespace-nowrap tabular-nums font-semibold text-gray-900 dark:text-gray-100">
-            {formatCelsius(outsideC)} °C
+            {formatCelsius(outsideC)}
           </span>
           <Sparkline data={historyOutside} />
         </div>

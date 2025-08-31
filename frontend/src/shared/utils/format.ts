@@ -1,12 +1,49 @@
+const kilometersFormatter = new Intl.NumberFormat(undefined, {
+  style: "unit",
+  unit: "kilometer",
+  unitDisplay: "short",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+});
+
+const minutesFormatter = new Intl.NumberFormat(undefined, {
+  style: "unit",
+  unit: "minute",
+  unitDisplay: "short",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
+
+const timeFormatter = new Intl.DateTimeFormat(undefined, {
+  timeStyle: "medium",
+});
+
+const celsiusFormatter = new Intl.NumberFormat(undefined, {
+  style: "unit",
+  unit: "celsius",
+  unitDisplay: "short",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+});
+
 export function formatKilometers(v?: number) {
-  return v != null ? v.toFixed(2) : undefined;
+  if (!v) return "—";
+
+  return kilometersFormatter.format(v);
+}
+
+export function formatMinutes(v?: number) {
+  if (!v) return "—";
+
+  return minutesFormatter.format(v);
 }
 
 export function formatCelsius(v?: number) {
-  return v != null ? v.toFixed(1) : undefined;
+  if (!v) return "—";
+
+  return celsiusFormatter.format(v);
 }
 
 export function formatTime(d: Date) {
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getHours()}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  return timeFormatter.format(d);
 }

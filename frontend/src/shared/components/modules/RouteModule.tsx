@@ -3,7 +3,7 @@ import { Trans, useLingui } from "@lingui/react/macro";
 
 import type { CarState } from "../../api/types";
 import { MetricCard } from "../MetricCard";
-import { formatKilometers } from "../../utils/format";
+import { formatKilometers, formatMinutes } from "../../utils/format";
 
 type Props = { route?: CarState["route"] };
 
@@ -22,7 +22,7 @@ export function RouteModule({ route }: Props) {
               <Trans>Distance</Trans>
             </span>
             <span className="font-semibold text-gray-900 dark:text-gray-100">
-              {route?.dist_km != null ? `${formatKilometers(route.dist_km)} km` : "—"}
+              {formatKilometers(route?.dist_km)}
             </span>
           </div>
           <div className="flex items-center justify-between">
@@ -30,7 +30,7 @@ export function RouteModule({ route }: Props) {
               <Trans>ETA</Trans>
             </span>
             <span className="font-semibold text-gray-900 dark:text-gray-100">
-              {route?.eta_min != null ? `${route.eta_min} min` : "—"}
+              {formatMinutes(route?.eta_min)}
             </span>
           </div>
           {route?.traffic_delay_min != null && route.traffic_delay_min > 0 && (
@@ -39,7 +39,7 @@ export function RouteModule({ route }: Props) {
                 <Trans>Traffic delay</Trans>
               </span>
               <span className="font-semibold text-gray-900 dark:text-gray-100">
-                {route.traffic_delay_min} min
+                {formatMinutes(route.traffic_delay_min)}
               </span>
             </div>
           )}
