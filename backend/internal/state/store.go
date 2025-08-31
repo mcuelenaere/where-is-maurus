@@ -106,206 +106,198 @@ func marshalDelta(delta map[string]any) []byte {
 	return b
 }
 
+// updateHelper handles the common update pattern
+func (s *Store) updateHelper(carID, ts int64, updateFn func(*carEntry, map[string]any)) []byte {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	ce := s.ensure(carID)
+	ce.state.TSMS = ts
+
+	delta := map[string]any{"ts_ms": ts}
+	updateFn(ce, delta)
+
+	cutoff := ts - ceWindowMs(s.window)
+	prune(&ce.history, cutoff)
+
+	return marshalDelta(delta)
+}
+
 // Update helpers. Each returns minimal delta map.
 
 func (s *Store) UpdateLocation(carID int64, ts int64, lat, lon, speedKPH, heading, elevM float64) []byte {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	ce := s.ensure(carID)
-	ce.state.TSMS = ts
-	if ce.state.Location == nil {
-		ce.state.Location = &Location{}
-	}
-	ce.state.Location.Lat = lat
-	ce.state.Location.Lon = lon
-	if speedKPH >= 0 {
-		ce.state.Location.SpeedKPH = speedKPH
-		ce.history.SpeedKPH = append(ce.history.SpeedKPH, TimestampedFloat{TS: ts, V: speedKPH})
-	}
-	if heading >= 0 {
-		ce.state.Location.Heading = heading
-		ce.history.Heading = append(ce.history.Heading, TimestampedFloat{TS: ts, V: heading})
-	}
-	if elevM >= 0 {
-		ce.state.Location.ElevationM = elevM
-		ce.history.ElevationM = append(ce.history.ElevationM, TimestampedFloat{TS: ts, V: elevM})
-	}
-	ce.history.Path = append(ce.history.Path, Breadcrumb{TS: ts, Lat: lat, Lon: lon})
-	cutoff := ts - ceWindowMs(s.window)
-	prune(&ce.history, cutoff)
-	return marshalDelta(map[string]any{
-		"ts_ms":    ts,
-		"location": ce.state.Location,
-		"history_30s": map[string]any{
+	return s.updateHelper(carID, ts, func(ce *carEntry, delta map[string]any) {
+		if ce.state.Location == nil {
+			ce.state.Location = &Location{}
+		}
+		ce.state.Location.Lat = lat
+		ce.state.Location.Lon = lon
+		if speedKPH >= 0 {
+			ce.state.Location.SpeedKPH = speedKPH
+			ce.history.SpeedKPH = append(ce.history.SpeedKPH, TimestampedFloat{TS: ts, V: speedKPH})
+		}
+		if heading >= 0 {
+			ce.state.Location.Heading = heading
+			ce.history.Heading = append(ce.history.Heading, TimestampedFloat{TS: ts, V: heading})
+		}
+		if elevM >= 0 {
+			ce.state.Location.ElevationM = elevM
+			ce.history.ElevationM = append(ce.history.ElevationM, TimestampedFloat{TS: ts, V: elevM})
+		}
+		ce.history.Path = append(ce.history.Path, Breadcrumb{TS: ts, Lat: lat, Lon: lon})
+
+		delta["location"] = ce.state.Location
+		delta["history_30s"] = map[string]any{
 			"speed_kph":   ce.history.SpeedKPH,
 			"heading":     ce.history.Heading,
 			"elevation_m": ce.history.ElevationM,
-		},
-		"path_30s": ce.history.Path,
+		}
+		delta["path_30s"] = ce.history.Path
 	})
 }
 
 func (s *Store) UpdateSpeed(carID int64, ts int64, speedKPH float64) []byte {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	ce := s.ensure(carID)
-	ce.state.TSMS = ts
-	if ce.state.Location == nil {
-		ce.state.Location = &Location{}
-	}
-	ce.state.Location.SpeedKPH = speedKPH
-	ce.history.SpeedKPH = append(ce.history.SpeedKPH, TimestampedFloat{TS: ts, V: speedKPH})
-	cutoff := ts - ceWindowMs(s.window)
-	prune(&ce.history, cutoff)
-	return marshalDelta(map[string]any{"ts_ms": ts, "location": ce.state.Location, "history_30s": map[string]any{"speed_kph": ce.history.SpeedKPH}})
+	return s.updateHelper(carID, ts, func(ce *carEntry, delta map[string]any) {
+		if ce.state.Location == nil {
+			ce.state.Location = &Location{}
+		}
+		ce.state.Location.SpeedKPH = speedKPH
+		ce.history.SpeedKPH = append(ce.history.SpeedKPH, TimestampedFloat{TS: ts, V: speedKPH})
+
+		delta["location"] = ce.state.Location
+		delta["history_30s"] = map[string]any{"speed_kph": ce.history.SpeedKPH}
+	})
 }
 
 func (s *Store) UpdateHeading(carID int64, ts int64, heading float64) []byte {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	ce := s.ensure(carID)
-	ce.state.TSMS = ts
-	if ce.state.Location == nil {
-		ce.state.Location = &Location{}
-	}
-	ce.state.Location.Heading = heading
-	ce.history.Heading = append(ce.history.Heading, TimestampedFloat{TS: ts, V: heading})
-	cutoff := ts - ceWindowMs(s.window)
-	prune(&ce.history, cutoff)
-	return marshalDelta(map[string]any{"ts_ms": ts, "location": ce.state.Location, "history_30s": map[string]any{"heading": ce.history.Heading}})
+	return s.updateHelper(carID, ts, func(ce *carEntry, delta map[string]any) {
+		if ce.state.Location == nil {
+			ce.state.Location = &Location{}
+		}
+		ce.state.Location.Heading = heading
+		ce.history.Heading = append(ce.history.Heading, TimestampedFloat{TS: ts, V: heading})
+
+		delta["location"] = ce.state.Location
+		delta["history_30s"] = map[string]any{"heading": ce.history.Heading}
+	})
 }
 
 func (s *Store) UpdateElevation(carID int64, ts int64, elevM float64) []byte {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	ce := s.ensure(carID)
-	ce.state.TSMS = ts
-	if ce.state.Location == nil {
-		ce.state.Location = &Location{}
-	}
-	ce.state.Location.ElevationM = elevM
-	ce.history.ElevationM = append(ce.history.ElevationM, TimestampedFloat{TS: ts, V: elevM})
-	cutoff := ts - ceWindowMs(s.window)
-	prune(&ce.history, cutoff)
-	return marshalDelta(map[string]any{"ts_ms": ts, "location": ce.state.Location, "history_30s": map[string]any{"elevation_m": ce.history.ElevationM}})
+	return s.updateHelper(carID, ts, func(ce *carEntry, delta map[string]any) {
+		if ce.state.Location == nil {
+			ce.state.Location = &Location{}
+		}
+		ce.state.Location.ElevationM = elevM
+		ce.history.ElevationM = append(ce.history.ElevationM, TimestampedFloat{TS: ts, V: elevM})
+
+		delta["location"] = ce.state.Location
+		delta["history_30s"] = map[string]any{"elevation_m": ce.history.ElevationM}
+	})
 }
 
 func (s *Store) UpdateBatteryLevel(carID int64, ts int64, soc float64) []byte {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	ce := s.ensure(carID)
-	ce.state.TSMS = ts
-	if ce.state.Battery == nil {
-		ce.state.Battery = &Battery{}
-	}
-	ce.state.Battery.SOCPct = soc
-	ce.history.SOCPct = append(ce.history.SOCPct, TimestampedFloat{TS: ts, V: soc})
-	cutoff := ts - ceWindowMs(s.window)
-	prune(&ce.history, cutoff)
-	return marshalDelta(map[string]any{"ts_ms": ts, "battery": ce.state.Battery, "history_30s": map[string]any{"soc_pct": ce.history.SOCPct}})
+	return s.updateHelper(carID, ts, func(ce *carEntry, delta map[string]any) {
+		if ce.state.Battery == nil {
+			ce.state.Battery = &Battery{}
+		}
+		ce.state.Battery.SOCPct = soc
+		ce.history.SOCPct = append(ce.history.SOCPct, TimestampedFloat{TS: ts, V: soc})
+
+		delta["battery"] = ce.state.Battery
+		delta["history_30s"] = map[string]any{"soc_pct": ce.history.SOCPct}
+	})
 }
 
 func (s *Store) UpdatePower(carID int64, ts int64, powerW float64) []byte {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	ce := s.ensure(carID)
-	ce.state.TSMS = ts
-	if ce.state.Battery == nil {
-		ce.state.Battery = &Battery{}
-	}
-	ce.state.Battery.PowerW = powerW
-	ce.history.PowerW = append(ce.history.PowerW, TimestampedFloat{TS: ts, V: powerW})
-	cutoff := ts - ceWindowMs(s.window)
-	prune(&ce.history, cutoff)
-	return marshalDelta(map[string]any{"ts_ms": ts, "battery": ce.state.Battery, "history_30s": map[string]any{"power_w": ce.history.PowerW}})
+	return s.updateHelper(carID, ts, func(ce *carEntry, delta map[string]any) {
+		if ce.state.Battery == nil {
+			ce.state.Battery = &Battery{}
+		}
+		ce.state.Battery.PowerW = powerW
+		ce.history.PowerW = append(ce.history.PowerW, TimestampedFloat{TS: ts, V: powerW})
+
+		delta["battery"] = ce.state.Battery
+		delta["history_30s"] = map[string]any{"power_w": ce.history.PowerW}
+	})
 }
 
 func (s *Store) UpdateInsideTemp(carID int64, ts int64, c float64) []byte {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	ce := s.ensure(carID)
-	ce.state.TSMS = ts
-	if ce.state.Climate == nil {
-		ce.state.Climate = &Climate{}
-	}
-	ce.state.Climate.InsideC = c
-	ce.history.InsideC = append(ce.history.InsideC, TimestampedFloat{TS: ts, V: c})
-	cutoff := ts - ceWindowMs(s.window)
-	prune(&ce.history, cutoff)
-	return marshalDelta(map[string]any{"ts_ms": ts, "climate": ce.state.Climate, "history_30s": map[string]any{"inside_c": ce.history.InsideC}})
+	return s.updateHelper(carID, ts, func(ce *carEntry, delta map[string]any) {
+		if ce.state.Climate == nil {
+			ce.state.Climate = &Climate{}
+		}
+		ce.state.Climate.InsideC = c
+		ce.history.InsideC = append(ce.history.InsideC, TimestampedFloat{TS: ts, V: c})
+
+		delta["climate"] = ce.state.Climate
+		delta["history_30s"] = map[string]any{"inside_c": ce.history.InsideC}
+	})
 }
 
 func (s *Store) UpdateOutsideTemp(carID int64, ts int64, c float64) []byte {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	ce := s.ensure(carID)
-	ce.state.TSMS = ts
-	if ce.state.Climate == nil {
-		ce.state.Climate = &Climate{}
-	}
-	ce.state.Climate.OutsideC = c
-	ce.history.OutsideC = append(ce.history.OutsideC, TimestampedFloat{TS: ts, V: c})
-	cutoff := ts - ceWindowMs(s.window)
-	prune(&ce.history, cutoff)
-	return marshalDelta(map[string]any{"ts_ms": ts, "climate": ce.state.Climate, "history_30s": map[string]any{"outside_c": ce.history.OutsideC}})
+	return s.updateHelper(carID, ts, func(ce *carEntry, delta map[string]any) {
+		if ce.state.Climate == nil {
+			ce.state.Climate = &Climate{}
+		}
+		ce.state.Climate.OutsideC = c
+		ce.history.OutsideC = append(ce.history.OutsideC, TimestampedFloat{TS: ts, V: c})
+
+		delta["climate"] = ce.state.Climate
+		delta["history_30s"] = map[string]any{"outside_c": ce.history.OutsideC}
+	})
 }
 
 func (s *Store) UpdateTPMS(carID int64, ts int64, pos string, v float64) []byte {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	ce := s.ensure(carID)
-	ce.state.TSMS = ts
-	if ce.state.TPMS == nil {
-		ce.state.TPMS = &TPMSBar{}
-	}
-	switch pos {
-	case "fl":
-		ce.state.TPMS.FL = v
-		ce.history.TPMSFL = append(ce.history.TPMSFL, TimestampedFloat{TS: ts, V: v})
-	case "fr":
-		ce.state.TPMS.FR = v
-		ce.history.TPMSFR = append(ce.history.TPMSFR, TimestampedFloat{TS: ts, V: v})
-	case "rl":
-		ce.state.TPMS.RL = v
-		ce.history.TPMSRL = append(ce.history.TPMSRL, TimestampedFloat{TS: ts, V: v})
-	case "rr":
-		ce.state.TPMS.RR = v
-		ce.history.TPMSRR = append(ce.history.TPMSRR, TimestampedFloat{TS: ts, V: v})
-	}
-	cutoff := ts - ceWindowMs(s.window)
-	prune(&ce.history, cutoff)
-	return marshalDelta(map[string]any{"ts_ms": ts, "tpms_bar": ce.state.TPMS})
+	return s.updateHelper(carID, ts, func(ce *carEntry, delta map[string]any) {
+		if ce.state.TPMS == nil {
+			ce.state.TPMS = &TPMSBar{}
+		}
+		switch pos {
+		case "fl":
+			ce.state.TPMS.FL = v
+			ce.history.TPMSFL = append(ce.history.TPMSFL, TimestampedFloat{TS: ts, V: v})
+		case "fr":
+			ce.state.TPMS.FR = v
+			ce.history.TPMSFR = append(ce.history.TPMSFR, TimestampedFloat{TS: ts, V: v})
+		case "rl":
+			ce.state.TPMS.RL = v
+			ce.history.TPMSRL = append(ce.history.TPMSRL, TimestampedFloat{TS: ts, V: v})
+		case "rr":
+			ce.state.TPMS.RR = v
+			ce.history.TPMSRR = append(ce.history.TPMSRR, TimestampedFloat{TS: ts, V: v})
+		}
+
+		delta["tpms_bar"] = ce.state.TPMS
+	})
 }
 
 func (s *Store) UpdateRoute(carID int64, ts int64, dest *Dest, etaMin, distKM float64) []byte {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	ce := s.ensure(carID)
-	ce.state.TSMS = ts
-	if ce.state.Route == nil {
-		ce.state.Route = &Route{}
-	}
-	ce.state.Route.Dest = dest
-	ce.state.Route.ETAMin = etaMin
-	ce.state.Route.DistKM = distKM
-	return marshalDelta(map[string]any{"ts_ms": ts, "route": ce.state.Route})
+	return s.updateHelper(carID, ts, func(ce *carEntry, delta map[string]any) {
+		if ce.state.Route == nil {
+			ce.state.Route = &Route{}
+		}
+		ce.state.Route.Dest = dest
+		ce.state.Route.ETAMin = etaMin
+		ce.state.Route.DistKM = distKM
+
+		delta["route"] = ce.state.Route
+	})
 }
 
 // UpdateRouteWithMeta updates route and includes optional destination label and traffic delay minutes.
 func (s *Store) UpdateRouteWithMeta(carID int64, ts int64, dest *Dest, etaMin, distKM float64, destLabel string, trafficDelayMin float64) []byte {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	ce := s.ensure(carID)
-	ce.state.TSMS = ts
-	if ce.state.Route == nil {
-		ce.state.Route = &Route{}
-	}
-	ce.state.Route.Dest = dest
-	ce.state.Route.ETAMin = etaMin
-	ce.state.Route.DistKM = distKM
-	ce.state.Route.DestLabel = destLabel
-	ce.state.Route.TrafficDelayMin = trafficDelayMin
-	return marshalDelta(map[string]any{"ts_ms": ts, "route": ce.state.Route})
+	return s.updateHelper(carID, ts, func(ce *carEntry, delta map[string]any) {
+		if ce.state.Route == nil {
+			ce.state.Route = &Route{}
+		}
+		ce.state.Route.Dest = dest
+		ce.state.Route.ETAMin = etaMin
+		ce.state.Route.DistKM = distKM
+		ce.state.Route.DestLabel = destLabel
+		ce.state.Route.TrafficDelayMin = trafficDelayMin
+
+		delta["route"] = ce.state.Route
+	})
 }
 
 func (s *Store) UpdateDisplayNameSilently(carID int64, ts int64, displayName string) {
