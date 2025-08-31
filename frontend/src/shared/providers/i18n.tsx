@@ -22,7 +22,7 @@ function activateLanguage(i18n: I18nType, language: string | undefined) {
   i18n.activate(language);
 }
 
-export interface I18nProps {
+interface I18nProps {
   children?: React.ReactNode;
 }
 

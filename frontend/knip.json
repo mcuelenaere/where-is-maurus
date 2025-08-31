@@ -10,7 +10,8 @@
         "lingui.config.ts"
       ],
       "project": ["src/**/*.{ts,tsx}", "*.{ts,tsx,js,jsx}"],
-      "ignoreDependencies": ["@lingui/macro", "tailwindcss"]
+      "ignoreDependencies": ["@lingui/macro", "tailwindcss"],
+      "ignore": ["src/shared/api/types.ts"]
     }
   },
   "ignore": ["dist/**"]
