@@ -51,6 +51,9 @@ func (c *Client) Connect(ctx context.Context) error {
 func (c *Client) SubscribeAllCars(ctx context.Context) error {
 	base := "teslamate/cars/+/" // '+' wildcard for car id
 	topics := []string{
+		base + "display_name",
+		base + "exterior_color",
+		base + "model",
 		base + "location",
 		base + "speed",
 		base + "heading",
@@ -91,6 +94,29 @@ func (c *Client) SubscribeAllCars(ctx context.Context) error {
 			if err := json.Unmarshal(m.Payload(), &loc); err == nil {
 				delta := c.store.UpdateLocation(carID, ts, loc.Latitude, loc.Longitude, -1, -1, -1)
 				c.hub.Broadcast(carID, wrapEvent("delta", delta))
+			}
+			return
+		}
+		if strings.HasSuffix(topic, "/display_name") {
+			displayName := strings.TrimSpace(payload)
+			if displayName != "" {
+				c.store.UpdateDisplayNameSilently(carID, ts, displayName)
+			}
+			return
+		}
+		if strings.HasSuffix(topic, "/exterior_color") {
+			exteriorColor := strings.TrimSpace(payload)
+			if exteriorColor != "" {
+				// Store the data but don't broadcast as delta update
+				c.store.UpdateExteriorColorSilently(carID, ts, exteriorColor)
+			}
+			return
+		}
+		if strings.HasSuffix(topic, "/model") {
+			model := strings.TrimSpace(payload)
+			if model != "" {
+				// Store the data but don't broadcast as delta update
+				c.store.UpdateModelSilently(carID, ts, model)
 			}
 			return
 		}

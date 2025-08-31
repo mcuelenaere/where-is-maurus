@@ -1,11 +1,11 @@
 import { Trans } from "@lingui/react/macro";
 type Props = {
-  carIds: number[];
+  cars: { id: number; display_name: string }[];
   value?: number;
   onChange: (id?: number) => void;
 };
 
-export function CarSelector({ carIds, value, onChange }: Props) {
+export function CarSelector({ cars, value, onChange }: Props) {
   return (
     <div className="flex items-center gap-2">
       <label className="text-sm text-gray-700 dark:text-gray-300">
@@ -19,14 +19,14 @@ export function CarSelector({ carIds, value, onChange }: Props) {
           onChange(v ? Number(v) : undefined);
         }}
       >
-        {carIds.length === 0 && (
+        {cars.length === 0 && (
           <option value="">
             <Trans>No cars</Trans>
           </option>
         )}
-        {carIds.map((id) => (
-          <option key={id} value={id}>
-            {id}
+        {cars.map((car) => (
+          <option key={car.id} value={car.id}>
+            {car.display_name}
           </option>
         ))}
       </select>

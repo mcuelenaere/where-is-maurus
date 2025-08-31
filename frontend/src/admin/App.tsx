@@ -12,7 +12,7 @@ import { useAdminSSE } from "./hooks/useAdminSSE";
 export default function App() {
   const { t } = useLingui();
 
-  const [carIds, setCarIds] = useState<number[]>([]);
+  const [cars, setCars] = useState<{ id: number; display_name: string }[]>([]);
   const [selectedCarId, setSelectedCarId] = useState<number | undefined>(undefined);
   const [error, setError] = useState<string | undefined>();
 
@@ -20,10 +20,10 @@ export default function App() {
     let cancelled = false;
     void (async () => {
       try {
-        const ids = await getCars();
+        const carList = await getCars();
         if (!cancelled) {
-          setCarIds(ids);
-          if (ids.length > 0) setSelectedCarId((prev) => prev ?? ids[0]);
+          setCars(carList);
+          if (carList.length > 0) setSelectedCarId((prev) => prev ?? carList[0].id);
         }
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : t`Failed to load cars`);
@@ -50,7 +50,7 @@ export default function App() {
 
       <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <CarSelector carIds={carIds} value={selectedCarId} onChange={setSelectedCarId} />
+          <CarSelector cars={cars} value={selectedCarId} onChange={setSelectedCarId} />
           <div className="text-sm text-gray-600 dark:text-gray-400">
             {connected ? <Trans>Live</Trans> : <Trans>Connecting…</Trans>}
             {lastUpdated ? (

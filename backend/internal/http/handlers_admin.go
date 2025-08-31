@@ -79,8 +79,8 @@ func (h *AdminHandlers) handleCreateShare(w http.ResponseWriter, r *http.Request
 }
 
 func (h *AdminHandlers) handleListCars(w http.ResponseWriter, r *http.Request) {
-	ids := h.Store.ListCarIDs()
-	writeJSON(w, http.StatusOK, map[string]any{"cars": ids})
+	cars := h.Store.ListCars()
+	writeJSON(w, http.StatusOK, map[string]any{"cars": cars})
 }
 
 // handleStream provides Server-Sent Events for the selected car ID for admin users.

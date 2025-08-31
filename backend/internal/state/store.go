@@ -40,6 +40,22 @@ func (s *Store) ListCarIDs() []int64 {
 	return ids
 }
 
+// ListCars returns car information including IDs and display names.
+func (s *Store) ListCars() []CarInfo {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	cars := make([]CarInfo, 0, len(s.cars))
+	for id, ce := range s.cars {
+		displayName := generateDisplayName(id, ce.state)
+		carInfo := CarInfo{
+			ID:          id,
+			DisplayName: displayName,
+		}
+		cars = append(cars, carInfo)
+	}
+	return cars
+}
+
 func (s *Store) ensure(carID int64) *carEntry {
 	if ce, ok := s.cars[carID]; ok {
 		return ce
@@ -290,6 +306,32 @@ func (s *Store) UpdateRouteWithMeta(carID int64, ts int64, dest *Dest, etaMin, d
 	ce.state.Route.DestLabel = destLabel
 	ce.state.Route.TrafficDelayMin = trafficDelayMin
 	return marshalDelta(map[string]any{"ts_ms": ts, "route": ce.state.Route})
+}
+
+func (s *Store) UpdateDisplayNameSilently(carID int64, ts int64, displayName string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	ce := s.ensure(carID)
+	ce.state.TSMS = ts
+	ce.state.DisplayName = displayName
+}
+
+// UpdateExteriorColorSilently updates the exterior color without broadcasting
+func (s *Store) UpdateExteriorColorSilently(carID int64, ts int64, exteriorColor string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	ce := s.ensure(carID)
+	ce.state.TSMS = ts
+	ce.state.ExteriorColor = exteriorColor
+}
+
+// UpdateModelSilently updates the model without broadcasting
+func (s *Store) UpdateModelSilently(carID int64, ts int64, model string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	ce := s.ensure(carID)
+	ce.state.TSMS = ts
+	ce.state.Model = model
 }
 
 func ceWindowMs(d time.Duration) int64 { return d.Milliseconds() }

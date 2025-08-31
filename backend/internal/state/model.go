@@ -1,5 +1,9 @@
 package state
 
+import (
+	"fmt"
+)
+
 type TimestampedFloat struct {
 	TS int64   `json:"ts_ms"`
 	V  float64 `json:"v"`
@@ -50,12 +54,15 @@ type Route struct {
 }
 
 type CarState struct {
-	TSMS     int64     `json:"ts_ms"`
-	Location *Location `json:"location,omitempty"`
-	Battery  *Battery  `json:"battery,omitempty"`
-	Climate  *Climate  `json:"climate,omitempty"`
-	TPMS     *TPMSBar  `json:"tpms_bar,omitempty"`
-	Route    *Route    `json:"route,omitempty"`
+	TSMS          int64 `json:"ts_ms"`
+	DisplayName   string
+	ExteriorColor string
+	Model         string
+	Location      *Location `json:"location,omitempty"`
+	Battery       *Battery  `json:"battery,omitempty"`
+	Climate       *Climate  `json:"climate,omitempty"`
+	TPMS          *TPMSBar  `json:"tpms_bar,omitempty"`
+	Route         *Route    `json:"route,omitempty"`
 }
 
 type HistoryWindow struct {
@@ -72,4 +79,24 @@ type HistoryWindow struct {
 	TPMSRL     []TimestampedFloat `json:"tpms_rl"`
 	TPMSRR     []TimestampedFloat `json:"tpms_rr"`
 	Path       []Breadcrumb       `json:"path_30s"`
+}
+
+type CarInfo struct {
+	ID          int64  `json:"id"`
+	DisplayName string `json:"display_name"`
+}
+
+// generateDisplayName returns the best available name for the car using fallbacks
+func generateDisplayName(carID int64, state CarState) string {
+	if state.DisplayName != "" {
+		return state.DisplayName
+	}
+
+	// Build a descriptive name from available information
+	if state.Model != "" && state.ExteriorColor != "" {
+		return fmt.Sprintf("Tesla Model %s (%s)", state.Model, state.ExteriorColor)
+	}
+
+	// Final fallback
+	return fmt.Sprintf("Car %d", carID)
 }

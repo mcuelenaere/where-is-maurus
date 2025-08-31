@@ -24,7 +24,7 @@ export async function createShare(req: AdminCreateShareRequest): Promise<AdminCr
   return parsed.data;
 }
 
-export async function getCars(): Promise<number[]> {
+export async function getCars(): Promise<{ id: number; display_name: string }[]> {
   const res = await apiFetch(`/api/v1/admin/cars`);
   const json = await res.json();
   const parsed = AdminCarsResponseSchema.safeParse(json);

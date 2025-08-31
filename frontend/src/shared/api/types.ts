@@ -64,7 +64,14 @@ export const HistoryWindowSchema = z
   .partial();
 export type HistoryWindow = z.infer<typeof HistoryWindowSchema>;
 
-export const AdminCarsResponseSchema = z.object({ cars: z.array(z.number()) });
+export const AdminCarsResponseSchema = z.object({
+  cars: z.array(
+    z.object({
+      id: z.number(),
+      display_name: z.string(),
+    })
+  ),
+});
 export type AdminCarsResponse = z.infer<typeof AdminCarsResponseSchema>;
 
 export const AdminCreateShareRequestSchema = z.object({
