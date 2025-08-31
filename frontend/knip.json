@@ -1,0 +1,17 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": [
+        "src/admin/main.tsx",
+        "src/share/main.tsx",
+        "vite.admin.config.ts",
+        "vite.share.config.ts",
+        "lingui.config.ts"
+      ],
+      "project": ["src/**/*.{ts,tsx}", "*.{ts,tsx,js,jsx}"],
+      "ignoreDependencies": ["@lingui/macro", "tailwindcss"]
+    }
+  },
+  "ignore": ["dist/**"]
+}
