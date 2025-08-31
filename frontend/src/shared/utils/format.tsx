@@ -194,7 +194,7 @@ export function BarFormatter({
         style: "unit",
         unit: "meter",
         unitDisplay: "short",
-        minimumFractionDigits: 0,
+        minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       }}
       value={value}
