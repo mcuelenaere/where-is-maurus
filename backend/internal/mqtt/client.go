@@ -27,6 +27,8 @@ func NewClient(brokerURL, username, password string, clientID string, store *sta
 		opts.SetPassword(password)
 	}
 	opts.SetAutoReconnect(true)
+	opts.SetCleanSession(false) // Keep subscriptions across reconnections
+	opts.SetResumeSubs(true)    // Automatically restore subscriptions on reconnect
 	opts.SetConnectionLostHandler(func(_ mqtt.Client, err error) { log.Warn().Err(err).Msg("mqtt lost") })
 	opts.SetOnConnectHandler(func(c mqtt.Client) { log.Info().Msg("mqtt connected") })
 	return &Client{cli: mqtt.NewClient(opts), store: store, hub: hub}
