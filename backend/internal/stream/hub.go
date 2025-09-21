@@ -47,12 +47,14 @@ func (h *Hub) Unsubscribe(carID int64, sub *Subscriber) {
 	log.Info().Int64("car_id", carID).Msg("removed subscriber")
 }
 
-func (h *Hub) Broadcast(carID int64, payload []byte) {
+func (h *Hub) Broadcast(carID int64, event string, data []byte) {
 	h.mu.RLock()
 	defer h.mu.RUnlock()
-	if len(payload) == 0 {
+	if len(data) == 0 {
 		return
 	}
+	// SSE framing: event: <event>\n data: <json>\n\n
+	payload := []byte("event: " + event + "\n" + "data: " + string(data) + "\n\n")
 	for sub := range h.subs[carID] {
 		select {
 		case sub.Ch <- payload:

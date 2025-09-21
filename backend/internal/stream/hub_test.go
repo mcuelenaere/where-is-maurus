@@ -12,11 +12,12 @@ func TestHub_SubscribeBroadcastUnsubscribe(t *testing.T) {
 	}
 	// broadcast should deliver
 	payload := []byte("x")
-	h.Broadcast(1, payload)
+	h.Broadcast(1, "test", payload)
 	select {
 	case got := <-sub.Ch:
-		if string(got) != "x" {
-			t.Fatalf("unexpected payload: %q", got)
+		expected := "event: test\ndata: x\n\n"
+		if string(got) != expected {
+			t.Fatalf("unexpected payload: %q, expected %q", got, expected)
 		}
 	default:
 		t.Fatalf("expected message delivered")

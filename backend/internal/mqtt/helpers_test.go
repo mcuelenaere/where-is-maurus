@@ -22,14 +22,3 @@ func TestToFloat(t *testing.T) {
 		}
 	}
 }
-
-func TestWrapEvent(t *testing.T) {
-	if v := wrapEvent("delta", nil); v != nil {
-		t.Fatalf("expected nil for empty data")
-	}
-	out := wrapEvent("delta", []byte("{\"a\":1}"))
-	want := "event: delta\ndata: {\"a\":1}\n\n"
-	if string(out) != want {
-		t.Fatalf("unexpected wrap: %q", string(out))
-	}
-}

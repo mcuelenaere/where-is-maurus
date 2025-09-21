@@ -95,7 +95,7 @@ func (c *Client) SubscribeAllCars(ctx context.Context) error {
 			}
 			if err := json.Unmarshal(m.Payload(), &loc); err == nil {
 				delta := c.store.UpdateLocation(carID, ts, loc.Latitude, loc.Longitude, -1, -1, -1)
-				c.hub.Broadcast(carID, wrapEvent("delta", delta))
+				c.hub.Broadcast(carID, "delta", delta)
 			}
 			return
 		}
@@ -128,7 +128,7 @@ func (c *Client) SubscribeAllCars(ctx context.Context) error {
 			if err := json.Unmarshal(m.Payload(), &ar); err == nil {
 				if e, ok := ar["error"]; ok && e != nil {
 					delta := c.store.UpdateRoute(carID, ts, nil, 0, 0)
-					c.hub.Broadcast(carID, wrapEvent("delta", delta))
+					c.hub.Broadcast(carID, "delta", delta)
 					return
 				}
 				var dest *state.Dest
@@ -168,7 +168,7 @@ func (c *Client) SubscribeAllCars(ctx context.Context) error {
 					}
 				}
 				delta := c.store.UpdateRouteWithMeta(carID, ts, dest, etaMin, distKM, destLabel, trafficDelayMin)
-				c.hub.Broadcast(carID, wrapEvent("delta", delta))
+				c.hub.Broadcast(carID, "delta", delta)
 			}
 			return
 		}
@@ -181,37 +181,37 @@ func (c *Client) SubscribeAllCars(ctx context.Context) error {
 		switch {
 		case strings.HasSuffix(topic, "/speed"):
 			delta := c.store.UpdateSpeed(carID, ts, val)
-			c.hub.Broadcast(carID, wrapEvent("delta", delta))
+			c.hub.Broadcast(carID, "delta", delta)
 		case strings.HasSuffix(topic, "/heading"):
 			delta := c.store.UpdateHeading(carID, ts, val)
-			c.hub.Broadcast(carID, wrapEvent("delta", delta))
+			c.hub.Broadcast(carID, "delta", delta)
 		case strings.HasSuffix(topic, "/elevation"):
 			delta := c.store.UpdateElevation(carID, ts, val)
-			c.hub.Broadcast(carID, wrapEvent("delta", delta))
+			c.hub.Broadcast(carID, "delta", delta)
 		case strings.HasSuffix(topic, "/battery_level"):
 			delta := c.store.UpdateBatteryLevel(carID, ts, val)
-			c.hub.Broadcast(carID, wrapEvent("delta", delta))
+			c.hub.Broadcast(carID, "delta", delta)
 		case strings.HasSuffix(topic, "/power"):
 			delta := c.store.UpdatePower(carID, ts, val)
-			c.hub.Broadcast(carID, wrapEvent("delta", delta))
+			c.hub.Broadcast(carID, "delta", delta)
 		case strings.HasSuffix(topic, "/inside_temp"):
 			delta := c.store.UpdateInsideTemp(carID, ts, val)
-			c.hub.Broadcast(carID, wrapEvent("delta", delta))
+			c.hub.Broadcast(carID, "delta", delta)
 		case strings.HasSuffix(topic, "/outside_temp"):
 			delta := c.store.UpdateOutsideTemp(carID, ts, val)
-			c.hub.Broadcast(carID, wrapEvent("delta", delta))
+			c.hub.Broadcast(carID, "delta", delta)
 		case strings.HasSuffix(topic, "/tpms_pressure_fl"):
 			delta := c.store.UpdateTPMS(carID, ts, "fl", val)
-			c.hub.Broadcast(carID, wrapEvent("delta", delta))
+			c.hub.Broadcast(carID, "delta", delta)
 		case strings.HasSuffix(topic, "/tpms_pressure_fr"):
 			delta := c.store.UpdateTPMS(carID, ts, "fr", val)
-			c.hub.Broadcast(carID, wrapEvent("delta", delta))
+			c.hub.Broadcast(carID, "delta", delta)
 		case strings.HasSuffix(topic, "/tpms_pressure_rl"):
 			delta := c.store.UpdateTPMS(carID, ts, "rl", val)
-			c.hub.Broadcast(carID, wrapEvent("delta", delta))
+			c.hub.Broadcast(carID, "delta", delta)
 		case strings.HasSuffix(topic, "/tpms_pressure_rr"):
 			delta := c.store.UpdateTPMS(carID, ts, "rr", val)
-			c.hub.Broadcast(carID, wrapEvent("delta", delta))
+			c.hub.Broadcast(carID, "delta", delta)
 		}
 	}
 	for _, t := range topics {
@@ -244,13 +244,4 @@ func toFloat(v any) (float64, bool) {
 		}
 	}
 	return 0, false
-}
-
-func wrapEvent(event string, data []byte) []byte {
-	if len(data) == 0 {
-		return nil
-	}
-	// SSE framing: event: <event>\n data: <json>\n\n
-	// We keep payload as-is assuming it is a JSON object, prefix data: once
-	return []byte("event: " + event + "\n" + "data: " + string(data) + "\n\n")
 }

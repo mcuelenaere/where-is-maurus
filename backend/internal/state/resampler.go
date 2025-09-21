@@ -95,7 +95,7 @@ func StartResampler(store *Store, hub *stream.Hub) {
 				if len(allDeltas) > 0 {
 					combinedDelta := mergeDeltas(allDeltas)
 					deltaBytes, _ := json.Marshal(combinedDelta)
-					hub.Broadcast(id, sseWrap("delta", deltaBytes))
+					hub.Broadcast(id, "delta", deltaBytes)
 				}
 
 				// route: we do not resample route; it changes infrequently and not graphed
@@ -144,16 +144,4 @@ func mergeDeltas(deltas []map[string]any) map[string]any {
 	}
 
 	return result
-}
-
-func sseWrap(event string, data []byte) []byte {
-	if len(data) == 0 {
-		return nil
-	}
-	// ensure data is valid JSON; if not, pass as-is
-	var js any
-	if json.Unmarshal(data, &js) != nil {
-		return []byte("event: " + event + "\n" + "data: " + string(data) + "\n\n")
-	}
-	return []byte("event: " + event + "\n" + "data: " + string(data) + "\n\n")
 }
