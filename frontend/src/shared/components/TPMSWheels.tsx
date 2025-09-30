@@ -13,10 +13,27 @@ export function TPMSWheels({
 }) {
   function pressureClass(v?: number) {
     if (v == null) return "text-gray-400";
-    if (v < 2.1) return "text-red-600 dark:text-red-400";
-    if (v < 2.3) return "text-yellow-600 dark:text-yellow-400";
-    if (v > 2.8) return "text-yellow-600 dark:text-yellow-400";
-    return "text-green-600 dark:text-green-400";
+
+    // Dangerously low
+    if (v < 2.6) return "text-red-600 dark:text-red-400";
+
+    // Low, but not catastrophic
+    if (v < 2.8) return "text-orange-600 dark:text-orange-400";
+
+    // Slightly below ideal
+    if (v < 2.9) return "text-amber-600 dark:text-amber-400";
+
+    // Ideal zone
+    if (v <= 3.0) return "text-green-600 dark:text-green-400";
+
+    // Slightly above
+    if (v <= 3.1) return "text-teal-600 dark:text-teal-400";
+
+    // Noticeably high
+    if (v <= 3.3) return "text-yellow-600 dark:text-yellow-400";
+
+    // Dangerously high
+    return "text-red-600 dark:text-red-400";
   }
 
   function Wheel({ label, value }: { label: string; value?: number }) {
