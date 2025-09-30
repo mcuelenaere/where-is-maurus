@@ -51,9 +51,9 @@ export default function App() {
       numeric: "auto",
     });
 
-    if (hours > 1) {
+    if (hours >= 1) {
       return t`Expires ${timeFormatter.format(hours, "hour")}`;
-    } else if (mins > 1) {
+    } else if (mins >= 1) {
       return t`Expires ${timeFormatter.format(mins, "minute")}`;
     } else {
       return t`Expires in < 1 min`;
