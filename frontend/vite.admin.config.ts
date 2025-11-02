@@ -2,48 +2,14 @@ import react from "@vitejs/plugin-react";
 import { lingui } from "@lingui/vite-plugin";
 import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
-import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  plugins: [
-    react({ babel: { plugins: ["macros"] } }),
-    lingui(),
-    tailwindcss(),
-    VitePWA({
-      registerType: "autoUpdate",
-      useCredentials: true,
-      devOptions: { enabled: true },
-      injectRegister: false,
-      workbox: {
-        // Disable all caching and interception
-        globPatterns: [],
-        globIgnores: ["**/*"],
-        // Ensure no requests are cached
-        maximumFileSizeToCacheInBytes: 0,
-      },
-      manifest: {
-        name: "Where is Maurus - Admin",
-        short_name: "WIM Admin",
-        start_url: ".",
-        scope: ".",
-        display: "standalone",
-        theme_color: "#0ea5e9",
-        background_color: "#111827",
-        icons: [
-          {
-            src: "icon.svg",
-            sizes: "any",
-            type: "image/svg+xml",
-            purpose: "any maskable",
-          },
-        ],
-      },
-    }),
-  ],
+  plugins: [react({ babel: { plugins: ["macros"] } }), lingui(), tailwindcss()],
   root: "src/admin",
   server: {
     port: 5174,
     host: true,
+    open: true,
   },
   build: {
     sourcemap: false,
