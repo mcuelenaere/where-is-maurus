@@ -106,10 +106,10 @@ function BatteryBarText({ socPct }: { socPct?: number }) {
   );
 }
 
-function PowerBarVisualization({ powerW }: { powerW: number }) {
-  const MAX_VALUE = 320;
-  const MIN_VALUE = -100;
+const MAX_VALUE = 320;
+const MIN_VALUE = -100;
 
+function PowerBarVisualization({ powerW }: { powerW: number }) {
   const { upFrac, downFrac } = useMemo(() => {
     const up = powerW > 0 ? Math.min(1, powerW / MAX_VALUE) : 0;
     const down = powerW < 0 ? Math.min(1, Math.abs(powerW / MIN_VALUE)) : 0;

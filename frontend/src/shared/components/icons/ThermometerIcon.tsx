@@ -75,7 +75,6 @@ export function ThermometerIcon({
   // Following reference pattern: M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z
   // Start top-right, go down right side, arc for bulb bottom, back up left side, small rounded top
   const rightX = stemX + stemWidth; // 14
-  const leftX = stemX; // 10
 
   // Unified path: rectangle top, smooth arc transition to bulb bottom
   // The arc goes from right bottom corner of stem, curves down to form bulb, back to left bottom corner
