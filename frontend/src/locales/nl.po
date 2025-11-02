@@ -17,36 +17,41 @@ msgstr ""
 msgid "Automatically center"
 msgstr "Automatisch centreren"
 
+#: src/shared/components/modules/EnergyModule.tsx
+msgid "Battery"
+msgstr "Batterij"
+
 #: src/shared/components/BatteryBar.tsx
 msgid "Battery state of charge"
 msgstr "Laadstatus van de batterij"
 
-#: src/admin/components/CarSelector.tsx
+#: src/apps/admin/components/CarSelector.tsx
+#: src/shared/components/MapView.tsx
 msgid "Car"
 msgstr "Auto"
 
-#: src/admin/App.tsx
-#: src/share/App.tsx
+#: src/apps/admin/App.tsx
+#: src/apps/share/App.tsx
 msgid "Connecting…"
 msgstr "Verbinden…"
 
-#: src/admin/components/ShareForm.tsx
+#: src/apps/admin/components/ShareForm.tsx
 msgid "Copied!"
 msgstr "Gekopieerd!"
 
-#: src/admin/components/ShareForm.tsx
+#: src/apps/admin/components/ShareForm.tsx
 msgid "Copy URL"
 msgstr "URL kopiëren"
 
-#: src/admin/components/ShareForm.tsx
+#: src/apps/admin/components/ShareForm.tsx
 msgid "Create link"
 msgstr "Link aanmaken"
 
-#: src/admin/components/ShareForm.tsx
+#: src/apps/admin/components/ShareForm.tsx
 msgid "Create shareable link"
 msgstr "Deelbare link aanmaken"
 
-#: src/admin/components/ShareForm.tsx
+#: src/apps/admin/components/ShareForm.tsx
 msgid "Creating…"
 msgstr "Aanmaken…"
 
@@ -54,15 +59,15 @@ msgstr "Aanmaken…"
 msgid "Current position"
 msgstr "Huidige positie"
 
-#: src/admin/components/DurationSelector.tsx
+#: src/apps/admin/components/DurationSelector.tsx
 msgid "Custom"
 msgstr "Aangepast"
 
-#: src/admin/components/DurationSelector.tsx
+#: src/apps/admin/components/DurationSelector.tsx
 msgid "Custom:"
 msgstr "Aangepast:"
 
-#: src/admin/components/DurationSelector.tsx
+#: src/apps/admin/components/DurationSelector.tsx
 msgid "Days"
 msgstr "Dagen"
 
@@ -74,61 +79,69 @@ msgstr "Bestemming"
 msgid "Distance"
 msgstr "Afstand"
 
-#: src/admin/components/DurationSelector.tsx
+#: src/apps/admin/components/DurationSelector.tsx
 msgid "Duration:"
 msgstr "Duur:"
 
-#: src/shared/components/modules/ElevationModule.tsx
+#: src/shared/components/modules/EnvironmentModule.tsx
 msgid "Elevation"
 msgstr "Hoogte"
+
+#: src/shared/components/modules/EnergyModule.tsx
+msgid "Energy"
+msgstr "Energie"
+
+#: src/shared/components/modules/EnvironmentModule.tsx
+msgid "Environment"
+msgstr "Omgeving"
 
 #: src/shared/components/modules/RouteModule.tsx
 msgid "ETA"
 msgstr "ETA"
 
-#: src/share/App.tsx
+#: src/apps/share/App.tsx
 msgid "Expired"
 msgstr "Verlopen"
 
 #. placeholder {0}: timeFormatter.format(hours, "hour")
 #. placeholder {0}: timeFormatter.format(mins, "minute")
-#: src/share/App.tsx
-#: src/share/App.tsx
+#: src/apps/share/App.tsx
+#: src/apps/share/App.tsx
 msgid "Expires {0}"
 msgstr "Verloopt {0}"
 
 #. placeholder {0}: i18n.date(computedExpiresAt, { dateStyle: "short", timeStyle: "medium" })
 #. placeholder {1}: ttlDays > 0 ? `${ttlDays}d ` : ""
-#: src/admin/components/DurationSelector.tsx
+#: src/apps/admin/components/DurationSelector.tsx
 msgid "Expires at: {0} ({1}{ttlHours}h {ttlMinutes}m from now)"
 msgstr "Verloopt op: {0} ({1}{ttlHours}u {ttlMinutes}m vanaf nu)"
 
-#: src/share/App.tsx
+#: src/apps/share/App.tsx
 msgid "Expires in < 1 min"
 msgstr "Verloopt binnen < 1 min"
 
-#: src/admin/components/ShareForm.tsx
+#: src/apps/admin/components/ShareForm.tsx
 msgid "Failed to create share"
 msgstr "Kan deel-link niet aanmaken"
 
-#: src/admin/App.tsx
+#: src/apps/admin/App.tsx
 msgid "Failed to load cars"
 msgstr "Kan auto's niet laden"
 
-#: src/admin/components/DurationSelector.tsx
+#: src/apps/admin/components/DurationSelector.tsx
 msgid "Hours"
 msgstr "Uren"
 
-#: src/shared/components/modules/TempModule.tsx
+#: src/shared/components/modules/EnvironmentModule.tsx
 msgid "Inside"
 msgstr "Binnen"
 
-#: src/admin/App.tsx
-#: src/share/App.tsx
+#: src/apps/admin/App.tsx
+#: src/apps/share/App.tsx
 msgid "Live"
 msgstr "Live"
 
-#: src/admin/components/DurationSelector.tsx
+#: src/apps/admin/components/DurationSelector.tsx
 msgid "Minutes"
 msgstr "Minuten"
 
@@ -136,27 +149,32 @@ msgstr "Minuten"
 msgid "No active route"
 msgstr "Geen actieve route"
 
-#: src/admin/components/CarSelector.tsx
+#: src/apps/admin/components/CarSelector.tsx
 msgid "No cars"
 msgstr "Geen auto's"
 
-#: src/admin/components/DurationSelector.tsx
+#: src/apps/admin/components/DurationSelector.tsx
 msgid "No ETA available"
 msgstr "Geen ETA beschikbaar"
 
-#: src/admin/components/ShareForm.tsx
+#: src/apps/admin/components/ShareForm.tsx
 msgid "Note: No share base URL configured"
 msgstr "Let op: geen basis-URL voor delen ingesteld"
 
-#: src/shared/components/modules/TempModule.tsx
+#: src/shared/components/MapView.tsx
+msgid "Off"
+msgstr "Uit"
+
+#: src/shared/components/modules/EnvironmentModule.tsx
 msgid "Outside"
 msgstr "Buiten"
 
-#: src/shared/components/modules/BatteryModule.tsx
+#: src/shared/components/modules/EnergyModule.tsx
 #: src/shared/components/PowerBar.tsx
 msgid "Power"
 msgstr "Vermogen"
 
+#: src/shared/components/MapView.tsx
 #: src/shared/components/modules/RouteModule.tsx
 msgid "Route"
 msgstr "Route"
@@ -166,7 +184,7 @@ msgstr "Route"
 msgid "Route • {0}"
 msgstr "Route • {0}"
 
-#: src/admin/components/ShareForm.tsx
+#: src/apps/admin/components/ShareForm.tsx
 msgid "Select a car first"
 msgstr "Selecteer eerst een auto"
 
@@ -174,7 +192,7 @@ msgstr "Selecteer eerst een auto"
 msgid "Session exchange failed"
 msgstr "Sessie-uitwisseling mislukt"
 
-#: src/admin/components/ShareForm.tsx
+#: src/apps/admin/components/ShareForm.tsx
 msgid "Share link"
 msgstr "Deel link"
 
@@ -186,10 +204,6 @@ msgstr "Snelheid"
 msgid "Speedometer"
 msgstr "Snelheidsmeter"
 
-#: src/shared/components/modules/TempModule.tsx
-msgid "Temp"
-msgstr "Temperatuur"
-
 #: src/shared/components/modules/TirePressureModule.tsx
 msgid "Tire Pressure"
 msgstr "Bandenspanning"
@@ -198,32 +212,20 @@ msgstr "Bandenspanning"
 msgid "Traffic delay"
 msgstr "Verkeersvertraging"
 
-#: src/admin/App.tsx
-#: src/share/App.tsx
+#: src/apps/admin/App.tsx
+#: src/apps/share/App.tsx
 msgid "Updated"
 msgstr "Bijgewerkt"
 
-#: src/admin/components/DurationSelector.tsx
-#: src/admin/components/DurationSelector.tsx
+#: src/apps/admin/components/DurationSelector.tsx
+#: src/apps/admin/components/DurationSelector.tsx
 msgid "Use ETA"
 msgstr "ETA gebruiken"
 
-#: src/shared/components/MapView.tsx
-msgid "Car"
-msgstr "Auto"
-
-#: src/shared/components/MapView.tsx
-msgid "Route"
-msgstr "Route"
-
-#: src/shared/components/MapView.tsx
-msgid "Off"
-msgstr "Uit"
-
-#: src/share/App.tsx
+#: src/apps/share/App.tsx
 msgid "Where is Maurus"
 msgstr "Waar is Maurus"
 
-#: src/admin/components/Header.tsx
+#: src/apps/admin/components/Header.tsx
 msgid "Where is Maurus – Admin"
 msgstr "Waar is Maurus – Beheer"
