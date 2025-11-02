@@ -16,9 +16,9 @@ export function SpeedModule({ speedKph, history }: Props) {
     <MetricCard label={<Trans>Speed</Trans>} hideValue>
       <div className="flex flex-col items-center gap-2">
         <Speedometer value={speedKph} unit="km/h" />
-        <div className="w-full flex flex-col items-center">
+        {history && (
           <Sparkline data={history} />
-        </div>
+        )}
       </div>
     </MetricCard>
   );

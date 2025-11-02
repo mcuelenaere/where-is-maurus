@@ -18,22 +18,20 @@ export function BatteryModule({ socPct, powerW, historySoc, historyPower }: Prop
   return (
     <MetricCard label={<Trans>Power</Trans>} hideValue>
       <div className="flex flex-col gap-3">
-        <div className="flex flex-row gap-2">
-          <div>
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-center">
             <BatteryBar socPct={socPct} />
           </div>
           {historySoc && (
-            <div className="self-center">
-              <Sparkline data={historySoc} />
-            </div>
+            <Sparkline data={historySoc} />
           )}
         </div>
-        <div className="flex flex-row gap-2">
-          <PowerBar powerW={powerW ?? 0} />
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-center">
+            <PowerBar powerW={powerW ?? 0} />
+          </div>
           {historyPower && (
-            <div className="self-center overflow-hidden">
-              <Sparkline data={historyPower} />
-            </div>
+            <Sparkline data={historyPower} />
           )}
         </div>
       </div>
