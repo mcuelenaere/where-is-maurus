@@ -117,8 +117,8 @@ func mergeDeltas(deltas []map[string]any) map[string]any {
 	result := deltas[0]
 
 	// Merge subsequent deltas
-	for i := 1; i < len(deltas); i++ {
-		for key, value := range deltas[i] {
+	for _, delta := range deltas[1:] {
+		for key, value := range delta {
 			switch key {
 			case "ts_ms":
 				// Keep the latest timestamp
