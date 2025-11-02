@@ -2,6 +2,7 @@ import "leaflet/dist/leaflet.css";
 
 import L from "leaflet";
 import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-leaflet";
+import { useEffect, useRef, useState } from "react";
 import { Trans } from "@lingui/react/macro";
 
 import { getEnv } from "../api/client";
@@ -18,23 +19,79 @@ L.Icon.Default.mergeOptions({
 
 type LatLon = { lat: number; lon: number; heading?: number };
 
+const AUTO_FIT_DELAY_MS = 15000;
+
+function TrackUserInteraction({
+  onInteractionChange,
+}: {
+  onInteractionChange: (isInteracting: boolean) => void;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    let interactionTimeout: number | undefined;
+
+    const handleInteractionStart = () => {
+      onInteractionChange(true);
+    };
+
+    const handleInteractionEnd = () => {
+      // Set a timeout to resume auto-fit after user stops interacting
+      // This gives a delay to ensure interaction is truly done
+      if (interactionTimeout) {
+        clearTimeout(interactionTimeout);
+      }
+      interactionTimeout = window.setTimeout(() => {
+        onInteractionChange(false);
+      }, AUTO_FIT_DELAY_MS);
+    };
+
+    map.on("movestart", handleInteractionStart);
+    map.on("zoomstart", handleInteractionStart);
+    map.on("moveend", handleInteractionEnd);
+    map.on("zoomend", handleInteractionEnd);
+
+    return () => {
+      if (interactionTimeout) {
+        clearTimeout(interactionTimeout);
+      }
+      map.off("movestart", handleInteractionStart);
+      map.off("zoomstart", handleInteractionStart);
+      map.off("moveend", handleInteractionEnd);
+      map.off("zoomend", handleInteractionEnd);
+    };
+  }, [map, onInteractionChange]);
+
+  return null;
+}
+
 function FitBounds({
   current,
   dest,
-  path,
+  isUserInteracting,
 }: {
   current?: LatLon;
   dest?: LatLon;
-  path?: PathPoint[];
+  isUserInteracting: boolean;
 }) {
   const map = useMap();
-  if (!current && !dest && !(path && path.length)) return null;
-  const latlngs: L.LatLngExpression[] = [];
-  if (current) latlngs.push([current.lat, current.lon]);
-  if (dest) latlngs.push([dest.lat, dest.lon]);
-  if (path && path.length) latlngs.push(...path.map((p) => [p.lat, p.lon] as [number, number]));
-  const bounds = L.latLngBounds(latlngs as L.LatLngTuple[]);
-  map.fitBounds(bounds, { padding: [20, 20] });
+
+  useEffect(() => {
+    // Don't auto-fit if user is interacting
+    if (isUserInteracting) {
+      return;
+    } else if (!current && !dest) {
+      return;
+    }
+
+    const latlngs: L.LatLngTuple[] = [];
+    if (current) latlngs.push([current.lat, current.lon]);
+    if (dest) latlngs.push([dest.lat, dest.lon]);
+
+    const bounds = L.latLngBounds(latlngs);
+    map.fitBounds(bounds, { padding: [20, 20] });
+  }, [map, current, dest, isUserInteracting]);
+
   return null;
 }
 
@@ -47,6 +104,8 @@ export function MapView({
   dest?: LatLon;
   path?: PathPoint[];
 }) {
+  const [isUserInteracting, setIsUserInteracting] = useState(false);
+
   const { mapTileUrl, mapAttribution, mapTileUrlDark, mapAttributionDark } = getEnv();
   const prefersDark =
     typeof window !== "undefined" &&
@@ -108,7 +167,12 @@ export function MapView({
             opacity={0.8}
           />
         )}
-        <FitBounds current={current} dest={dest} path={path} />
+        <TrackUserInteraction onInteractionChange={setIsUserInteracting} />
+        <FitBounds
+          current={current}
+          dest={dest}
+          isUserInteracting={isUserInteracting}
+        />
       </MapContainer>
     </div>
   );
