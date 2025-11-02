@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Trans, useLingui } from "@lingui/react/macro";
 
 import { getCars } from "../shared/api/admin";
@@ -35,14 +35,10 @@ export default function App() {
   }, [t]);
 
   const { state, connected, error: sseError } = useAdminSSE(selectedCarId);
-  const lastUpdated = useMemo(
-    () => (state?.ts_ms ? new Date(state.ts_ms).getTime() : undefined),
-    [state?.ts_ms]
-  );
-  useEffect(() => {
-    if (sseError) setError(sseError);
-    else setError(undefined);
-  }, [sseError]);
+  const lastUpdated = state?.ts_ms ? new Date(state.ts_ms).getTime() : undefined;
+
+  // Derive error from sseError instead of using effect
+  const displayError = sseError || error;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -64,9 +60,9 @@ export default function App() {
           </div>
         </div>
 
-        {error && (
+        {displayError && (
           <div className="mt-3 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-300">
-            {error}
+            {displayError}
           </div>
         )}
 

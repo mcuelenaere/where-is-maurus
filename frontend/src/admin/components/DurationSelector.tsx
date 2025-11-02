@@ -1,5 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Trans, useLingui } from "@lingui/react/macro";
+
+function useTime() {
+  const [time, setTime] = useState(() => new Date());
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(id);
+  }, []);
+
+  return time;
+}
 
 type Props = {
   etaMin?: number;
@@ -11,37 +25,30 @@ type SelectionType = "preset" | "custom" | "eta";
 export function DurationSelector({ etaMin, onDurationChange }: Props) {
   const { t, i18n } = useLingui();
 
-  const [ttlHours, setTtlHours] = useState<number>(4);
-  const [ttlMinutes, setTtlMinutes] = useState<number>(0);
+  const [ttlHours, setTtlHours] = useState<number>(() =>
+    etaMin && etaMin > 0 ? Math.floor(etaMin / 60) : 4
+  );
+  const [ttlMinutes, setTtlMinutes] = useState<number>(() => {
+    if (!etaMin || etaMin <= 0) return 0;
+    const minutes = etaMin % 60;
+    const hours = Math.floor(etaMin / 60);
+    return hours === 0 && minutes === 0 ? 1 : minutes;
+  });
   const [ttlDays, setTtlDays] = useState<number>(0);
   const [customTimeUnit, setCustomTimeUnit] = useState<"minutes" | "hours" | "days">("hours");
-  const [customTimeValue, setCustomTimeValue] = useState<number>(4);
+  const [customTimeValue, setCustomTimeValue] = useState<number>(() =>
+    etaMin && etaMin > 0 ? Math.floor(etaMin / 60) : 4
+  );
   const [selectionType, setSelectionType] = useState<SelectionType>("preset");
+  const time = useTime();
 
   const presetsMin = [15, 30, 60, 120, 240, 480];
 
-  useEffect(() => {
-    if (etaMin && etaMin > 0) {
-      const hours = Math.floor(etaMin / 60);
-      let minutes = etaMin % 60;
-      if (hours === 0 && minutes === 0) {
-        minutes = 1;
-      }
-      setTtlDays(0);
-      setTtlHours(hours);
-      setTtlMinutes(minutes);
-      setCustomTimeUnit("hours");
-      setCustomTimeValue(hours);
-      setSelectionType("preset");
-    }
-  }, [etaMin]);
+  // Calculate total minutes from TTL values
+  const totalMinutes = (ttlDays || 0) * 24 * 60 + (ttlHours || 0) * 60 + (ttlMinutes || 0);
 
-  const computedExpiresAt = useMemo(() => {
-    const totalMinutes = (ttlDays || 0) * 24 * 60 + (ttlHours || 0) * 60 + (ttlMinutes || 0);
-    const date = new Date(Date.now() + totalMinutes * 60 * 1000);
-    date.setSeconds(0);
-    return date.toISOString();
-  }, [ttlDays, ttlHours, ttlMinutes]);
+  // Format expiration time
+  const computedExpiresAt = new Date(time.getTime() + totalMinutes * 60 * 1000).toISOString();
 
   // Notify parent component of duration changes
   useEffect(() => {

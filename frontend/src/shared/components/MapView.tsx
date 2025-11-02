@@ -2,7 +2,7 @@ import "leaflet/dist/leaflet.css";
 
 import L from "leaflet";
 import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-leaflet";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Trans } from "@lingui/react/macro";
 
 import { getEnv } from "../api/client";
@@ -172,19 +172,18 @@ export function MapView({
   speedKph?: number;
 }) {
   const [autoFitMode, setAutoFitMode] = useState<AutoFitMode>("route");
-  const { mapTileUrl, mapAttribution, mapTileUrlDark, mapAttributionDark } = useMemo(
-    () => getEnv(),
-    []
-  );
+  const { mapTileUrl, mapAttribution, mapTileUrlDark, mapAttributionDark } = getEnv();
 
   // Listen for dark mode preference changes
-  const [prefersDark, setPrefersDark] = useState(false);
+  const [prefersDark, setPrefersDark] = useState(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return false;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
 
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) return;
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    setPrefersDark(mediaQuery.matches);
 
     const handleChange = (e: MediaQueryListEvent) => setPrefersDark(e.matches);
     mediaQuery.addEventListener("change", handleChange);
@@ -195,10 +194,7 @@ export function MapView({
   const url = prefersDark ? mapTileUrlDark : mapTileUrl;
   const attribution = prefersDark ? mapAttributionDark : mapAttribution;
 
-  const center: [number, number] = useMemo(
-    () => (current ? [current.lat, current.lon] : [0, 0]),
-    [current?.lat, current?.lon]
-  );
+  const center: [number, number] = current ? [current.lat, current.lon] : [0, 0];
 
   const pathPositions = useMemo(() => {
     if (!path || path.length < 2) return undefined;

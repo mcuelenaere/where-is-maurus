@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import type { SnapshotPayload } from "../api/types";
 import { MapView } from "./MapView";
 import { RouteModule } from "./modules/RouteModule";
@@ -15,15 +15,13 @@ export const ModulesAndMap = React.memo(function ModulesAndMap({
 }: {
   state?: SnapshotPayload;
 }) {
-  const current: Current = useMemo(() => {
-    return state?.location
-      ? {
-          lat: state.location.lat,
-          lon: state.location.lon,
-          heading: state.location.heading,
-        }
-      : undefined;
-  }, [state?.location?.lat, state?.location?.lon, state?.location?.heading]);
+  const current: Current = state?.location
+    ? {
+        lat: state.location.lat,
+        lon: state.location.lon,
+        heading: state.location.heading,
+      }
+    : undefined;
 
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
