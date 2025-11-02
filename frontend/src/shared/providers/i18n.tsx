@@ -1,7 +1,7 @@
 import type { I18n as I18nType } from "@lingui/core";
 import { setupI18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
-import { English, Dutch } from "../../locales";
+import { English, Dutch } from "~/locales";
 import { useMemo } from "react";
 
 const messages = {

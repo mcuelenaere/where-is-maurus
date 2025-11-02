@@ -1,4 +1,4 @@
-import { BarFormatter } from "../utils/format";
+import { BarFormatter } from "~/shared/utils/format";
 
 function pressureClass(v?: number) {
   if (v == null) return "text-gray-400";

@@ -1,9 +1,9 @@
 import React from "react";
 import { Trans, useLingui } from "@lingui/react/macro";
 
-import type { CarState } from "../../api/types";
-import { MetricCard } from "../MetricCard";
-import { KilometersFormatter, MinutesFormatter } from "../../utils/format";
+import type { CarState } from "~/shared/api/types";
+import { MetricCard } from "~/shared/components/MetricCard";
+import { KilometersFormatter, MinutesFormatter } from "~/shared/utils/format";
 
 type Props = { route?: CarState["route"] };
 

@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { Trans, useLingui } from "@lingui/react/macro";
 
-import { createShare } from "../../shared/api/admin";
-import { getEnv } from "../../shared/api/client";
+import { createShare } from "~/shared/api/admin";
+import { getEnv } from "~/shared/api/client";
 import { DurationSelector } from "./DurationSelector";
 
 type Props = { carId?: number; etaMin?: number };

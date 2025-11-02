@@ -1,10 +1,10 @@
-import "../styles/tailwind.css";
+import "~/styles/tailwind.css";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
 
 import App from "./App";
-import { I18n } from "../shared/providers/i18n";
+import { I18n } from "~/shared/providers/i18n";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

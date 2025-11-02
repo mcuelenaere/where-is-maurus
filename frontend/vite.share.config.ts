@@ -2,10 +2,16 @@ import react from "@vitejs/plugin-react";
 import { lingui } from "@lingui/vite-plugin";
 import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
+import path from "path";
 
 export default defineConfig({
   plugins: [react({ babel: { plugins: ["macros"] } }), lingui(), tailwindcss()],
-  root: "src/share",
+  resolve: {
+    alias: {
+      "~": path.resolve(__dirname, "./src"),
+    },
+  },
+  root: "src/apps/share",
   server: {
     port: 5173,
     host: true,
@@ -13,6 +19,6 @@ export default defineConfig({
   },
   build: {
     sourcemap: false,
-    outDir: "../../dist/share",
+    outDir: path.resolve(__dirname, "dist/share"),
   },
 });

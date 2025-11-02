@@ -1,8 +1,8 @@
 import React from "react";
 import { Trans } from "@lingui/react/macro";
 
-import { MetricCard } from "../MetricCard";
-import { TPMSWheels } from "../TPMSWheels";
+import { MetricCard } from "~/shared/components/MetricCard";
+import { TPMSWheels } from "~/shared/components/TPMSWheels";
 
 type Props = {
   fl?: number;

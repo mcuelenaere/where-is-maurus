@@ -5,8 +5,8 @@ import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-
 import { useEffect, useState, useMemo } from "react";
 import { Trans } from "@lingui/react/macro";
 
-import { getEnv } from "../api/client";
-import type { PathPoint } from "../api/types";
+import { getEnv } from "~/shared/api/client";
+import type { PathPoint } from "~/shared/api/types";
 
 // Fix Leaflet's default icon paths under Vite
 // @ts-expect-error - accessing private properties to override paths

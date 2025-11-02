@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useLingui } from "@lingui/react/macro";
 
-import { getEnv } from "../../shared/api/client";
-import type { DeltaPayload, SnapshotPayload } from "../api/types";
+import { getEnv } from "~/shared/api/client";
+import type { DeltaPayload, SnapshotPayload } from "~/shared/api/types";
 
 type Options = {
   token?: string;

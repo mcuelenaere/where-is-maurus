@@ -1,10 +1,10 @@
 import React from "react";
 import { Trans } from "@lingui/react/macro";
 
-import type { HistoryWindow } from "../../api/types";
-import { MetricCard } from "../MetricCard";
-import { Sparkline } from "../Sparkline";
-import { Speedometer } from "../Speedometer";
+import type { HistoryWindow } from "~/shared/api/types";
+import { MetricCard } from "~/shared/components/MetricCard";
+import { Sparkline } from "~/shared/components/Sparkline";
+import { Speedometer } from "~/shared/components/Speedometer";
 
 type Props = {
   speedKph?: number;

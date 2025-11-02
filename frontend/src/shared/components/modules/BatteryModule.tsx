@@ -1,11 +1,11 @@
 import React from "react";
 import { Trans } from "@lingui/react/macro";
 
-import type { HistoryWindow } from "../../api/types";
-import { MetricCard } from "../MetricCard";
-import { Sparkline } from "../Sparkline";
-import { BatteryBar } from "../BatteryBar";
-import { PowerBar } from "../PowerBar";
+import type { HistoryWindow } from "~/shared/api/types";
+import { MetricCard } from "~/shared/components/MetricCard";
+import { Sparkline } from "~/shared/components/Sparkline";
+import { BatteryBar } from "~/shared/components/BatteryBar";
+import { PowerBar } from "~/shared/components/PowerBar";
 
 type Props = {
   socPct?: number;

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useLingui } from "@lingui/react/macro";
-import { KilowattFormatter } from "../utils/format";
+import { KilowattFormatter } from "~/shared/utils/format";
 
 /**
  * Power range in kilowatts.

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Trans, useLingui } from "@lingui/react/macro";
 
-import { ModulesAndMap } from "../shared/components/ModulesAndMap";
-import { formatTime } from "../shared/utils/format";
+import { ModulesAndMap } from "~/shared/components/ModulesAndMap";
+import { formatTime } from "~/shared/utils/format";
 import { useSSE } from "./hooks/useSSE";
 
 export default function App() {

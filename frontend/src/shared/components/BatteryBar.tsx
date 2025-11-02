@@ -1,6 +1,6 @@
 import React from "react";
 import { useLingui } from "@lingui/react/macro";
-import { PercentFormatter } from "../utils/format";
+import { PercentFormatter } from "~/shared/utils/format";
 
 export function BatteryBar({ socPct }: { socPct?: number }) {
   const { t } = useLingui();

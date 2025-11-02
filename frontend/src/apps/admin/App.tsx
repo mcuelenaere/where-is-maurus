@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Trans, useLingui } from "@lingui/react/macro";
 
-import { getCars } from "../shared/api/admin";
-import { ModulesAndMap } from "../shared/components/ModulesAndMap";
-import { formatTime } from "../shared/utils/format";
+import { getCars } from "~/shared/api/admin";
+import { ModulesAndMap } from "~/shared/components/ModulesAndMap";
+import { formatTime } from "~/shared/utils/format";
 import { CarSelector } from "./components/CarSelector";
 import Header from "./components/Header";
 import { ShareForm } from "./components/ShareForm";

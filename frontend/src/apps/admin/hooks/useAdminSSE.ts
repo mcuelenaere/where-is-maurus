@@ -1,4 +1,4 @@
-import { useSSE as useSharedSSE } from "../../shared/hooks/useSSE";
+import { useSSE as useSharedSSE } from "~/shared/hooks/useSSE";
 
 function getCookie(name: string): string | undefined {
   if (typeof document === "undefined") return undefined;

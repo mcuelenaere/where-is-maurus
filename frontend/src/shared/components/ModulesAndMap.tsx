@@ -1,5 +1,5 @@
 import React from "react";
-import type { SnapshotPayload } from "../api/types";
+import type { SnapshotPayload } from "~/shared/api/types";
 import { MapView } from "./MapView";
 import { RouteModule } from "./modules/RouteModule";
 import { SpeedModule } from "./modules/SpeedModule";
