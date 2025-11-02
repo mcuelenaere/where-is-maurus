@@ -10,14 +10,18 @@ import { ElevationModule } from "./modules/ElevationModule";
 
 type Current = { lat: number; lon: number; heading?: number } | undefined;
 
-export const ModulesAndMap = React.memo(function ModulesAndMap({ state }: { state?: SnapshotPayload }) {
+export const ModulesAndMap = React.memo(function ModulesAndMap({
+  state,
+}: {
+  state?: SnapshotPayload;
+}) {
   const current: Current = useMemo(() => {
     return state?.location
       ? {
-        lat: state.location.lat,
-        lon: state.location.lon,
-        heading: state.location.heading,
-      }
+          lat: state.location.lat,
+          lon: state.location.lon,
+          heading: state.location.heading,
+        }
       : undefined;
   }, [state?.location?.lat, state?.location?.lon, state?.location?.heading]);
 

@@ -6,7 +6,7 @@ import { KilowattFormatter } from "../utils/format";
  * Power range in kilowatts.
  * - Maximum positive power: 320 kW
  * - Minimum negative power: -100 kW
- * 
+ *
  * For width calculation: worst case formatted value is "-XXX kW" (up to 7 characters).
  * Using tabular-nums, we set a fixed width to prevent layout shifts.
  */

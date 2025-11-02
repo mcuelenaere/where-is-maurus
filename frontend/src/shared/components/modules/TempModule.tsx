@@ -13,7 +13,12 @@ type Props = {
   historyOutside?: HistoryWindow["outside_c"];
 };
 
-export const TempModule = React.memo(function TempModule({ insideC, outsideC, historyInside, historyOutside }: Props) {
+export const TempModule = React.memo(function TempModule({
+  insideC,
+  outsideC,
+  historyInside,
+  historyOutside,
+}: Props) {
   return (
     <MetricCard label={<Trans>Temp</Trans>} hideValue>
       <div className="flex flex-col gap-2">
@@ -36,9 +41,7 @@ export const TempModule = React.memo(function TempModule({ insideC, outsideC, hi
               />
             </div>
           </div>
-          {historyInside && (
-            <Sparkline data={historyInside} />
-          )}
+          {historyInside && <Sparkline data={historyInside} />}
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-2 text-sm">
@@ -59,9 +62,7 @@ export const TempModule = React.memo(function TempModule({ insideC, outsideC, hi
               />
             </div>
           </div>
-          {historyOutside && (
-            <Sparkline data={historyOutside} />
-          )}
+          {historyOutside && <Sparkline data={historyOutside} />}
         </div>
       </div>
     </MetricCard>

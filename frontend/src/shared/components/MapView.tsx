@@ -21,11 +21,7 @@ type LatLon = { lat: number; lon: number; heading?: number };
 
 type AutoFitMode = "car" | "route" | "off";
 
-function TrackUserInteraction({
-  onAutoFitDisable,
-}: {
-  onAutoFitDisable: () => void;
-}) {
+function TrackUserInteraction({ onAutoFitDisable }: { onAutoFitDisable: () => void }) {
   const map = useMap();
 
   useEffect(() => {
@@ -135,10 +131,11 @@ function AutoFitControl({
         <button
           type="button"
           onClick={handleClick}
-          className={`px-2 py-1.5 text-xs font-medium cursor-pointer ${autoFitMode !== "off"
-            ? "bg-blue-50 dark:bg-blue-900"
-            : "bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700"
-            } text-gray-700 dark:text-gray-300`}
+          className={`px-2 py-1.5 text-xs font-medium cursor-pointer ${
+            autoFitMode !== "off"
+              ? "bg-blue-50 dark:bg-blue-900"
+              : "bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700"
+          } text-gray-700 dark:text-gray-300`}
           style={{
             border: "none",
             display: "flex",
@@ -152,7 +149,9 @@ function AutoFitControl({
           <span className="text-[10px] leading-tight">
             <Trans>Automatically center</Trans>
           </span>
-          <span className={`text-xs font-semibold ${autoFitMode !== "off" ? "text-blue-700 dark:text-blue-300" : ""} mt-0.5 flex items-center gap-1`}>
+          <span
+            className={`text-xs font-semibold ${autoFitMode !== "off" ? "text-blue-700 dark:text-blue-300" : ""} mt-0.5 flex items-center gap-1`}
+          >
             {modeLabel}
           </span>
         </button>
@@ -173,7 +172,10 @@ export function MapView({
   speedKph?: number;
 }) {
   const [autoFitMode, setAutoFitMode] = useState<AutoFitMode>("route");
-  const { mapTileUrl, mapAttribution, mapTileUrlDark, mapAttributionDark } = useMemo(() => getEnv(), []);
+  const { mapTileUrl, mapAttribution, mapTileUrlDark, mapAttributionDark } = useMemo(
+    () => getEnv(),
+    []
+  );
 
   // Listen for dark mode preference changes
   const [prefersDark, setPrefersDark] = useState(false);
@@ -254,22 +256,10 @@ export function MapView({
           </Marker>
         )}
         {pathPositions && (
-          <Polyline
-            positions={pathPositions}
-            color="#2563eb"
-            weight={3}
-            opacity={0.8}
-          />
+          <Polyline positions={pathPositions} color="#2563eb" weight={3} opacity={0.8} />
         )}
-        <TrackUserInteraction
-          onAutoFitDisable={() => setAutoFitMode("off")}
-        />
-        <FitBounds
-          current={current}
-          dest={dest}
-          autoFitMode={autoFitMode}
-          speedKph={speedKph}
-        />
+        <TrackUserInteraction onAutoFitDisable={() => setAutoFitMode("off")} />
+        <FitBounds current={current} dest={dest} autoFitMode={autoFitMode} speedKph={speedKph} />
         <AutoFitControl
           autoFitMode={autoFitMode}
           onCycleMode={() => {

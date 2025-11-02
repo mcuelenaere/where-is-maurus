@@ -30,9 +30,7 @@ export const ElevationModule = React.memo(function ElevationModule({ elevationM,
             />
           </div>
         </div>
-        {history && (
-          <Sparkline data={history} />
-        )}
+        {history && <Sparkline data={history} />}
       </div>
     </MetricCard>
   );

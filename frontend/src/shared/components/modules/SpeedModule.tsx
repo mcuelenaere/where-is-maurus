@@ -16,9 +16,7 @@ export const SpeedModule = React.memo(function SpeedModule({ speedKph, history }
     <MetricCard label={<Trans>Speed</Trans>} hideValue>
       <div className="flex flex-col items-center gap-2">
         <Speedometer value={speedKph} unit="km/h" />
-        {history && (
-          <Sparkline data={history} />
-        )}
+        {history && <Sparkline data={history} />}
       </div>
     </MetricCard>
   );
