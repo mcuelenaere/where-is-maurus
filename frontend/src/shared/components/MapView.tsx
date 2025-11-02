@@ -2,7 +2,7 @@ import "leaflet/dist/leaflet.css";
 
 import L from "leaflet";
 import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-leaflet";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Trans } from "@lingui/react/macro";
 
 import { getEnv } from "../api/client";
@@ -114,6 +114,13 @@ export function MapView({
   const url = prefersDark ? mapTileUrlDark : mapTileUrl;
   const attribution = prefersDark ? mapAttributionDark : mapAttribution;
   const center: [number, number] = current ? [current.lat, current.lon] : [0, 0];
+
+  // Memoize path positions to prevent unnecessary re-renders during zoom
+  const pathPositions = useMemo(() => {
+    if (!path || path.length < 2) return undefined;
+    return path.map((p) => [p.lat, p.lon] as [number, number]);
+  }, [path]);
+
   const carIcon = L.divIcon({
     className: "",
     html: `
@@ -159,9 +166,9 @@ export function MapView({
             </Popup>
           </Marker>
         )}
-        {path && path.length > 1 && (
+        {pathPositions && (
           <Polyline
-            positions={path.map((p) => [p.lat, p.lon])}
+            positions={pathPositions}
             color="#2563eb"
             weight={3}
             opacity={0.8}
