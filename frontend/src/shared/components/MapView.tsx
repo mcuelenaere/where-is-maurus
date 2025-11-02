@@ -235,7 +235,12 @@ export function MapView({
 
   return (
     <div className="h-80 min-h-[360px] overflow-hidden rounded-md border border-gray-200 sm:h-96 lg:h-full dark:border-gray-700 dark:bg-gray-800">
-      <MapContainer center={center} zoom={13} style={{ height: "100%", width: "100%" }}>
+      <MapContainer
+        center={center}
+        zoom={13}
+        style={{ height: "100%", width: "100%" }}
+        zoomControl={false}
+      >
         <TileLayer url={url} attribution={attribution} />
         {current && (
           <Marker position={[current.lat, current.lon]} icon={carIcon}>
