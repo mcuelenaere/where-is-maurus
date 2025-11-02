@@ -36,7 +36,7 @@ export const EnergyModule = React.memo(function EnergyModule({
                 <BatteryBarText socPct={socPct} />
               </div>
             </div>
-            {historySoc && <Sparkline data={historySoc} />}
+            {historySoc && <Sparkline data={historySoc} min={0} max={100} />}
           </div>
         </div>
 
@@ -54,7 +54,7 @@ export const EnergyModule = React.memo(function EnergyModule({
                 <PowerBarText powerW={powerW ?? 0} />
               </div>
             </div>
-            {historyPower && <Sparkline data={historyPower} />}
+            {historyPower && <Sparkline data={historyPower} min={-100} max={320} />}
           </div>
         </div>
       </div>
