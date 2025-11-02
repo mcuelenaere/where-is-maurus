@@ -15,29 +15,29 @@ A real-time Tesla vehicle tracking application that provides live location, batt
 - **Live updates**: Server-Sent Events (SSE) provide instant updates without polling
 - **Share functionality**: Generate shareable links for public viewing
 - **Admin interface**: Protected admin panel for managing share tokens
-- **TeslaMate integration**: Connects to TeslaMate MQTT broker for vehicle data
+- **TeslaMate integration**: Receives vehicle data from TeslaMate via MQTT broker
 
 ## 🏗️ Architecture
 
-```
-┌─────────────┐    MQTT     ┌─────────────┐    SSE      ┌─────────────┐
-│ TeslaMate   │ ──────────→ │   Backend   │ ──────────→ │  Frontend   │
-│   Broker    │             │   (Go)      │             │  (React)    │
-└─────────────┘             └─────────────┘             └─────────────┘
-                                   │
-                                   │ HTTP API
-                                   ▼
-                            ┌─────────────┐
-                            │   Admin     │
-                            │  Interface  │
-                            └─────────────┘
+```mermaid
+graph LR
+    TM[TeslaMate]
+    MB[MQTT Broker]
+    BE["Backend<br/><span style='color:#00ADD8'>Go</span>"]
+    FE["Frontend<br/><span style='color:#61DAFB'>React</span>"]
+    AI["Admin Interface<br/><span style='color:#61DAFB'>React</span>"]
+    
+    TM -->|MQTT| MB
+    MB -->|MQTT| BE
+    BE -->|HTTP SSE| FE
+    BE -->|HTTP SSE| AI
 ```
 
 ### Components
 
 - **Backend** (`/backend`): Go service that consumes MQTT data and provides SSE streams
 - **Frontend** (`/frontend`): Two React applications (Share + Admin) built with Vite
-- **MQTT Integration**: Connects to TeslaMate MQTT broker for real-time vehicle data
+- **MQTT Integration**: Connects to MQTT broker to receive real-time vehicle data from TeslaMate
 - **Cloudflare Access**: Protects admin endpoints with JWT authentication
 
 ## 🚀 Quick Start
