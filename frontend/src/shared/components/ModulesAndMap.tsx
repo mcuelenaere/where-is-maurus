@@ -3,10 +3,9 @@ import type { SnapshotPayload } from "~/shared/api/types";
 import { MapView } from "./MapView";
 import { RouteModule } from "./modules/RouteModule";
 import { SpeedModule } from "./modules/SpeedModule";
-import { BatteryModule } from "./modules/BatteryModule";
-import { TempModule } from "./modules/TempModule";
+import { EnergyModule } from "./modules/EnergyModule";
+import { EnvironmentModule } from "./modules/EnvironmentModule";
 import { TirePressureModule } from "./modules/TirePressureModule";
-import { ElevationModule } from "./modules/ElevationModule";
 
 type Current = { lat: number; lon: number; heading?: number } | undefined;
 
@@ -39,27 +38,25 @@ export const ModulesAndMap = React.memo(function ModulesAndMap({
           speedKph={state?.location?.speed_kph}
           history={state?.history_30s?.speed_kph}
         />
-        <BatteryModule
+        <EnergyModule
           socPct={state?.battery?.soc_pct}
           powerW={state?.battery?.power_w}
           historySoc={state?.history_30s?.soc_pct}
           historyPower={state?.history_30s?.power_w}
         />
-        <TempModule
+        <EnvironmentModule
           insideC={state?.climate?.inside_c}
           outsideC={state?.climate?.outside_c}
+          elevationM={state?.location?.elevation_m}
           historyInside={state?.history_30s?.inside_c}
           historyOutside={state?.history_30s?.outside_c}
+          historyElevation={state?.history_30s?.elevation_m}
         />
         <TirePressureModule
           fl={state?.tpms_bar?.fl}
           fr={state?.tpms_bar?.fr}
           rl={state?.tpms_bar?.rl}
           rr={state?.tpms_bar?.rr}
-        />
-        <ElevationModule
-          elevationM={state?.location?.elevation_m}
-          history={state?.history_30s?.elevation_m}
         />
       </div>
     </div>
