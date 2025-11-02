@@ -219,8 +219,9 @@ export function KilowattFormatter({
         style: "unit",
         unit: "meter",
         unitDisplay: "short",
+        signDisplay: "exceptZero",
         minimumFractionDigits: 0,
-        maximumFractionDigits: 1,
+        maximumFractionDigits: 0,
       }}
       value={value}
       renderValue={renderValue}

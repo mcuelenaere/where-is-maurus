@@ -2,11 +2,18 @@ import React, { useMemo } from "react";
 import { useLingui } from "@lingui/react/macro";
 import { KilowattFormatter } from "../utils/format";
 
-const MAX_VALUE = 320; // W
-const MIN_VALUE = -100; // W
+/**
+ * Power range in kilowatts.
+ * - Maximum positive power: 320 kW
+ * - Minimum negative power: -100 kW
+ * 
+ * For width calculation: worst case formatted value is "-XXX kW" (up to 7 characters).
+ * Using tabular-nums, we set a fixed width to prevent layout shifts.
+ */
+const MAX_VALUE = 320; // kW
+const MIN_VALUE = -100; // kW
 
 // Visual power bar similar to Tesla: center is 0, up is positive (red), down is negative (green)
-// max positive ~320 W, min negative ~-100 W
 export function PowerBar({ powerW }: { powerW: number }) {
   const { t } = useLingui();
 
@@ -36,7 +43,7 @@ export function PowerBar({ powerW }: { powerW: number }) {
         <KilowattFormatter
           value={powerW}
           renderValue={(parts) => (
-            <span className="font-semibold tabular-nums text-gray-900 dark:text-gray-100">
+            <span className="font-semibold tabular-nums w-[4ch] inline-block text-right text-gray-900 dark:text-gray-100">
               {parts}
             </span>
           )}

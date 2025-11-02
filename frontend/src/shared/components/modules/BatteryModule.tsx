@@ -31,7 +31,7 @@ export function BatteryModule({ socPct, powerW, historySoc, historyPower }: Prop
         <div className="flex flex-row gap-2">
           <PowerBar powerW={powerW ?? 0} />
           {historyPower && (
-            <div className="self-center">
+            <div className="self-center overflow-hidden">
               <Sparkline data={historyPower} />
             </div>
           )}
