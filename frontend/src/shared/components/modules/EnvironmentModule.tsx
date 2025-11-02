@@ -32,7 +32,7 @@ export const EnvironmentModule = React.memo(function EnvironmentModule({
         {/* Inside Temperature */}
         <div className="flex gap-2">
           <div className="flex items-center">
-            <ThermometerIcon className="h-8 w-8 flex-shrink-0 text-gray-600 dark:text-gray-300" />
+            <ThermometerIcon className="h-10 w-8 flex-shrink-0" temperature={insideC} />
           </div>
           <div className="flex-1 flex flex-col gap-1">
             <div className="flex items-center justify-between text-sm">
@@ -60,7 +60,7 @@ export const EnvironmentModule = React.memo(function EnvironmentModule({
         {/* Outside Temperature */}
         <div className="flex gap-2">
           <div className="flex items-center">
-            <ThermometerIcon className="h-8 w-8 flex-shrink-0 text-gray-600 dark:text-gray-300" />
+            <ThermometerIcon className="h-10 w-8 flex-shrink-0" temperature={outsideC} />
           </div>
           <div className="flex-1 flex flex-col gap-1">
             <div className="flex items-center justify-between text-sm">
