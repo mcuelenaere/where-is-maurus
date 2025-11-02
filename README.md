@@ -89,6 +89,7 @@ Key configuration options in `backend/.env`:
 
 ```bash
 HTTP_ADDR=:8080                       # HTTP server address
+LOG_LEVEL=info                        # Log level (debug, info, warn, error)
 MQTT_BROKER_URL=tcp://localhost:1883  # MQTT broker URL
 MQTT_USERNAME=                        # MQTT username (if required)
 MQTT_PASSWORD=                        # MQTT password (if required)
@@ -141,10 +142,17 @@ make docker-run
 
 ## 📡 API Endpoints
 
+### Public Endpoints
+
 - `GET /healthz` - Health check
 - `POST /api/v1/session` - Create session from share token
 - `GET /api/v1/stream` - SSE stream of vehicle data
+
+### Admin Endpoints
+
 - `POST /api/v1/shares` - Create share token (admin only)
+- `GET /api/v1/admin/cars` - List all cars (admin only)
+- `GET /api/v1/admin/cars/{id}/stream` - SSE stream for specific car (admin only)
 
 ## 🔒 Security
 
