@@ -1,3 +1,4 @@
+import React, { useMemo } from "react";
 import type { SnapshotPayload } from "../api/types";
 import { MapView } from "./MapView";
 import { RouteModule } from "./modules/RouteModule";
@@ -9,14 +10,16 @@ import { ElevationModule } from "./modules/ElevationModule";
 
 type Current = { lat: number; lon: number; heading?: number } | undefined;
 
-export function ModulesAndMap({ state }: { state?: SnapshotPayload }) {
-  const current: Current = state?.location
-    ? {
+export const ModulesAndMap = React.memo(function ModulesAndMap({ state }: { state?: SnapshotPayload }) {
+  const current: Current = useMemo(() => {
+    return state?.location
+      ? {
         lat: state.location.lat,
         lon: state.location.lon,
         heading: state.location.heading,
       }
-    : undefined;
+      : undefined;
+  }, [state?.location?.lat, state?.location?.lon, state?.location?.heading]);
 
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
@@ -54,4 +57,4 @@ export function ModulesAndMap({ state }: { state?: SnapshotPayload }) {
       </div>
     </div>
   );
-}
+});

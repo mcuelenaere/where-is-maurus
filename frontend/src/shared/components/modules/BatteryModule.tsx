@@ -14,7 +14,7 @@ type Props = {
   historyPower?: HistoryWindow["power_w"];
 };
 
-export function BatteryModule({ socPct, powerW, historySoc, historyPower }: Props) {
+export const BatteryModule = React.memo(function BatteryModule({ socPct, powerW, historySoc, historyPower }: Props) {
   return (
     <MetricCard label={<Trans>Power</Trans>} hideValue>
       <div className="flex flex-col gap-3">
@@ -37,4 +37,4 @@ export function BatteryModule({ socPct, powerW, historySoc, historyPower }: Prop
       </div>
     </MetricCard>
   );
-}
+});

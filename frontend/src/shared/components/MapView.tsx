@@ -2,7 +2,7 @@ import "leaflet/dist/leaflet.css";
 
 import L from "leaflet";
 import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-leaflet";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { Trans } from "@lingui/react/macro";
 
 import { getEnv } from "../api/client";
@@ -20,6 +20,7 @@ L.Icon.Default.mergeOptions({
 type LatLon = { lat: number; lon: number; heading?: number };
 
 const AUTO_FIT_DELAY_MS = 15000;
+const FIT_BOUNDS_THROTTLE_MS = 2000;
 
 function TrackUserInteraction({
   onInteractionChange,
@@ -75,6 +76,7 @@ function FitBounds({
   isUserInteracting: boolean;
 }) {
   const map = useMap();
+  const lastFitBoundsRef = useRef<number>(0);
 
   useEffect(() => {
     // Don't auto-fit if user is interacting
@@ -83,6 +85,13 @@ function FitBounds({
     } else if (!current && !dest) {
       return;
     }
+
+    // Throttle fitBounds to reduce map operations when car is moving
+    const now = Date.now();
+    if (now - lastFitBoundsRef.current < FIT_BOUNDS_THROTTLE_MS) {
+      return;
+    }
+    lastFitBoundsRef.current = now;
 
     const latlngs: L.LatLngTuple[] = [];
     if (current) latlngs.push([current.lat, current.lon]);
@@ -106,24 +115,42 @@ export function MapView({
 }) {
   const [isUserInteracting, setIsUserInteracting] = useState(false);
 
-  const { mapTileUrl, mapAttribution, mapTileUrlDark, mapAttributionDark } = getEnv();
-  const prefersDark =
-    typeof window !== "undefined" &&
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches;
+  // Memoize getEnv() call to prevent recreating on every render
+  const env = useMemo(() => getEnv(), []);
+  const { mapTileUrl, mapAttribution, mapTileUrlDark, mapAttributionDark } = env;
+
+  // Listen for dark mode preference changes
+  const [prefersDark, setPrefersDark] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    setPrefersDark(mediaQuery.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => setPrefersDark(e.matches);
+    mediaQuery.addEventListener("change", handleChange);
+
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
   const url = prefersDark ? mapTileUrlDark : mapTileUrl;
   const attribution = prefersDark ? mapAttributionDark : mapAttribution;
-  const center: [number, number] = current ? [current.lat, current.lon] : [0, 0];
 
-  // Memoize path positions to prevent unnecessary re-renders during zoom
+  const center: [number, number] = useMemo(
+    () => (current ? [current.lat, current.lon] : [0, 0]),
+    [current?.lat, current?.lon]
+  );
+
   const pathPositions = useMemo(() => {
     if (!path || path.length < 2) return undefined;
     return path.map((p) => [p.lat, p.lon] as [number, number]);
   }, [path]);
 
-  const carIcon = L.divIcon({
-    className: "",
-    html: `
+  const carIcon = useMemo(() => {
+    return L.divIcon({
+      className: "",
+      html: `
       <svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
         style="transform: rotate(${current?.heading ?? 0}deg); transform-origin: 50% 50%;">
         <g>
@@ -131,12 +158,15 @@ export function MapView({
         </g>
       </svg>
     `,
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
-  });
-  const destIcon = L.divIcon({
-    className: "",
-    html: `
+      iconSize: [28, 28],
+      iconAnchor: [14, 14],
+    });
+  }, [current?.heading]);
+
+  const destIcon = useMemo(() => {
+    return L.divIcon({
+      className: "",
+      html: `
       <svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <g>
           <path d="M12 2 C8 2 6 4 6 7 C6 10 12 16 12 16 C12 16 18 10 18 7 C18 4 16 2 12 2 Z" fill="#ef4444" stroke="#991b1b" stroke-width="1" />
@@ -144,9 +174,10 @@ export function MapView({
         </g>
       </svg>
     `,
-    iconSize: [28, 28],
-    iconAnchor: [14, 16],
-  });
+      iconSize: [28, 28],
+      iconAnchor: [14, 16],
+    });
+  }, []);
 
   return (
     <div className="h-80 min-h-[360px] overflow-hidden rounded-md border border-gray-200 sm:h-96 lg:h-full dark:border-gray-700 dark:bg-gray-800">

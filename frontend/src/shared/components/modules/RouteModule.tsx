@@ -7,7 +7,7 @@ import { KilometersFormatter, MinutesFormatter } from "../../utils/format";
 
 type Props = { route?: CarState["route"] };
 
-export function RouteModule({ route }: Props) {
+export const RouteModule = React.memo(function RouteModule({ route }: Props) {
   const { t } = useLingui();
 
   const hasRoute = Boolean(route?.dest);
@@ -81,4 +81,4 @@ export function RouteModule({ route }: Props) {
       )}
     </MetricCard>
   );
-}
+});

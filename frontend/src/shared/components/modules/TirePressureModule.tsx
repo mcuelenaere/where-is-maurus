@@ -11,10 +11,10 @@ type Props = {
   rr?: number;
 };
 
-export function TirePressureModule({ fl, fr, rl, rr }: Props) {
+export const TirePressureModule = React.memo(function TirePressureModule({ fl, fr, rl, rr }: Props) {
   return (
     <MetricCard label={<Trans>Tire Pressure</Trans>} hideValue>
       <TPMSWheels fl={fl} fr={fr} rl={rl} rr={rr} />
     </MetricCard>
   );
-}
+});

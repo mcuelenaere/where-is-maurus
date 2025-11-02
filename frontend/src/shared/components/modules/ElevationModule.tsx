@@ -11,7 +11,7 @@ type Props = {
   history?: HistoryWindow["elevation_m"];
 };
 
-export function ElevationModule({ elevationM, history }: Props) {
+export const ElevationModule = React.memo(function ElevationModule({ elevationM, history }: Props) {
   return (
     <MetricCard label={<Trans>Elevation</Trans>} hideValue>
       <div className="flex flex-col gap-2">
@@ -36,4 +36,4 @@ export function ElevationModule({ elevationM, history }: Props) {
       </div>
     </MetricCard>
   );
-}
+});

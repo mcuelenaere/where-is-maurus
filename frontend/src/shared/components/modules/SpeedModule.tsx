@@ -11,7 +11,7 @@ type Props = {
   history?: HistoryWindow["speed_kph"];
 };
 
-export function SpeedModule({ speedKph, history }: Props) {
+export const SpeedModule = React.memo(function SpeedModule({ speedKph, history }: Props) {
   return (
     <MetricCard label={<Trans>Speed</Trans>} hideValue>
       <div className="flex flex-col items-center gap-2">
@@ -22,4 +22,4 @@ export function SpeedModule({ speedKph, history }: Props) {
       </div>
     </MetricCard>
   );
-}
+});

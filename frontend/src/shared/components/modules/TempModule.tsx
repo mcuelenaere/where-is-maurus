@@ -13,7 +13,7 @@ type Props = {
   historyOutside?: HistoryWindow["outside_c"];
 };
 
-export function TempModule({ insideC, outsideC, historyInside, historyOutside }: Props) {
+export const TempModule = React.memo(function TempModule({ insideC, outsideC, historyInside, historyOutside }: Props) {
   return (
     <MetricCard label={<Trans>Temp</Trans>} hideValue>
       <div className="flex flex-col gap-2">
@@ -66,4 +66,4 @@ export function TempModule({ insideC, outsideC, historyInside, historyOutside }:
       </div>
     </MetricCard>
   );
-}
+});
