@@ -5,20 +5,20 @@
   ],
   "packageRules": [
     {
-      "matchPackagePatterns": [
-        "^@types/",
-        "^eslint",
-        "^@eslint",
-        "^prettier",
-        "^typescript-eslint",
-        "^typescript",
-        "^vite",
-        "^@vitejs",
-        "@lingui/vite-plugin"
-      ],
       "automerge": true,
       "automergeType": "pr",
-      "platformAutomerge": true
+      "platformAutomerge": true,
+      "matchPackageNames": [
+        "/^@types//",
+        "/^eslint/",
+        "/^@eslint/",
+        "/^prettier/",
+        "/^typescript-eslint/",
+        "/^typescript/",
+        "/^vite/",
+        "/^@vitejs/",
+        "/@lingui/vite-plugin/"
+      ]
     },
     {
       "matchPackageNames": [
