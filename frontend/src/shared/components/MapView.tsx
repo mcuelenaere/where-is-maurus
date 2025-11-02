@@ -60,10 +60,12 @@ function FitBounds({
   current,
   dest,
   autoFitMode,
+  speedKph,
 }: {
   current?: LatLon;
   dest?: LatLon;
   autoFitMode: AutoFitMode;
+  speedKph?: number;
 }) {
   const map = useMap();
 
@@ -74,9 +76,18 @@ function FitBounds({
     }
 
     if (autoFitMode === "car") {
-      // For "car" mode, only center on car with higher zoom
+      // For "car" mode, only center on car with zoom based on speed
       if (current) {
-        map.setView([current.lat, current.lon], 16, { animate: true });
+        // Calculate zoom based on speed: higher speed = lower zoom (zoom out more)
+        // Speed range: 0-120 km/h, Zoom range: 14-18
+        // At 0 km/h: zoom 18 (very close)
+        // At 120+ km/h: zoom 14 (moderately far out)
+        // More gentle curve - less sensitive to city speed changes
+        const speed = speedKph ?? 0;
+        // Use a logarithmic-like curve for smoother transitions
+        // Slower speeds have less impact on zoom
+        const zoom = Math.max(14, Math.min(18, 18 - Math.pow(speed / 30, 0.7)));
+        map.setView([current.lat, current.lon], zoom, { animate: true });
       }
     } else if (autoFitMode === "route") {
       // For "route" mode, center on both car and destination
@@ -89,7 +100,7 @@ function FitBounds({
         map.fitBounds(bounds, { padding: [20, 20] });
       }
     }
-  }, [map, current, dest, autoFitMode]);
+  }, [map, current, dest, autoFitMode, speedKph]);
 
   return null;
 }
@@ -154,10 +165,12 @@ export function MapView({
   current,
   dest,
   path,
+  speedKph,
 }: {
   current?: LatLon;
   dest?: LatLon;
   path?: PathPoint[];
+  speedKph?: number;
 }) {
   const [autoFitMode, setAutoFitMode] = useState<AutoFitMode>("route");
   const { mapTileUrl, mapAttribution, mapTileUrlDark, mapAttributionDark } = useMemo(() => getEnv(), []);
@@ -255,6 +268,7 @@ export function MapView({
           current={current}
           dest={dest}
           autoFitMode={autoFitMode}
+          speedKph={speedKph}
         />
         <AutoFitControl
           autoFitMode={autoFitMode}

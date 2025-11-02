@@ -24,7 +24,12 @@ export const ModulesAndMap = React.memo(function ModulesAndMap({ state }: { stat
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
       <div className="min-h-[360px] lg:col-span-2">
-        <MapView current={current} dest={state?.route?.dest} path={state?.path_30s} />
+        <MapView
+          current={current}
+          dest={state?.route?.dest}
+          path={state?.path_30s}
+          speedKph={state?.location?.speed_kph}
+        />
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2">
         <RouteModule route={state?.route} />
