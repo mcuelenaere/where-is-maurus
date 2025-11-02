@@ -19,49 +19,39 @@ L.Icon.Default.mergeOptions({
 
 type LatLon = { lat: number; lon: number; heading?: number };
 
-const AUTO_FIT_DELAY_MS = 15000;
-const FIT_BOUNDS_THROTTLE_MS = 2000;
+type AutoFitMode = "car" | "route" | "off";
 
 function TrackUserInteraction({
-  onInteractionChange,
+  onAutoFitDisable,
 }: {
-  onInteractionChange: (isInteracting: boolean) => void;
+  onAutoFitDisable: () => void;
 }) {
   const map = useMap();
 
   useEffect(() => {
-    let interactionTimeout: number | undefined;
-
-    const handleInteractionStart = () => {
-      onInteractionChange(true);
-    };
-
-    const handleInteractionEnd = () => {
-      // Set a timeout to resume auto-fit after user stops interacting
-      // This gives a delay to ensure interaction is truly done
-      if (interactionTimeout) {
-        clearTimeout(interactionTimeout);
+    // Listen to DOM events directly on the map container to catch user interactions
+    const mapContainer = map.getContainer();
+    const handleUserInteraction = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.closest(".leaflet-control")) {
+        // Don't disable if the interaction came from the control button
+        return;
       }
-      interactionTimeout = window.setTimeout(() => {
-        onInteractionChange(false);
-      }, AUTO_FIT_DELAY_MS);
+
+      onAutoFitDisable();
     };
 
-    map.on("movestart", handleInteractionStart);
-    map.on("zoomstart", handleInteractionStart);
-    map.on("moveend", handleInteractionEnd);
-    map.on("zoomend", handleInteractionEnd);
+    // Listen to direct DOM events for user interaction
+    mapContainer.addEventListener("mousedown", handleUserInteraction);
+    mapContainer.addEventListener("touchstart", handleUserInteraction);
+    mapContainer.addEventListener("wheel", handleUserInteraction);
 
     return () => {
-      if (interactionTimeout) {
-        clearTimeout(interactionTimeout);
-      }
-      map.off("movestart", handleInteractionStart);
-      map.off("zoomstart", handleInteractionStart);
-      map.off("moveend", handleInteractionEnd);
-      map.off("zoomend", handleInteractionEnd);
+      mapContainer.removeEventListener("mousedown", handleUserInteraction);
+      mapContainer.removeEventListener("touchstart", handleUserInteraction);
+      mapContainer.removeEventListener("wheel", handleUserInteraction);
     };
-  }, [map, onInteractionChange]);
+  }, [map, onAutoFitDisable]);
 
   return null;
 }
@@ -69,39 +59,95 @@ function TrackUserInteraction({
 function FitBounds({
   current,
   dest,
-  isUserInteracting,
+  autoFitMode,
 }: {
   current?: LatLon;
   dest?: LatLon;
-  isUserInteracting: boolean;
+  autoFitMode: AutoFitMode;
 }) {
   const map = useMap();
-  const lastFitBoundsRef = useRef<number>(0);
 
   useEffect(() => {
-    // Don't auto-fit if user is interacting
-    if (isUserInteracting) {
-      return;
-    } else if (!current && !dest) {
+    // Don't auto-fit if auto-fit is off
+    if (autoFitMode === "off") {
       return;
     }
 
-    // Throttle fitBounds to reduce map operations when car is moving
-    const now = Date.now();
-    if (now - lastFitBoundsRef.current < FIT_BOUNDS_THROTTLE_MS) {
-      return;
+    if (autoFitMode === "car") {
+      // For "car" mode, only center on car with higher zoom
+      if (current) {
+        map.setView([current.lat, current.lon], 16, { animate: true });
+      }
+    } else if (autoFitMode === "route") {
+      // For "route" mode, center on both car and destination
+      const latlngs: L.LatLngTuple[] = [];
+      if (current) latlngs.push([current.lat, current.lon]);
+      if (dest) latlngs.push([dest.lat, dest.lon]);
+
+      if (latlngs.length > 0) {
+        const bounds = L.latLngBounds(latlngs);
+        map.fitBounds(bounds, { padding: [20, 20] });
+      }
     }
-    lastFitBoundsRef.current = now;
-
-    const latlngs: L.LatLngTuple[] = [];
-    if (current) latlngs.push([current.lat, current.lon]);
-    if (dest) latlngs.push([dest.lat, dest.lon]);
-
-    const bounds = L.latLngBounds(latlngs);
-    map.fitBounds(bounds, { padding: [20, 20] });
-  }, [map, current, dest, isUserInteracting]);
+  }, [map, current, dest, autoFitMode]);
 
   return null;
+}
+
+function AutoFitControl({
+  autoFitMode,
+  onCycleMode,
+}: {
+  autoFitMode: AutoFitMode;
+  onCycleMode: () => void;
+}) {
+  const modeLabel = useMemo(() => {
+    switch (autoFitMode) {
+      case "car":
+        return <Trans>Car</Trans>;
+      case "route":
+        return <Trans>Route</Trans>;
+      case "off":
+        return <Trans>Off</Trans>;
+    }
+  }, [autoFitMode]);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onCycleMode();
+  };
+
+  return (
+    <div className="leaflet-top leaflet-right">
+      <div className="leaflet-control leaflet-bar">
+        <button
+          type="button"
+          onClick={handleClick}
+          className={`px-2 py-1.5 text-xs font-medium cursor-pointer ${autoFitMode !== "off"
+            ? "bg-blue-50 dark:bg-blue-900"
+            : "bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700"
+            } text-gray-700 dark:text-gray-300`}
+          style={{
+            border: "none",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            lineHeight: "1.2",
+            userSelect: "none",
+            touchAction: "none",
+          }}
+        >
+          <span className="text-[10px] leading-tight">
+            <Trans>Automatically center</Trans>
+          </span>
+          <span className={`text-xs font-semibold ${autoFitMode !== "off" ? "text-blue-700 dark:text-blue-300" : ""} mt-0.5 flex items-center gap-1`}>
+            {modeLabel}
+          </span>
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export function MapView({
@@ -113,11 +159,8 @@ export function MapView({
   dest?: LatLon;
   path?: PathPoint[];
 }) {
-  const [isUserInteracting, setIsUserInteracting] = useState(false);
-
-  // Memoize getEnv() call to prevent recreating on every render
-  const env = useMemo(() => getEnv(), []);
-  const { mapTileUrl, mapAttribution, mapTileUrlDark, mapAttributionDark } = env;
+  const [autoFitMode, setAutoFitMode] = useState<AutoFitMode>("route");
+  const { mapTileUrl, mapAttribution, mapTileUrlDark, mapAttributionDark } = useMemo(() => getEnv(), []);
 
   // Listen for dark mode preference changes
   const [prefersDark, setPrefersDark] = useState(false);
@@ -205,11 +248,24 @@ export function MapView({
             opacity={0.8}
           />
         )}
-        <TrackUserInteraction onInteractionChange={setIsUserInteracting} />
+        <TrackUserInteraction
+          onAutoFitDisable={() => setAutoFitMode("off")}
+        />
         <FitBounds
           current={current}
           dest={dest}
-          isUserInteracting={isUserInteracting}
+          autoFitMode={autoFitMode}
+        />
+        <AutoFitControl
+          autoFitMode={autoFitMode}
+          onCycleMode={() => {
+            // Cycle between route and car (prefer car first)
+            if (autoFitMode === "car") {
+              setAutoFitMode("route");
+            } else {
+              setAutoFitMode("car");
+            }
+          }}
         />
       </MapContainer>
     </div>

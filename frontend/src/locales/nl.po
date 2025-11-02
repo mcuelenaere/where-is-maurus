@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: src/shared/components/MapView.tsx
+msgid "Automatically center"
+msgstr "Automatisch centreren"
+
 #: src/shared/components/BatteryBar.tsx
 msgid "Battery state of charge"
 msgstr "Laadstatus van de batterij"
@@ -203,6 +207,18 @@ msgstr "Bijgewerkt"
 #: src/admin/components/DurationSelector.tsx
 msgid "Use ETA"
 msgstr "ETA gebruiken"
+
+#: src/shared/components/MapView.tsx
+msgid "Car"
+msgstr "Auto"
+
+#: src/shared/components/MapView.tsx
+msgid "Route"
+msgstr "Route"
+
+#: src/shared/components/MapView.tsx
+msgid "Off"
+msgstr "Uit"
 
 #: src/share/App.tsx
 msgid "Where is Maurus"
