@@ -3,8 +3,8 @@
   "workspaces": {
     ".": {
       "entry": [
-        "src/admin/main.tsx",
-        "src/share/main.tsx",
+        "src/apps/admin/main.tsx",
+        "src/apps/share/main.tsx",
         "vite.admin.config.ts",
         "vite.share.config.ts",
         "lingui.config.ts"
