@@ -33,7 +33,7 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.9.0",
+    "@eslint/js": "^10.0.0",
     "@lingui/cli": "^5.4.1",
     "@lingui/vite-plugin": "^5.4.1",
     "@lingui/format-po": "^5.4.1",
@@ -44,7 +44,7 @@
     "@types/react-sparklines": "^1.7.5",
     "@vitejs/plugin-react": "^5.0.0",
     "babel-plugin-macros": "^3.1.0",
-    "eslint": "^9.9.0",
+    "eslint": "^10.0.0",
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^7.0.0",
     "knip": "^5.63.0",
